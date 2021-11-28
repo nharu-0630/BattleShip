@@ -75,6 +75,11 @@ class BoardCells {
 
     BoardCells(int boardSize) {
         boardCells = new Cell[boardSize][boardSize];
+        for (int x = 0; x < boardSize; x++) {
+            for (int y = 0; y < boardSize; y++) {
+                SetCell(x, y, new Cell());
+            }
+        }
     }
 
     public Cell GetCell(Point point) {
@@ -97,16 +102,9 @@ class BoardCells {
 class BattleShip {
 
     final static int boardSize = 5;
-    static BoardCells boardCells;
+    static BoardCells boardCells = new BoardCells(boardSize);
 
     public static void main(String args[]) {
-        boardCells = new BoardCells(boardSize);
-        for (int x = 0; x < boardSize; x++) {
-            for (int y = 0; y < boardSize; y++) {
-                boardCells.SetCell(x, y, new Cell());
-            }
-        }
-        boardCells.GetCell(1, 1).SetAllyHp(3);
         for (Point point : RandomPoints(4)) {
             boardCells.GetCell(point).SetEnemyHp(3);
         }
