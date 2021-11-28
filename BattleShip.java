@@ -9,19 +9,21 @@ class Cell {
     private Integer alphaHp;
     private Integer bravoHp;
 
+    private boolean alphaCanAttack;
+    private boolean bravoCanAttack;
+
     Cell() {
         alphaHp = -1;
         bravoHp = -1;
+        alphaCanAttack = false;
+        bravoCanAttack = false;
     }
 
-    public Integer GetHp(Integer side) {
-        switch (side) {
-            case 0:
-                return alphaHp;
-            case 1:
-                return bravoHp;
-            default:
-                return alphaHp;
+    public Integer GetHp(boolean alphaSide) {
+        if (alphaSide) {
+            return alphaHp;
+        } else {
+            return bravoHp;
         }
     }
 
@@ -34,25 +36,45 @@ class Cell {
     }
 
     public void SetCanAttak(boolean alphaSide, boolean canAttack) {
-        if (canAttack) {
-            if (isEmpty()) {
-                this.canAttack = true;
+        if (GetCanAttack(alphaSide)) {
+            if (isEmpty(alphaSide)) {
+                if (alphaSide) {
+                    alphaCanAttack = true;
+                } else {
+                    bravoCanAttack = true;
+                }
             }
         } else {
-            this.canAttack = false;
+            if (alphaSide) {
+                alphaCanAttack = false;
+            } else {
+                bravoCanAttack = false;
+            }
         }
     }
 
-    public boolean GetCanAttack() {
-        return canAttack;
+    public boolean GetCanAttack(boolean alphaSide) {
+        if (alphaSide) {
+            return alphaCanAttack;
+        } else {
+            return bravoCanAttack;
+        }
     }
 
-    public boolean isAlive(int side) {
-        return allyHp > 0;
+    public boolean isAlive(boolean alphaSide) {
+        if (alphaSide) {
+            return alphaHp > 0;
+        } else {
+            return bravoHp > 0;
+        }
     }
 
-    public boolean isEmpty() {
-        return allyHp == -1 && enemyHp != 0;
+    public boolean isEmpty(boolean alphaSide) {
+        if (alphaSide) {
+            return alphaHp == -1 && bravoHp != 0;
+        } else {
+            return bravoHp == -1 && alphaHp != 0;
+        }
     }
 }
 
@@ -116,28 +138,26 @@ class BoardCells {
 
     // ゲーム続行の可否
     public static boolean IsContinue() {
-        Integer allyCount = AllyPoints().size();
-        Integer enemyCount = EnemyPoints().size();
-        Integer allySumHp = 0;
-        for (Point point : AllyPoints()) {
-            allySumHp += GetCell(point).GetAllyHp();
+        Integer alphaCount = AllyPoints().size();
+        Integer bravoCount = BravoPoints().size();
+        Integer alphaSumHp = 0;
+        for (Point point : AlphaPoints()) {
+            alphaSumHp += GetCell(point).GetHp(true);
         }
-        Integer enemySumHp = 0;
-        for (Point point : EnemyPoints()) {
-            enemySumHp += GetCell(point).GetEnemyHp();
+        Integer bravoSumHp = 0;
+        for (Point point : BravoPoints()) {
+            bravoSumHp += GetCell(point).GetHp(false);
         }
         SetTurnCount();
         System.out.println("【戦況】 " + GetTurnCount() + "ターン目");
-        System.out.println("味方残機 = " + allyCount + " (総HP : " + allySumHp + ")");
-        System.out.println("　敵残機 = " + enemyCount + " (総HP : " + enemySumHp + ")");
-        if (allyCount == 0) {
-            System.out.println("味方が全滅しました");
-            System.out.println("あなたの負けです");
+        System.out.println("α残機 = " + alphaCount + " (総HP : " + alphaSumHp + ")");
+        System.out.println("β残機 = " + bravoCount + " (総HP : " + bravoSumHp + ")");
+        if (alphaCount == 0) {
+            System.out.println("αが全滅しました");
             return false;
         }
-        if (enemyCount == 0) {
-            System.out.println("敵が全滅しました");
-            System.out.println("あなたの勝ちです");
+        if (bravoCount == 0) {
+            System.out.println("βが全滅しました");
             return false;
         }
         return true;
@@ -207,8 +227,8 @@ class BoardCells {
     }
 
     // 指定ポイントから指定ポイントへの移動可否
-    public static boolean CanMoveAlly(Point oldPoint, Point newPoint) {
-        if (GetCell(oldPoint).isAlive() && GetCell(newPoint).isEmpty()) {
+    public static boolean CanMoveAlly(boolean alphaSide, Point oldPoint, Point newPoint) {
+        if (GetCell(oldPoint).isAlive(alphaSide) && GetCell(newPoint).isEmpty(alphaSide)) {
             if (PointDistance(oldPoint, newPoint) == 1) {
                 return true;
             } else if (Math.abs(oldPoint.x - newPoint.x) == 2 && oldPoint.y == newPoint.y) {
@@ -229,11 +249,11 @@ class BoardCells {
     }
 
     // 指定ポイントから指定ポイントへの移動
-    public static boolean MoveAllyPoint(Point oldPoint, Point newPoint) {
-        if (CanMoveAlly(oldPoint, newPoint)) {
+    public static boolean MoveAllyPoint(boolean alphaSide, Point oldPoint, Point newPoint) {
+        if (CanMoveAlly(alphaSide, oldPoint, newPoint)) {
             System.out.println("【戦艦移動】 " + oldPoint + " → " + newPoint);
-            GetCell(newPoint).SetAllyHp(GetCell(oldPoint).GetAllyHp());
-            GetCell(oldPoint).SetAllyHp(-1);
+            GetCell(newPoint).SetHp(alphaSide, GetCell(oldPoint).GetHp(alphaSide));
+            GetCell(oldPoint).SetHp(alphaSide, -1);
             return true;
         } else {
             System.out.println("【戦艦移動】拒否されました");
@@ -242,16 +262,16 @@ class BoardCells {
     }
 
     // 指定ポイントから指定ベクトル方向への移動
-    public static boolean MoveAllyVector(Point oldPoint, Point vectorPoint) {
+    public static boolean MoveAllyVector(boolean alphaSide, Point oldPoint, Point vectorPoint) {
         Point newPoint = new Point(oldPoint.x + vectorPoint.x, oldPoint.y + vectorPoint.y);
-        return MoveAllyPoint(oldPoint, newPoint);
+        return MoveAllyPoint(alphaSide, oldPoint, newPoint);
     }
 
-    // 指定ポイントへ最も近い味方のポイントリスト
-    public static ArrayList<Point> ShortPoint(Point point) {
+    // 指定ポイントへ最も近い戦艦のポイントリスト
+    public static ArrayList<Point> ShortPoint(boolean alphaSide, Point point) {
         HashMap<Point, Integer> pointsDistance = new HashMap<Point, Integer>();
-        for (Point allyPoint : AllyPoints()) {
-            pointsDistance.put(allyPoint, PointDistance(allyPoint, point));
+        for (Point shipPoint : ShipPoints(alphaSide)) {
+            pointsDistance.put(shipPoint, PointDistance(shipPoint, point));
         }
         Integer shortDistance = Collections.min(pointsDistance.values());
         ArrayList<Point> points = new ArrayList<Point>();
@@ -263,25 +283,12 @@ class BoardCells {
         return points;
     }
 
-    // 味方のポイントリスト
-    public static ArrayList<Point> AllyPoints() {
+    // 戦艦のポイントリスト
+    public static ArrayList<Point> ShipPoints(boolean alphaSide) {
         ArrayList<Point> points = new ArrayList<Point>();
         for (int x = 0; x < boardSize; x++) {
             for (int y = 0; y < boardSize; y++) {
-                if (GetCell(x, y).isAlive()) {
-                    points.add(new Point(x, y));
-                }
-            }
-        }
-        return points;
-    }
-
-    // 敵のポイントリスト
-    public static ArrayList<Point> EnemyPoints() {
-        ArrayList<Point> points = new ArrayList<Point>();
-        for (int x = 0; x < boardSize; x++) {
-            for (int y = 0; y < boardSize; y++) {
-                if (GetCell(x, y).GetEnemyHp() > 0) {
+                if (GetCell(x, y).isAlive(alphaSide)) {
                     points.add(new Point(x, y));
                 }
             }
@@ -290,17 +297,17 @@ class BoardCells {
     }
 
     // 攻撃可能範囲の検索
-    public static void CanAttackSearch() {
+    public static void CanAttackSearch(boolean alphaSide) {
         for (int x = 0; x < boardSize; x++) {
             for (int y = 0; y < boardSize; y++) {
-                GetCell(x, y).SetCanAttak(false);
+                GetCell(x, y).SetCanAttak(alphaSide, false);
             }
         }
         for (int x = 0; x < boardSize; x++) {
             for (int y = 0; y < boardSize; y++) {
-                if (GetCell(x, y).isAlive()) {
+                if (GetCell(x, y).isAlive(alphaSide)) {
                     for (Point point : PointRound(new Point(x, y))) {
-                        GetCell(point).SetCanAttak(true);
+                        GetCell(point).SetCanAttak(alphaSide, true);
                     }
                 }
             }
@@ -308,20 +315,20 @@ class BoardCells {
     }
 
     // 指定ポイントへの攻撃可否
-    public static boolean CanAttackPoint(Point point) {
-        CanAttackSearch();
-        return GetCell(point).GetCanAttack();
+    public static boolean CanAttackPoint(boolean alphaSide, Point point) {
+        CanAttackSearch(alphaSide);
+        return GetCell(point).GetCanAttack(alphaSide);
     }
 
     // 指定ポイントへの攻撃
-    public static boolean AttackPoint(Point point) {
-        if (CanAttackPoint(point)) {
+    public static boolean AttackPoint(boolean alphaSide, Point point) {
+        if (CanAttackPoint(alphaSide, point)) {
             System.out.println("【攻撃処理】" + point);
-            if (GetCell(point).GetEnemyHp() > 0) {
-                GetCell(point).SetEnemyHp(GetCell(point).GetEnemyHp() - 1);
+            if (GetCell(point).isAlive(!alphaSide)) {
+                GetCell(point).SetHp(!alphaSide, GetCell(point).GetHp(!alphaSide) - 1);
                 // 命中！
                 System.out.println("命中！");
-                if (GetCell(point).GetEnemyHp() == 0) {
+                if (GetCell(point).GetHp(!alphaSide) == 0) {
                     // 撃沈！
                     System.out.println("撃沈！");
                 }
@@ -330,7 +337,7 @@ class BoardCells {
                 System.out.println("ハズレ！");
             }
             for (Point roundPoint : PointRound(point)) {
-                if (GetCell(roundPoint).GetEnemyHp() > 0) {
+                if (GetCell(roundPoint).isAlive(!alphaSide)) {
                     // 波高し！
                     System.out.println("波高し！");
                 }
@@ -342,9 +349,9 @@ class BoardCells {
         }
     }
 
-    // 盤面に味方HPを表示
-    public static void WriteBoardAllyHp() {
-        System.out.println("【盤面表示】味方HP");
+    // 盤面にHPを表示
+    public static void WriteBoardHp(boolean alphaSide) {
+        System.out.println("【盤面表示】HP");
         System.out.print("  ");
         for (int i = 0; i < boardSize; i++) {
             if (i != 0) {
@@ -356,33 +363,8 @@ class BoardCells {
         for (int y = 0; y < boardSize; y++) {
             System.out.print(y + "|");
             for (int x = 0; x < boardSize; x++) {
-                if (GetCell(x, y).GetAllyHp() != -1) {
-                    System.out.print(GetCell(x, y).GetAllyHp());
-                } else {
-                    System.out.print(" ");
-                }
-                System.out.print(" ");
-            }
-            System.out.println();
-        }
-    }
-
-    // 盤面に敵HPを表示
-    public static void WriteBoardEnemyHp() {
-        System.out.println("【盤面表示】敵HP");
-        System.out.print("  ");
-        for (int i = 0; i < boardSize; i++) {
-            if (i != 0) {
-                System.out.print("|");
-            }
-            System.out.print((i));
-        }
-        System.out.println();
-        for (int y = 0; y < boardSize; y++) {
-            System.out.print(y + "|");
-            for (int x = 0; x < boardSize; x++) {
-                if (GetCell(x, y).GetEnemyHp() != -1) {
-                    System.out.print(GetCell(x, y).GetEnemyHp());
+                if (GetCell(x, y).GetHp(alphaSide) != -1) {
+                    System.out.print(GetCell(x, y).GetHp(alphaSide));
                 } else {
                     System.out.print(" ");
                 }
@@ -393,8 +375,8 @@ class BoardCells {
     }
 
     // 盤面に攻撃可能範囲を表示
-    public static void WriteBoardCanAttack() {
-        CanAttackSearch();
+    public static void WriteBoardCanAttack(boolean alphaSide) {
+        CanAttackSearch(alphaSide);
         System.out.println("【盤面表示】攻撃可能範囲");
         System.out.print("  ");
         for (int i = 0; i < boardSize; i++) {
@@ -407,7 +389,7 @@ class BoardCells {
         for (int y = 0; y < boardSize; y++) {
             System.out.print(y + "|");
             for (int x = 0; x < boardSize; x++) {
-                if (GetCell(x, y).GetCanAttack()) {
+                if (GetCell(x, y).GetCanAttack(alphaSide)) {
                     System.out.print("*");
                 } else {
                     System.out.print(" ");
