@@ -507,6 +507,7 @@ class Algorithm extends BoardCells {
                     break;
                 case 0:
                     // 前ターンで敵に命中しなかった
+
                     break;
             }
 
