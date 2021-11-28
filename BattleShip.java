@@ -72,11 +72,12 @@ class Point {
 }
 
 class BoardCells {
+    private int boardSize;
     private Cell[][] boardCells;
-
     private int turnCount;
 
     BoardCells(int boardSize) {
+        this.boardSize = boardSize;
         boardCells = new Cell[boardSize][boardSize];
         for (int x = 0; x < boardSize; x++) {
             for (int y = 0; y < boardSize; y++) {
@@ -109,47 +110,21 @@ class BoardCells {
     public void SetCell(int x, int y, Cell cell) {
         boardCells[x][y] = cell;
     }
-}
-
-class BattleShip {
-
-    final static int boardSize = 5;
-    static BoardCells boardCells = new BoardCells(boardSize);
-
-    public static void main(String args[]) {
-        // 敵をランダムに4箇所配置
-        for (Point point : RandomPoints(4)) {
-            boardCells.GetCell(point).SetEnemyHp(3);
-        }
-        boardCells.GetCell(1, 1).SetAllyHp(3);
-        boardCells.GetCell(3, 1).SetAllyHp(3);
-        boardCells.GetCell(1, 3).SetAllyHp(3);
-        boardCells.GetCell(3, 3).SetAllyHp(3);
-        Scanner scanner = new Scanner(System.in);
-        while (IsContinue()) {
-            WriteBoardAllyHp();
-            scanner.nextLine();
-
-        }
-        System.out.println("ゲームが終了しました");
-        scanner.nextLine();
-        scanner.close();
-    }
 
     // ゲーム続行の可否
-    static boolean IsContinue() {
+    public boolean IsContinue() {
         int allyCount = AllyPoints().size();
         int enemyCount = EnemyPoints().size();
         int allySumHp = 0;
         for (Point point : AllyPoints()) {
-            allySumHp += boardCells.GetCell(point).GetAllyHp();
+            allySumHp += GetCell(point).GetAllyHp();
         }
         int enemySumHp = 0;
         for (Point point : EnemyPoints()) {
-            enemySumHp += boardCells.GetCell(point).GetEnemyHp();
+            enemySumHp += GetCell(point).GetEnemyHp();
         }
-        boardCells.SetTurnCount();
-        System.out.println("【戦況】 " + boardCells.GetTurnCount() + "ターン目");
+        SetTurnCount();
+        System.out.println("【戦況】 " + GetTurnCount() + "ターン目");
         System.out.println("味方残機 = " + allyCount + " (総HP : " + allySumHp + ")");
         System.out.println("　敵残機 = " + enemyCount + " (総HP : " + enemySumHp + ")");
         if (allyCount == 0) {
@@ -166,7 +141,7 @@ class BattleShip {
     }
 
     // 重複を除くランダムなポイントリスト
-    static ArrayList<Point> RandomPoints(int count) {
+    public ArrayList<Point> RandomPoints(int count) {
         ArrayList<Point> points = new ArrayList<Point>();
         Random random = new Random();
         HashMap<Integer, Integer> randomPoints = new HashMap<Integer, Integer>();
@@ -181,7 +156,7 @@ class BattleShip {
     }
 
     // 指定ポイントから8方向のポイントリスト
-    static ArrayList<Point> PointRound(Point point) {
+    public ArrayList<Point> PointRound(Point point) {
         ArrayList<Point> points = new ArrayList<Point>();
         if (point.x > 0) {
             points.add(new Point(point.x - 1, point.y));
@@ -211,7 +186,7 @@ class BattleShip {
     }
 
     // 指定ポイントから4方向のポイントリスト
-    static ArrayList<Point> PointCross(Point point) {
+    public ArrayList<Point> PointCross(Point point) {
         ArrayList<Point> points = new ArrayList<Point>();
         if (point.x > 0) {
             points.add(new Point(point.x - 1, point.y));
@@ -229,8 +204,8 @@ class BattleShip {
     }
 
     // 指定ポイントから指定ポイントへの移動可否
-    static boolean CanMoveAlly(Point oldPoint, Point newPoint) {
-        if (boardCells.GetCell(oldPoint).isAlive() && boardCells.GetCell(newPoint).isEmpty()) {
+    public boolean CanMoveAlly(Point oldPoint, Point newPoint) {
+        if (GetCell(oldPoint).isAlive() && GetCell(newPoint).isEmpty()) {
             if (PointDistance(oldPoint, newPoint) == 1) {
                 return true;
             } else if (Math.abs(oldPoint.x - newPoint.x) == 2 && oldPoint.y == newPoint.y) {
@@ -246,16 +221,16 @@ class BattleShip {
     }
 
     // 指定ポイントから指定ポイントへの距離（X距離 + Y距離）
-    static int PointDistance(Point aPoint, Point bPoint) {
+    public int PointDistance(Point aPoint, Point bPoint) {
         return (Math.abs(aPoint.x - bPoint.x) + Math.abs(aPoint.y - bPoint.y));
     }
 
     // 指定ポイントから指定ポイントへの移動
-    static boolean MoveAllyPoint(Point oldPoint, Point newPoint) {
+    public boolean MoveAllyPoint(Point oldPoint, Point newPoint) {
         if (CanMoveAlly(oldPoint, newPoint)) {
             System.out.println("【戦艦移動】 " + oldPoint + " → " + newPoint);
-            boardCells.GetCell(newPoint).SetAllyHp(boardCells.GetCell(oldPoint).GetAllyHp());
-            boardCells.GetCell(oldPoint).SetAllyHp(-1);
+            GetCell(newPoint).SetAllyHp(GetCell(oldPoint).GetAllyHp());
+            GetCell(oldPoint).SetAllyHp(-1);
             return true;
         } else {
             System.out.println("【戦艦移動】拒否されました");
@@ -264,17 +239,17 @@ class BattleShip {
     }
 
     // 指定ポイントから指定ベクトル方向への移動
-    static boolean MoveAllyVector(Point oldPoint, Point vectorPoint) {
+    public boolean MoveAllyVector(Point oldPoint, Point vectorPoint) {
         Point newPoint = new Point(oldPoint.x + vectorPoint.x, oldPoint.y + vectorPoint.y);
         return MoveAllyPoint(oldPoint, newPoint);
     }
 
     // 指定ポイントへ最も近い味方のポイントリスト
-    static ArrayList<Point> ShortPoint(Point point) {
+    public ArrayList<Point> ShortPoint(Point point) {
         HashMap<Point, Integer> pointsDistance = new HashMap<Point, Integer>();
         for (int x = 0; x < boardSize; x++) {
             for (int y = 0; y < boardSize; y++) {
-                if (boardCells.GetCell(x, y).isAlive()) {
+                if (GetCell(x, y).isAlive()) {
                     pointsDistance.put(new Point(x, y), PointDistance(new Point(x, y), point));
                 }
             }
@@ -290,11 +265,11 @@ class BattleShip {
     }
 
     // 味方のポイントリスト
-    static ArrayList<Point> AllyPoints() {
+    public ArrayList<Point> AllyPoints() {
         ArrayList<Point> points = new ArrayList<Point>();
         for (int x = 0; x < boardSize; x++) {
             for (int y = 0; y < boardSize; y++) {
-                if (boardCells.GetCell(x, y).isAlive()) {
+                if (GetCell(x, y).isAlive()) {
                     points.add(new Point(x, y));
                 }
             }
@@ -303,11 +278,11 @@ class BattleShip {
     }
 
     // 敵のポイントリスト
-    static ArrayList<Point> EnemyPoints() {
+    public ArrayList<Point> EnemyPoints() {
         ArrayList<Point> points = new ArrayList<Point>();
         for (int x = 0; x < boardSize; x++) {
             for (int y = 0; y < boardSize; y++) {
-                if (boardCells.GetCell(x, y).GetEnemyHp() > 0) {
+                if (GetCell(x, y).GetEnemyHp() > 0) {
                     points.add(new Point(x, y));
                 }
             }
@@ -316,17 +291,17 @@ class BattleShip {
     }
 
     // 攻撃可能範囲の検索
-    static void CanAttackSearch() {
+    public void CanAttackSearch() {
         for (int x = 0; x < boardSize; x++) {
             for (int y = 0; y < boardSize; y++) {
-                boardCells.GetCell(x, y).SetCanAttak(false);
+                GetCell(x, y).SetCanAttak(false);
             }
         }
         for (int x = 0; x < boardSize; x++) {
             for (int y = 0; y < boardSize; y++) {
-                if (boardCells.GetCell(x, y).isAlive()) {
+                if (GetCell(x, y).isAlive()) {
                     for (Point point : PointRound(new Point(x, y))) {
-                        boardCells.GetCell(point).SetCanAttak(true);
+                        GetCell(point).SetCanAttak(true);
                     }
                 }
             }
@@ -334,20 +309,20 @@ class BattleShip {
     }
 
     // 指定ポイントへの攻撃可否
-    static boolean CanAttackPoint(Point point) {
+    public boolean CanAttackPoint(Point point) {
         CanAttackSearch();
-        return boardCells.GetCell(point).GetCanAttack();
+        return GetCell(point).GetCanAttack();
     }
 
     // 指定ポイントへの攻撃
-    static boolean AttackPoint(Point point) {
+    public boolean AttackPoint(Point point) {
         if (CanAttackPoint(point)) {
             System.out.println("【攻撃処理】" + point);
-            if (boardCells.GetCell(point).GetEnemyHp() > 0) {
-                boardCells.GetCell(point).SetEnemyHp(boardCells.GetCell(point).GetEnemyHp() - 1);
+            if (GetCell(point).GetEnemyHp() > 0) {
+                GetCell(point).SetEnemyHp(GetCell(point).GetEnemyHp() - 1);
                 // 命中！
                 System.out.println("命中！");
-                if (boardCells.GetCell(point).GetEnemyHp() == 0) {
+                if (GetCell(point).GetEnemyHp() == 0) {
                     // 撃沈！
                     System.out.println("撃沈！");
                 }
@@ -356,7 +331,7 @@ class BattleShip {
                 System.out.println("ハズレ！");
             }
             for (Point roundPoint : PointRound(point)) {
-                if (boardCells.GetCell(roundPoint).GetEnemyHp() > 0) {
+                if (GetCell(roundPoint).GetEnemyHp() > 0) {
                     // 波高し！
                     System.out.println("波高し！");
                 }
@@ -369,7 +344,7 @@ class BattleShip {
     }
 
     // 盤面に味方HPを表示
-    static void WriteBoardAllyHp() {
+    public void WriteBoardAllyHp() {
         System.out.println("【盤面表示】味方HP");
         System.out.print("  ");
         for (int i = 0; i < boardSize; i++) {
@@ -382,8 +357,8 @@ class BattleShip {
         for (int y = 0; y < boardSize; y++) {
             System.out.print(y + "|");
             for (int x = 0; x < boardSize; x++) {
-                if (boardCells.GetCell(x, y).GetAllyHp() != -1) {
-                    System.out.print(boardCells.GetCell(x, y).GetAllyHp());
+                if (GetCell(x, y).GetAllyHp() != -1) {
+                    System.out.print(GetCell(x, y).GetAllyHp());
                 } else {
                     System.out.print(" ");
                 }
@@ -394,7 +369,7 @@ class BattleShip {
     }
 
     // 盤面に敵HPを表示
-    static void WriteBoardEnemyHp() {
+    public void WriteBoardEnemyHp() {
         System.out.println("【盤面表示】敵HP");
         System.out.print("  ");
         for (int i = 0; i < boardSize; i++) {
@@ -407,8 +382,8 @@ class BattleShip {
         for (int y = 0; y < boardSize; y++) {
             System.out.print(y + "|");
             for (int x = 0; x < boardSize; x++) {
-                if (boardCells.GetCell(x, y).GetEnemyHp() != -1) {
-                    System.out.print(boardCells.GetCell(x, y).GetEnemyHp());
+                if (GetCell(x, y).GetEnemyHp() != -1) {
+                    System.out.print(GetCell(x, y).GetEnemyHp());
                 } else {
                     System.out.print(" ");
                 }
@@ -419,7 +394,7 @@ class BattleShip {
     }
 
     // 盤面に攻撃可能範囲を表示
-    static void WriteBoardCanAttack() {
+    public void WriteBoardCanAttack() {
         CanAttackSearch();
         System.out.println("【盤面表示】攻撃可能範囲");
         System.out.print("  ");
@@ -433,7 +408,7 @@ class BattleShip {
         for (int y = 0; y < boardSize; y++) {
             System.out.print(y + "|");
             for (int x = 0; x < boardSize; x++) {
-                if (boardCells.GetCell(x, y).GetCanAttack()) {
+                if (GetCell(x, y).GetCanAttack()) {
                     System.out.print("*");
                 } else {
                     System.out.print(" ");
@@ -443,4 +418,67 @@ class BattleShip {
             System.out.println();
         }
     }
+
+}
+
+class Algorithm extends BoardCells {
+    private static Point lastEnemyAttackPoint;
+    private static Point lastEnemyMoveVector;
+
+    private static Point lastAllyAttackPoint;
+    private static int lastAllyAttackResult;
+    private static Point lastAllyMovePoint;
+
+    Algorithm(int boardSize) {
+        super(boardSize);
+    }
+
+    public void SetLastEnemyAttackPoint(Point point) {
+        lastEnemyAttackPoint = point;
+    }
+
+    public void SetLastEnemyMoveVector(Point point) {
+        lastEnemyMoveVector = point;
+    }
+
+    public void SetLastAllyAttackPoint(Point point, int result) {
+        lastAllyAttackPoint = point;
+        lastAllyAttackResult = result;
+    }
+
+    public void SetLastAllyMovePoint(Point point) {
+        lastAllyMovePoint = point;
+    }
+
+    public void Think() {
+
+    }
+
+}
+
+class BattleShip {
+
+    // public static BoardCells boardCells = new BoardCells(5);
+    public static Algorithm boardCells = new Algorithm(5);
+
+    public static void main(String args[]) {
+        // 敵をランダムに4箇所配置
+        for (Point point : boardCells.RandomPoints(4)) {
+            boardCells.GetCell(point).SetEnemyHp(3);
+        }
+        boardCells.GetCell(1, 1).SetAllyHp(3);
+        boardCells.GetCell(3, 1).SetAllyHp(3);
+        boardCells.GetCell(1, 3).SetAllyHp(3);
+        boardCells.GetCell(3, 3).SetAllyHp(3);
+        Scanner scanner = new Scanner(System.in);
+        while (boardCells.IsContinue()) {
+            boardCells.WriteBoardAllyHp();
+            scanner.nextLine();
+
+        }
+        System.out.println("ゲームが終了しました");
+        scanner.nextLine();
+        scanner.close();
+    }
+
 }
