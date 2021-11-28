@@ -129,7 +129,10 @@ class BattleShip {
         while (IsContinue()) {
             WriteBoardAllyHp();
             scanner.nextLine();
+
         }
+        System.out.println("ゲームが終了しました");
+        scanner.nextLine();
         scanner.close();
     }
 
@@ -151,10 +154,12 @@ class BattleShip {
         System.out.println("　敵残機 = " + enemyCount + " (総HP : " + enemySumHp + ")");
         if (allyCount == 0) {
             System.out.println("味方が全滅しました");
+            System.out.println("あなたの負けです");
             return false;
         }
         if (enemyCount == 0) {
             System.out.println("敵が全滅しました");
+            System.out.println("あなたの勝ちです");
             return false;
         }
         return true;
