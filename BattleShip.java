@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.Collections;
 
 class Cell {
@@ -124,9 +125,12 @@ class BattleShip {
         boardCells.GetCell(3, 1).SetAllyHp(3);
         boardCells.GetCell(1, 3).SetAllyHp(3);
         boardCells.GetCell(3, 3).SetAllyHp(3);
+        Scanner scanner = new Scanner(System.in);
         while (IsContinue()) {
             WriteBoardAllyHp();
+            scanner.nextLine();
         }
+        scanner.close();
     }
 
     // ゲーム続行の可否
