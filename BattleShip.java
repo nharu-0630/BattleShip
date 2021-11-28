@@ -6,34 +6,34 @@ import java.util.Scanner;
 import java.util.Collections;
 
 class Cell {
-    private Integer enemyHp;
-    private Integer allyHp;
-
-    private boolean canAttack;
+    private Integer alphaHp;
+    private Integer bravoHp;
 
     Cell() {
-        enemyHp = -1;
-        allyHp = -1;
-        canAttack = false;
+        alphaHp = -1;
+        bravoHp = -1;
     }
 
-    public Integer GetEnemyHp() {
-        return enemyHp;
+    public Integer GetHp(Integer side) {
+        switch (side) {
+            case 0:
+                return alphaHp;
+            case 1:
+                return bravoHp;
+            default:
+                return alphaHp;
+        }
     }
 
-    public void SetEnemyHp(int enemyHp) {
-        this.enemyHp = enemyHp;
+    public void SetHp(boolean alphaSide, int hp) {
+        if (alphaSide) {
+            alphaHp = hp;
+        } else {
+            bravoHp = hp;
+        }
     }
 
-    public Integer GetAllyHp() {
-        return allyHp;
-    }
-
-    public void SetAllyHp(int allyHp) {
-        this.allyHp = allyHp;
-    }
-
-    public void SetCanAttak(boolean canAttack) {
+    public void SetCanAttak(boolean alphaSide, boolean canAttack) {
         if (canAttack) {
             if (isEmpty()) {
                 this.canAttack = true;
@@ -47,7 +47,7 @@ class Cell {
         return canAttack;
     }
 
-    public boolean isAlive() {
+    public boolean isAlive(int side) {
         return allyHp > 0;
     }
 
