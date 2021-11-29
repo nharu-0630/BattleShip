@@ -9,6 +9,9 @@ class Cell {
     private Integer alphaHp;
     private Integer bravoHp;
 
+    private Integer alphaValue;
+    private Integer bravoValue;
+
     private boolean alphaCanAttack;
     private boolean bravoCanAttack;
 
@@ -74,6 +77,22 @@ class Cell {
             return alphaHp == -1 && bravoHp != 0;
         } else {
             return bravoHp == -1 && alphaHp != 0;
+        }
+    }
+
+    public Integer GetValue(boolean alphaSide) {
+        if (alphaSide) {
+            return alphaValue;
+        } else {
+            return bravoValue;
+        }
+    }
+
+    public void SetValue(boolean alphaSide, Integer value) {
+        if (alphaSide) {
+            alphaValue = value;
+        } else {
+            bravoValue = value;
         }
     }
 }
@@ -152,6 +171,30 @@ class BoardCells {
         boardCells[x][y] = cell;
     }
 
+    public static Point GetLastAttackPoint(boolean alphaSide) {
+        if (alphaSide) {
+            return lastAlphaAttackPoint;
+        } else {
+            return lastBravoAttackPoint;
+        }
+    }
+
+    public static Integer GetLastAttackResult(boolean alphaSide) {
+        if (alphaSide) {
+            return lastAlphaAttackResult;
+        } else {
+            return lastBravoAttackResult;
+        }
+    }
+
+    public static Point GetLastMoveVector(boolean alphaSide) {
+        if (alphaSide) {
+            return lastAlphaMoveVector;
+        } else {
+            return lastBravoMoveVector;
+        }
+    }
+
     // ゲーム続行の可否
     public static boolean IsContinue(boolean interrupt) {
         Integer alphaCount = ShipPoints(true).size();
@@ -191,30 +234,6 @@ class BoardCells {
             return false;
         }
         return true;
-    }
-
-    public static Point lastAttackPoint(boolean alphaSide) {
-        if (alphaSide) {
-            return lastAlphaAttackPoint;
-        } else {
-            return lastBravoAttackPoint;
-        }
-    }
-
-    public static Integer lastAttackResult(boolean alphaSide) {
-        if (alphaSide) {
-            return lastAlphaAttackResult;
-        } else {
-            return lastBravoAttackResult;
-        }
-    }
-
-    public static Point lastMoveVector(boolean alphaSide) {
-        if (alphaSide) {
-            return lastAlphaMoveVector;
-        } else {
-            return lastBravoMoveVector;
-        }
     }
 
     // 重複を除くランダムなポイントリスト
@@ -527,26 +546,26 @@ class Algorithm {
 
     public void Think() {
         BoardCells.CanAttackSearch(alphaSide);
-        if (BoardCells.lastAttackResult(!alphaSide) != null) {
+        if (BoardCells.GetLastAttackResult(!alphaSide) != null) {
             // 敵に攻撃された
-            switch (BoardCells.lastAttackResult(!alphaSide)) {
+            switch (BoardCells.GetLastAttackResult(!alphaSide)) {
                 case 3:
                 case 2:
                     allySumHp--;
-                    if (BoardCells.lastAttackResult(!alphaSide) == 3) {
+                    if (BoardCells.GetLastAttackResult(!alphaSide) == 3) {
                         allyCount--;
                         // 敵に撃沈された
                     } else {
                         // 敵に命中された
                         ArrayList<Point> points = new ArrayList<Point>();
-                        for (Point point : BoardCells.PointCross(BoardCells.lastAttackPoint(!alphaSide), 2)) {
-                            if (BoardCells.CanMovePoint(alphaSide, BoardCells.lastAttackPoint(!alphaSide), point)) {
+                        for (Point point : BoardCells.PointCross(BoardCells.GetLastAttackPoint(!alphaSide), 2)) {
+                            if (BoardCells.CanMovePoint(alphaSide, BoardCells.GetLastAttackPoint(!alphaSide), point)) {
                                 points.add(point);
                             }
                         }
                         // 移動できる範囲からランダムに移動
                         Random random = new Random();
-                        DoMove(BoardCells.lastAttackPoint(!alphaSide), points.get(random.nextInt(points.size())));
+                        DoMove(BoardCells.GetLastAttackPoint(!alphaSide), points.get(random.nextInt(points.size())));
                     }
                     break;
                 case 1:
@@ -555,27 +574,27 @@ class Algorithm {
                     break;
             }
         }
-        if (BoardCells.lastAttackResult(alphaSide) != null) {
+        if (BoardCells.GetLastAttackResult(alphaSide) != null) {
             // 敵を攻撃した
-            switch (BoardCells.lastAttackResult(alphaSide)) {
+            switch (BoardCells.GetLastAttackResult(alphaSide)) {
                 case 3:
                 case 2:
                     enemySumHp--;
-                    if (BoardCells.lastAttackResult(alphaSide) == 3) {
+                    if (BoardCells.GetLastAttackResult(alphaSide) == 3) {
                         enemyCount--;
                         // 敵を撃沈した
                     } else {
                         // 敵を命中した
-                        if (BoardCells.lastMoveVector(!alphaSide) == null) {
+                        if (BoardCells.GetLastMoveVector(!alphaSide) == null) {
                             // 敵が移動しなかった
-                            DoAttack(BoardCells.lastAttackPoint(alphaSide));
+                            DoAttack(BoardCells.GetLastAttackPoint(alphaSide));
                             return;
                         } else {
                             // 敵が移動した
                             if (enemyCount == 1) {
                                 // 敵が1機のみ
-                                DoAttack(BoardCells.lastAttackPoint(alphaSide)
-                                        .Plus(BoardCells.lastMoveVector(!alphaSide)));
+                                DoAttack(BoardCells.GetLastAttackPoint(alphaSide)
+                                        .Plus(BoardCells.GetLastMoveVector(!alphaSide)));
                                 return;
                             } else {
                                 // 敵が2機以上
@@ -585,8 +604,9 @@ class Algorithm {
                     break;
                 case 1:
                     // 敵を波高しした
-                    ArrayList<Point> possibilityPoints = BoardCells.PointRound(BoardCells.lastAttackPoint(alphaSide));
-                    if (BoardCells.lastMoveVector(!alphaSide) == null) {
+                    ArrayList<Point> possibilityPoints = BoardCells
+                            .PointRound(BoardCells.GetLastAttackPoint(alphaSide));
+                    if (BoardCells.GetLastAttackPoint(!alphaSide) == null) {
                         // 敵が移動しなかった
                         HashMap<Point, Integer> pointsRound = new HashMap<Point, Integer>();
                         for (Point point : possibilityPoints) {
