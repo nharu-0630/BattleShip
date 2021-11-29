@@ -12,16 +12,16 @@ class Cell {
     private Integer alphaValue;
     private Integer bravoValue;
 
-    private boolean alphaCanAttack;
-    private boolean bravoCanAttack;
+    private boolean alphaIsAttack;
+    private boolean bravoIsAttack;
 
     Cell() {
         alphaHp = -1;
         bravoHp = -1;
         alphaValue = 0;
         bravoValue = 0;
-        alphaCanAttack = false;
-        bravoCanAttack = false;
+        alphaIsAttack = false;
+        bravoIsAttack = false;
     }
 
     public Integer GetHp(boolean alphaSide) {
@@ -40,29 +40,29 @@ class Cell {
         }
     }
 
-    public void SetCanAttak(boolean alphaSide, boolean canAttack) {
-        if (canAttack) {
+    public void SetCanAttak(boolean alphaSide, boolean isAttack) {
+        if (isAttack) {
             if (isEmpty(alphaSide)) {
                 if (alphaSide) {
-                    alphaCanAttack = true;
+                    alphaIsAttack = true;
                 } else {
-                    bravoCanAttack = true;
+                    bravoIsAttack = true;
                 }
             }
         } else {
             if (alphaSide) {
-                alphaCanAttack = false;
+                alphaIsAttack = false;
             } else {
-                bravoCanAttack = false;
+                bravoIsAttack = false;
             }
         }
     }
 
-    public boolean GetCanAttack(boolean alphaSide) {
+    public boolean GetIsAttack(boolean alphaSide) {
         if (alphaSide) {
-            return alphaCanAttack;
+            return alphaIsAttack;
         } else {
-            return bravoCanAttack;
+            return bravoIsAttack;
         }
     }
 
@@ -136,9 +136,9 @@ class BoardCells {
     private static Point lastBravoMoveVector;
 
     BoardCells() {
-        boardCells = new Cell[boardSize][boardSize];
-        for (Integer x = 0; x < boardSize; x++) {
-            for (Integer y = 0; y < boardSize; y++) {
+        boardCells = new Cell[GetBoardSize()][GetBoardSize()];
+        for (Integer x = 0; x < GetBoardSize(); x++) {
+            for (Integer y = 0; y < GetBoardSize(); y++) {
                 SetCell(x, y, new Cell());
             }
         }
@@ -161,7 +161,7 @@ class BoardCells {
         return boardCells[point.x][point.y];
     }
 
-    public static Cell GetCell(int x, Integer y) {
+    public static Cell GetCell(Integer x, Integer y) {
         return boardCells[x][y];
     }
 
@@ -250,7 +250,26 @@ class BoardCells {
             points.add(new Point(randomPoint.getKey(), randomPoint.getValue()));
         }
         return points;
+    }
 
+    // 値が最大であるポイントリスト
+    public static ArrayList<Point> MaxValuePoints(boolean alphaSide, boolean isAttackEnable) {
+        HashMap<Point, Integer> pointsValue = new HashMap<Point, Integer>();
+        for (Integer x = 0; x < BoardCells.GetBoardSize(); x++) {
+            for (Integer y = 0; y < BoardCells.GetBoardSize(); y++) {
+                if ((isAttackEnable && BoardCells.IsAttackEnablePoint(alphaSide, new Point(x, y))) || !isAttackEnable) {
+                    pointsValue.put(new Point(x, y), BoardCells.GetCell(x, y).GetValue(alphaSide));
+                }
+            }
+        }
+        Integer maxValue = Collections.max(pointsValue.values());
+        ArrayList<Point> points = new ArrayList<Point>();
+        for (Map.Entry<Point, Integer> pointValue : pointsValue.entrySet()) {
+            if (pointValue.getValue() == maxValue) {
+                points.add(pointValue.getKey());
+            }
+        }
+        return points;
     }
 
     // 指定ポイントから8方向のポイントリスト
@@ -378,6 +397,31 @@ class BoardCells {
         return points;
     }
 
+    // 値をすべて初期化
+    public static void ClearValue(boolean alphaSide) {
+        for (Integer x = 0; x < BoardCells.GetBoardSize(); x++) {
+            for (Integer y = 0; y < BoardCells.GetBoardSize(); y++) {
+                BoardCells.GetCell(x, y).SetValue(alphaSide, 0);
+            }
+        }
+    }
+
+    // 値をすべて平均化
+    public static void NormalizeValue(boolean alphaSide) {
+        for (Integer x = 0; x < BoardCells.GetBoardSize(); x++) {
+            for (Integer y = 0; y < BoardCells.GetBoardSize(); y++) {
+                Integer value = 3;
+                if (x != 0 && x != BoardCells.GetBoardSize() - 1) {
+                    value += 2;
+                }
+                if (y != 0 && y != BoardCells.GetBoardSize() - 1) {
+                    value += 2;
+                }
+                BoardCells.GetCell(x, y).SetValue(alphaSide, value);
+            }
+        }
+    }
+
     // 戦艦のポイントリスト
     public static ArrayList<Point> ShipPoints(boolean alphaSide) {
         ArrayList<Point> points = new ArrayList<Point>();
@@ -414,7 +458,7 @@ class BoardCells {
         ArrayList<Point> points = new ArrayList<Point>();
         for (Integer x = 0; x < BoardCells.GetBoardSize(); x++) {
             for (Integer y = 0; y < BoardCells.GetBoardSize(); y++) {
-                if (BoardCells.GetCell(x, y).GetCanAttack(alphaSide)) {
+                if (BoardCells.GetCell(x, y).GetIsAttack(alphaSide)) {
                     points.add(new Point(x, y));
                 }
             }
@@ -423,9 +467,9 @@ class BoardCells {
     }
 
     // 指定ポイントへの攻撃可否
-    public static boolean CanAttackEnablePoint(boolean alphaSide, Point point) {
+    public static boolean IsAttackEnablePoint(boolean alphaSide, Point point) {
         AttackEnableSearch(alphaSide);
-        return BoardCells.GetCell(point).GetCanAttack(alphaSide);
+        return BoardCells.GetCell(point).GetIsAttack(alphaSide);
     }
 
     // 指定ポイントへの攻撃
@@ -435,7 +479,7 @@ class BoardCells {
         } else {
             System.out.print("【β");
         }
-        if (CanAttackEnablePoint(alphaSide, point)) {
+        if (IsAttackEnablePoint(alphaSide, point)) {
             Integer attackResult = 0;
             System.out.println("攻撃】" + point);
             if (BoardCells.GetCell(point).isAlive(!alphaSide)) {
@@ -516,13 +560,13 @@ class BoardCells {
     }
 
     // 盤面に攻撃可能範囲を表示
-    public static void WriteBoardCanAttack(boolean alphaSide) {
+    public static void WriteBoardIsAttack(boolean alphaSide) {
         if (alphaSide) {
             System.out.print("【α");
         } else {
             System.out.print("【β");
         }
-        CanAttackSearch(alphaSide);
+        AttackEnableSearch(alphaSide);
         System.out.println("盤面】攻撃可能範囲");
         System.out.print("  ");
         for (Integer i = 0; i < BoardCells.GetBoardSize(); i++) {
@@ -535,7 +579,7 @@ class BoardCells {
         for (Integer y = 0; y < BoardCells.GetBoardSize(); y++) {
             System.out.print(y + "|");
             for (Integer x = 0; x < BoardCells.GetBoardSize(); x++) {
-                if (BoardCells.GetCell(x, y).GetCanAttack(alphaSide)) {
+                if (BoardCells.GetCell(x, y).GetIsAttack(alphaSide)) {
                     System.out.print("*");
                 } else {
                     System.out.print(" ");
@@ -561,6 +605,11 @@ class BoardCells {
             return (lastBravoAttackPoint != null);
         }
     }
+
+    public static Point RandomGet(ArrayList<Point> points) {
+        Random random = new Random();
+        return points.get(random.nextInt(points.size()));
+    }
 }
 
 class Algorithm {
@@ -584,8 +633,19 @@ class Algorithm {
 
     public void Think() {
         BoardCells.AttackEnableSearch(alphaSide);
+        if (BoardCells.IsLastMove(!alphaSide)) {
+            if (alphaSide) {
+                BoardCells.ClearValue(alphaSide);
+            } else {
+                BoardCells.NormalizeValue(alphaSide);
+            }
+        }
         if (BoardCells.IsLastAttack(!alphaSide)) {
             // 敵に攻撃された
+            BoardCells.GetCell(BoardCells.GetLastAttackPoint(!alphaSide)).SetValue(alphaSide, 0);
+            for (Point point : BoardCells.PointRound(BoardCells.GetLastAttackPoint(!alphaSide))) {
+                BoardCells.GetCell(point).SetValue(alphaSide, BoardCells.GetCell(point).GetValue(alphaSide) + 1);
+            }
             switch (BoardCells.GetLastAttackResult(!alphaSide)) {
                 case 3:
                 case 2:
@@ -597,13 +657,13 @@ class Algorithm {
                         // 敵に命中された
                         ArrayList<Point> points = new ArrayList<Point>();
                         for (Point point : BoardCells.PointCross(BoardCells.GetLastAttackPoint(!alphaSide), 2)) {
-                            if (BoardCells.CanMovePoint(alphaSide, BoardCells.GetLastAttackPoint(!alphaSide), point)) {
+                            if (BoardCells.CanMovePoint(alphaSide, BoardCells.GetLastAttackPoint(!alphaSide),
+                                    point)) {
                                 points.add(point);
                             }
                         }
                         // 移動できる範囲からランダムに移動
-                        Random random = new Random();
-                        DoMove(BoardCells.GetLastAttackPoint(!alphaSide), points.get(random.nextInt(points.size())));
+                        DoMove(BoardCells.GetLastAttackPoint(!alphaSide), BoardCells.RandomGet(points));
                         return;
                     }
                     break;
@@ -622,52 +682,60 @@ class Algorithm {
                     if (BoardCells.GetLastAttackResult(alphaSide) == 3) {
                         enemyCount--;
                         // 敵を撃沈した
+                        BoardCells.GetCell(BoardCells.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0);
                     } else {
                         // 敵を命中した
+                        BoardCells.GetCell(BoardCells.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 10);
                         if (BoardCells.IsLastMove(!alphaSide)) {
-                            // 敵が移動しなかった
-                            DoAttack(BoardCells.GetLastAttackPoint(alphaSide));
-                            return;
-                        } else {
                             // 敵が移動した
                             if (enemyCount == 1) {
                                 // 敵が1機のみ
-                                if (BoardCells.CanAttackEnablePoint(alphaSide, BoardCells.GetLastAttackPoint(alphaSide)
+                                BoardCells.GetCell(BoardCells.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0);
+                                BoardCells.GetCell(BoardCells.GetLastAttackPoint(alphaSide)
+                                        .Plus(BoardCells.GetLastMoveVector(!alphaSide))).SetValue(alphaSide, 10);
+                                if (BoardCells.IsAttackEnablePoint(alphaSide, BoardCells.GetLastAttackPoint(alphaSide)
                                         .Plus(BoardCells.GetLastMoveVector(!alphaSide)))) {
                                     // 攻撃可能範囲内なら攻撃する
                                     DoAttack(BoardCells.GetLastAttackPoint(alphaSide)
                                             .Plus(BoardCells.GetLastMoveVector(!alphaSide)));
+                                    return;
                                 }
-                                return;
                             } else {
                                 // 敵が2機以上
                             }
+                        } else {
+                            // 敵が移動しなかった
+                            DoAttack(BoardCells.GetLastAttackPoint(alphaSide));
+                            return;
                         }
                     }
                     break;
                 case 1:
                     // 敵を波高しした
-                    ArrayList<Point> possibilityPoints = BoardCells
-                            .PointRound(BoardCells.GetLastAttackPoint(alphaSide));
+                    BoardCells.GetCell(BoardCells.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0);
+                    for (Point point : BoardCells.PointRound(BoardCells.GetLastAttackPoint(alphaSide))) {
+                        BoardCells.GetCell(point).SetValue(alphaSide,
+                                BoardCells.GetCell(point).GetValue(alphaSide) + 1);
+                    }
                     if (BoardCells.IsLastMove(!alphaSide)) {
-                        // 敵が移動しなかった
+                        // 敵が移動した
 
                     } else {
-                        // 敵が移動した
+                        // 敵が移動しなかった
+
                     }
                     break;
                 case 0:
                     // 前ターンで敵に命中しなかった
-
+                    BoardCells.GetCell(BoardCells.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0);
+                    for (Point point : BoardCells.PointRound(BoardCells.GetLastAttackPoint(alphaSide))) {
+                        BoardCells.GetCell(point).SetValue(alphaSide, 0);
+                    }
                     break;
             }
         }
-        Random random = new Random();
-        if (random.nextDouble() <= 1) {
-            DoAttack(BoardCells.AttackEnablePoints(alphaSide).get(random.nextInt(
-                    BoardCells.AttackEnablePoints(alphaSide).size())));
-            return;
-        }
+        DoAttack(BoardCells.RandomGet(BoardCells.MaxValuePoints(alphaSide, true)));
+        return;
     }
 
     private void DoMove(Point oldPoint, Point newPoint) {
@@ -689,12 +757,16 @@ class BattleShip {
     public static Algorithm bravoAlgorithm = new Algorithm(false);
 
     public static void main(String args[]) {
-        for (Point point : BoardCells.RandomPoints(4)) {
-            BoardCells.GetCell(point).SetHp(true, 3);
-        }
-        for (Point point : BoardCells.RandomPoints(4)) {
-            BoardCells.GetCell(point).SetHp(false, 3);
-        }
+
+        BoardCells.GetCell(0, 0).SetHp(true, 3);
+        BoardCells.GetCell(3, 1).SetHp(true, 3);
+        BoardCells.GetCell(1, 3).SetHp(true, 3);
+        BoardCells.GetCell(4, 4).SetHp(true, 3);
+
+        BoardCells.GetCell(1, 1).SetHp(false, 3);
+        BoardCells.GetCell(2, 2).SetHp(false, 3);
+        BoardCells.GetCell(3, 3).SetHp(false, 3);
+        BoardCells.GetCell(3, 0).SetHp(false, 3);
         boolean alphaSide = true;
         Scanner scanner = new Scanner(System.in);
         while (BoardCells.IsContinue(false)) {
@@ -709,10 +781,8 @@ class BattleShip {
                 BoardCells.IsContinue(true);
                 break;
             }
-            // scanner.nextLine();
         }
         System.out.println("ゲームが終了しました");
-        scanner.nextLine();
         scanner.close();
     }
 
