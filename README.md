@@ -2,7 +2,7 @@
 # BattleShip
 
 認知科学2021 潜水艦撃沈ゲーム  
-RTX 3080 Ti
+`RTX 3080 Ti`
 
 # Documentation
 
