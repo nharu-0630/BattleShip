@@ -36,7 +36,7 @@ class Cell {
     }
 
     public void SetCanAttak(boolean alphaSide, boolean canAttack) {
-        if (GetCanAttack(alphaSide)) {
+        if (canAttack) {
             if (isEmpty(alphaSide)) {
                 if (alphaSide) {
                     alphaCanAttack = true;
@@ -91,7 +91,7 @@ class Point {
         return new Point(this.x + point.x, this.y + point.y);
     }
 
-    public Point Minus(Point point){
+    public Point Minus(Point point) {
         return new Point(this.x - point.x, this.y - point.y);
     }
 
@@ -151,7 +151,7 @@ class BoardCells {
     public static void SetCell(int x, Integer y, Cell cell) {
         boardCells[x][y] = cell;
     }
-    
+
     // ゲーム続行の可否
     public static boolean IsContinue() {
         Integer alphaCount = ShipPoints(true).size();
@@ -179,26 +179,26 @@ class BoardCells {
         return true;
     }
 
-    public static Point lastAttackPoint(boolean alphaSide){
-        if (alphaSide){
+    public static Point lastAttackPoint(boolean alphaSide) {
+        if (alphaSide) {
             return lastAlphaAttackPoint;
-        }else{
+        } else {
             return lastBravoAttackPoint;
         }
     }
 
-    public static Integer lastAttackResult(boolean alphaSide){
-        if (alphaSide){
+    public static Integer lastAttackResult(boolean alphaSide) {
+        if (alphaSide) {
             return lastAlphaAttackResult;
-        }else{
+        } else {
             return lastBravoAttackResult;
         }
     }
 
-    public static Point lastMoveVector(boolean alphaSide){
-        if (alphaSide){
+    public static Point lastMoveVector(boolean alphaSide) {
+        if (alphaSide) {
             return lastAlphaMoveVector;
-        }else{
+        } else {
             return lastBravoMoveVector;
         }
     }
@@ -249,25 +249,27 @@ class BoardCells {
     }
 
     // 指定ポイントから4方向のポイントリスト
-    public static ArrayList<Point> PointCross(Point point) {
+    public static ArrayList<Point> PointCross(Point point, Integer length) {
         ArrayList<Point> points = new ArrayList<Point>();
-        if (point.x > 0) {
-            points.add(new Point(point.x - 1, point.y));
-        }
-        if (point.x < BoardCells.GetBoardSize() - 1) {
-            points.add(new Point(point.x + 1, point.y));
-        }
-        if (point.y > 0) {
-            points.add(new Point(point.x, point.y - 1));
-        }
-        if (point.y < BoardCells.GetBoardSize() - 1) {
-            points.add(new Point(point.x, point.y + 1));
+        for (Integer i = 1; i <= length; i++) {
+            if (point.x > i - 1) {
+                points.add(new Point(point.x - i, point.y));
+            }
+            if (point.x < BoardCells.GetBoardSize() - i) {
+                points.add(new Point(point.x + i, point.y));
+            }
+            if (point.y > i - 1) {
+                points.add(new Point(point.x, point.y - i));
+            }
+            if (point.y < BoardCells.GetBoardSize() - i) {
+                points.add(new Point(point.x, point.y + i));
+            }
         }
         return points;
     }
 
     // 指定ポイントから指定ポイントへの移動可否
-    public static boolean CanMoveAlly(boolean alphaSide, Point oldPoint, Point newPoint) {
+    public static boolean CanMovePoint(boolean alphaSide, Point oldPoint, Point newPoint) {
         if (BoardCells.GetCell(oldPoint).isAlive(alphaSide) && BoardCells.GetCell(newPoint).isEmpty(alphaSide)) {
             if (PointDistance(oldPoint, newPoint) == 1) {
                 return true;
@@ -283,6 +285,11 @@ class BoardCells {
         }
     }
 
+    // 指定ポイントから指定ベクトル方向への移動可否
+    public static boolean CanMoveVector(boolean alphaSide, Point oldPoint, Point vectorPoint) {
+        return CanMovePoint(alphaSide, oldPoint, oldPoint.Plus(vectorPoint));
+    }
+
     // 指定ポイントから指定ポイントへの距離（X距離 + Y距離）
     public static Integer PointDistance(Point aPoint, Point bPoint) {
         return (Math.abs(aPoint.x - bPoint.x) + Math.abs(aPoint.y - bPoint.y));
@@ -290,7 +297,7 @@ class BoardCells {
 
     // 指定ポイントから指定ポイントへの移動
     public static boolean MovePoint(boolean alphaSide, Point oldPoint, Point newPoint) {
-        if (CanMoveAlly(alphaSide, oldPoint, newPoint)) {
+        if (CanMovePoint(alphaSide, oldPoint, newPoint)) {
             System.out.println("【戦艦移動】 " + oldPoint + " → " + newPoint);
             BoardCells.GetCell(newPoint).SetHp(alphaSide, BoardCells.GetCell(oldPoint).GetHp(alphaSide));
             BoardCells.GetCell(oldPoint).SetHp(alphaSide, -1);
@@ -312,8 +319,7 @@ class BoardCells {
 
     // 指定ポイントから指定ベクトル方向への移動
     public static boolean MoveVector(boolean alphaSide, Point oldPoint, Point vectorPoint) {
-        Point newPoint = new Point(oldPoint.x + vectorPoint.x, oldPoint.y + vectorPoint.y);
-        return MovePoint(alphaSide, oldPoint, newPoint);
+        return MovePoint(alphaSide, oldPoint, oldPoint.Plus(vectorPoint));
     }
 
     // 指定ポイントへ最も近い戦艦のポイントリスト
@@ -491,23 +497,27 @@ class Algorithm {
     }
 
     public void Think() {
-        if (BoardCells.lastAttackResult(!alphaSide) != null){
+        BoardCells.CanAttackSearch(alphaSide);
+        if (BoardCells.lastAttackResult(!alphaSide) != null) {
             // 敵に攻撃された
-            switch (BoardCells.lastAttackResult(!alphaSide)){
+            switch (BoardCells.lastAttackResult(!alphaSide)) {
                 case 3:
                 case 2:
                     allySumHp--;
-                    if (BoardCells.lastAttackResult(!alphaSide) == 3){
+                    if (BoardCells.lastAttackResult(!alphaSide) == 3) {
                         allyCount--;
                         // 敵に撃沈された
-                    }else{
+                    } else {
                         // 敵に命中された
-                        
-                        DoMove(BoardCells.lastAttackPoint(!alphaSide), );
-
-                        // やることリスト
-                        // 敵のポイントを特定できるならば反撃
-                        // 敵のポイントを特定できないならば移動・偽装移動
+                        ArrayList<Point> points = new ArrayList<Point>();
+                        for (Point point : BoardCells.PointCross(BoardCells.lastAttackPoint(!alphaSide), 2)) {
+                            if (BoardCells.CanMovePoint(alphaSide, BoardCells.lastAttackPoint(!alphaSide), point)) {
+                                points.add(point);
+                            }
+                        }
+                        // 移動できる範囲からランダムに移動
+                        Random random = new Random();
+                        DoMove(BoardCells.lastAttackPoint(!alphaSide), points.get(random.nextInt(points.size())));
                     }
                     break;
                 case 1:
@@ -522,10 +532,10 @@ class Algorithm {
                 case 3:
                 case 2:
                     enemySumHp--;
-                    if (BoardCells.lastAttackResult(alphaSide) == 3){
+                    if (BoardCells.lastAttackResult(alphaSide) == 3) {
                         enemyCount--;
                         // 敵を撃沈した
-                    }else{
+                    } else {
                         // 敵を命中した
                         if (BoardCells.lastMoveVector(!alphaSide) == null) {
                             // 敵が移動しなかった
@@ -549,18 +559,17 @@ class Algorithm {
                     ArrayList<Point> possibilityPoints = BoardCells.PointRound(BoardCells.lastAttackPoint(alphaSide));
                     if (BoardCells.lastMoveVector(!alphaSide) == null) {
                         // 敵が移動しなかった
-                        if (possibilityPoints.size() <= 3) {
-                            // 敵がいる可能性があるポイントが3以下なら最も探索できるポイントに攻撃する
-                            HashMap<Point, Integer> pointsRound = new HashMap<Point, Integer>();
-                            for (Point point : possibilityPoints) {
+                        HashMap<Point, Integer> pointsRound = new HashMap<Point, Integer>();
+                        for (Point point : possibilityPoints) {
+                            if (BoardCells.CanAttackPoint(alphaSide, point)) {
                                 pointsRound.put(point, BoardCells.PointRound(point).size());
                             }
-                            Integer maxRound = Collections.max(pointsRound.values());
-                            for (Map.Entry<Point, Integer> pointRound : pointsRound.entrySet()) {
-                                if (pointRound.getValue() == maxRound) {
-                                    DoAttack(pointRound.getKey());
-                                    return;
-                                }
+                        }
+                        Integer maxRound = Collections.max(pointsRound.values());
+                        for (Map.Entry<Point, Integer> pointRound : pointsRound.entrySet()) {
+                            if (pointRound.getValue() == maxRound) {
+                                DoAttack(pointRound.getKey());
+                                return;
                             }
                         }
                     } else {
@@ -574,26 +583,23 @@ class Algorithm {
             }
         }
         Random random = new Random();
-        if (random.nextDouble() < 0.7){
-            BoardCells.CanAttackSearch(alphaSide);
+        if (random.nextDouble() <= 1) {
             ArrayList<Point> points = new ArrayList<Point>();
-            for (Integer x = 0; x < BoardCells.GetBoardSize(); x++){
-                for (Integer y = 0; y < BoardCells.GetBoardSize(); y++){
-                    if (BoardCells.GetCell(x,y).GetCanAttack(alphaSide)){
-                        points.add(new Point(x,y));
+            for (Integer x = 0; x < BoardCells.GetBoardSize(); x++) {
+                for (Integer y = 0; y < BoardCells.GetBoardSize(); y++) {
+                    if (BoardCells.GetCell(x, y).GetCanAttack(alphaSide)) {
+                        points.add(new Point(x, y));
                     }
                 }
             }
             DoAttack(points.get(random.nextInt(points.size())));
-        }else{
-
         }
     }
 
-    private void DoMove(Point oldPoint,Point newPoint){
+    private void DoMove(Point oldPoint, Point newPoint) {
         System.out.println(newPoint.Minus(oldPoint) + " に移動！");
         BoardCells.MovePoint(alphaSide, oldPoint, newPoint);
-    } 
+    }
 
     private void DoAttack(Point point) {
         System.out.println(point + " に魚雷発射！");
@@ -619,13 +625,12 @@ class BattleShip {
         Scanner scanner = new Scanner(System.in);
         while (BoardCells.IsContinue()) {
             BoardCells.WriteBoardHp(alphaSide);
-            scanner.nextLine();
-            if (alphaSide){
+            if (alphaSide) {
                 alphAlgorithm.Think();
-            }else{
+            } else {
                 bravoAlgorithm.Think();
             }
-            alphaSide =! alphaSide;
+            alphaSide = !alphaSide;
         }
         System.out.println("ゲームが終了しました");
         scanner.nextLine();
