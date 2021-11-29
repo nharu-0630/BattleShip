@@ -662,10 +662,6 @@ class Board {
     }
 }
 
-class Master extends Board {
-
-}
-
 class Interface {
     public Integer allyCount;
     public Integer allySumHp;
@@ -696,6 +692,10 @@ class Interface {
 class Algorithm001 extends Interface {
     Algorithm001(boolean alphaSide) {
         super(alphaSide);
+        Board.GetCell(0, 0).SetHp(alphaSide, 3);
+        Board.GetCell(0, 4).SetHp(alphaSide, 3);
+        Board.GetCell(4, 0).SetHp(alphaSide, 3);
+        Board.GetCell(4, 4).SetHp(alphaSide, 3);
     }
 
     public void Think() {
@@ -806,9 +806,13 @@ class Algorithm001 extends Interface {
     }
 }
 
-class Algorithm002 extends Interface {
-    Algorithm002(boolean alphaSide) {
+class AlgorithmHuman extends Interface {
+    AlgorithmHuman(boolean alphaSide) {
         super(alphaSide);
+        Board.GetCell(0, 0).SetHp(alphaSide, 3);
+        Board.GetCell(0, 4).SetHp(alphaSide, 3);
+        Board.GetCell(4, 0).SetHp(alphaSide, 3);
+        Board.GetCell(4, 4).SetHp(alphaSide, 3);
     }
 
     public void Think() {
@@ -851,23 +855,7 @@ class BattleShip {
 
         Board.Initialize(true);
         Algorithm001 alphaAlgorithm = new Algorithm001(true);
-        Algorithm002 bravoAlgorithm = new Algorithm002(false);
-
-        /*
-         * Board.GetCell(0, 0).SetHp(true, 3);
-         * Board.GetCell(0, 4).SetHp(true, 3);
-         * Board.GetCell(4, 0).SetHp(true, 3);
-         * Board.GetCell(4, 4).SetHp(true, 3);
-         */
-
-        for (Point point : Board.RandomPoints(4)) {
-            Board.GetCell(point).SetHp(true, 3);
-        }
-
-        Board.GetCell(0, 0).SetHp(false, 3);
-        Board.GetCell(0, 4).SetHp(false, 3);
-        Board.GetCell(4, 0).SetHp(false, 3);
-        Board.GetCell(4, 4).SetHp(false, 3);
+        AlgorithmHuman bravoAlgorithm = new AlgorithmHuman(false);
 
         boolean alphaSide = true;
         while (Board.IsContinue(false)) {
