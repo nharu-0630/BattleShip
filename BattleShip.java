@@ -1,9 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.Collections;
+import java.util.*;
 
 class Cell {
     private Integer alphaHp;
@@ -123,6 +118,8 @@ class Point {
 }
 
 class Board {
+    public static Scanner scanner = new Scanner(System.in);
+
     private static final Integer boardSize = 5;
 
     private static Cell[][] cells;
@@ -414,9 +411,9 @@ class Board {
     }
 
     // 指定ポイントから指定ポイントへの移動
-    public static boolean MovePoint(boolean alphaSide, Point oldPoint, Point newPoint) {
+    public static boolean MovePoint(boolean alphaSide, Point oldPoint, Point newPoint, boolean isHack) {
         LogSide(alphaSide);
-        if (IsMoveEnablePoint(alphaSide, oldPoint, newPoint)) {
+        if (IsMoveEnablePoint(alphaSide, oldPoint, newPoint) || isHack) {
             LogLine("移動】 " + oldPoint + " → " + newPoint);
             Board.GetCell(newPoint).SetHp(alphaSide, Board.GetCell(oldPoint).GetHp(alphaSide));
             Board.GetCell(oldPoint).SetHp(alphaSide, -1);
@@ -437,8 +434,8 @@ class Board {
     }
 
     // 指定ポイントから指定ベクトル方向への移動
-    public static boolean MoveVector(boolean alphaSide, Point oldPoint, Point vectorPoint) {
-        return MovePoint(alphaSide, oldPoint, oldPoint.Plus(vectorPoint));
+    public static boolean MoveVector(boolean alphaSide, Point oldPoint, Point vectorPoint, boolean isHack) {
+        return MovePoint(alphaSide, oldPoint, oldPoint.Plus(vectorPoint), isHack);
     }
 
     // 指定ポイントへ最も近い戦艦のポイントリスト
@@ -534,9 +531,9 @@ class Board {
     }
 
     // 指定ポイントへの攻撃
-    public static boolean AttackPoint(boolean alphaSide, Point point) {
+    public static boolean AttackPoint(boolean alphaSide, Point point, boolean isHack) {
         LogSide(alphaSide);
-        if (IsAttackEnablePoint(alphaSide, point)) {
+        if (IsAttackEnablePoint(alphaSide, point) || isHack) {
             Integer attackResult = 0;
             LogLine("攻撃】" + point);
             if (Board.GetCell(point).isAlive(!alphaSide)) {
@@ -678,240 +675,13 @@ class Interface {
         enemySumHp = 12;
     }
 
-    public void DoMove(Point oldPoint, Point newPoint) {
+    public void DoMove(Point oldPoint, Point newPoint, boolean isHack) {
         Board.LogLine(newPoint.Minus(oldPoint) + " に移動！");
-        Board.MovePoint(alphaSide, oldPoint, newPoint);
+        Board.MovePoint(alphaSide, oldPoint, newPoint, isHack);
     }
 
-    public void DoAttack(Point point) {
+    public void DoAttack(Point point, boolean isHack) {
         Board.LogLine(point + " に魚雷発射！");
-        Board.AttackPoint(alphaSide, point);
-    }
-}
-
-class Algorithm001 extends Interface {
-    Algorithm001(boolean alphaSide) {
-        super(alphaSide);
-        Board.GetCell(0, 0).SetHp(alphaSide, 3);
-        Board.GetCell(0, 4).SetHp(alphaSide, 3);
-        Board.GetCell(4, 0).SetHp(alphaSide, 3);
-        Board.GetCell(4, 4).SetHp(alphaSide, 3);
-    }
-
-    public void Think() {
-        Board.AttackEnableSearch(alphaSide);
-        if (Board.IsLastMove(!alphaSide)) {
-            if (alphaSide) {
-                Board.ClearValue(alphaSide);
-            } else {
-                Board.NormalizeValue(alphaSide);
-            }
-        }
-        if (Board.IsLastAttack(!alphaSide)) {
-            // 敵に攻撃された
-            Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValue(alphaSide, 0);
-            for (Point point : Board.PointRound(Board.GetLastAttackPoint(!alphaSide))) {
-                Board.GetCell(point).SetValue(alphaSide, Board.GetCell(point).GetValue(alphaSide) + 1);
-            }
-            switch (Board.GetLastAttackResult(!alphaSide)) {
-                case 3:
-                case 2:
-                    allySumHp--;
-                    if (Board.GetLastAttackResult(!alphaSide) == 3) {
-                        allyCount--;
-                        // 敵に撃沈された
-                    } else {
-                        // 敵に命中された
-                        ArrayList<Point> points = new ArrayList<Point>();
-                        for (Point point : Board.PointCross(Board.GetLastAttackPoint(!alphaSide), 2)) {
-                            if (Board.IsMoveEnablePoint(alphaSide, Board.GetLastAttackPoint(!alphaSide),
-                                    point)) {
-                                points.add(point);
-                            }
-                        }
-                        // 移動できる範囲からランダムに移動
-                        DoMove(Board.GetLastAttackPoint(!alphaSide), Board.RandomGet(points));
-                        return;
-                    }
-                    break;
-                case 1:
-                    // 波高しされた
-
-                    break;
-            }
-        }
-        if (Board.IsLastAttack(alphaSide)) {
-            // 敵を攻撃した
-            switch (Board.GetLastAttackResult(alphaSide)) {
-                case 3:
-                case 2:
-                    enemySumHp--;
-                    if (Board.GetLastAttackResult(alphaSide) == 3) {
-                        enemyCount--;
-                        // 敵を撃沈した
-                        Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0);
-                    } else {
-                        // 敵を命中した
-                        Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 10);
-                        if (Board.IsLastMove(!alphaSide)) {
-                            // 敵が移動した
-                            if (enemyCount == 1) {
-                                // 敵が1機のみ
-                                Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0);
-                                Board.GetCell(Board.GetLastAttackPoint(alphaSide)
-                                        .Plus(Board.GetLastMoveVector(!alphaSide))).SetValue(alphaSide, 10);
-                                if (Board.IsAttackEnablePoint(alphaSide, Board.GetLastAttackPoint(alphaSide)
-                                        .Plus(Board.GetLastMoveVector(!alphaSide)))) {
-                                    // 攻撃可能範囲内なら攻撃する
-                                    DoAttack(Board.GetLastAttackPoint(alphaSide)
-                                            .Plus(Board.GetLastMoveVector(!alphaSide)));
-                                    return;
-                                }
-                            } else {
-                                // 敵が2機以上
-                            }
-                        } else {
-                            // 敵が移動しなかった
-                            DoAttack(Board.GetLastAttackPoint(alphaSide));
-                            return;
-                        }
-                    }
-                    break;
-                case 1:
-                    // 敵を波高しした
-                    Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0);
-                    for (Point point : Board.PointRound(Board.GetLastAttackPoint(alphaSide))) {
-                        Board.GetCell(point).SetValue(alphaSide,
-                                Board.GetCell(point).GetValue(alphaSide) + 1);
-                    }
-                    if (Board.IsLastMove(!alphaSide)) {
-                        // 敵が移動した
-
-                    } else {
-                        // 敵が移動しなかった
-
-                    }
-                    break;
-                case 0:
-                    // 前ターンで敵に命中しなかった
-                    Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0);
-                    for (Point point : Board.PointRound(Board.GetLastAttackPoint(alphaSide))) {
-                        Board.GetCell(point).SetValue(alphaSide, 0);
-                    }
-                    break;
-            }
-        }
-        DoAttack(Board.RandomGet(Board.MaxValuePoints(alphaSide, true)));
-        return;
-    }
-}
-
-class AlgorithmHuman extends Interface {
-    AlgorithmHuman(boolean alphaSide) {
-        super(alphaSide);
-        Board.GetCell(0, 0).SetHp(alphaSide, 3);
-        Board.GetCell(0, 4).SetHp(alphaSide, 3);
-        Board.GetCell(4, 0).SetHp(alphaSide, 3);
-        Board.GetCell(4, 4).SetHp(alphaSide, 3);
-    }
-
-    public void Think() {
-        Board.AttackEnableSearch(alphaSide);
-        Board.WriteBoardHp(alphaSide);
-        Board.WriteBoardIsAttack(alphaSide);
-        System.out.print("a(Attack), m(Move): ");
-        String action = BattleShip.scanner.nextLine();
-        switch (action) {
-            case "a":
-                System.out.print("x,y: ");
-                String[] tempArray = BattleShip.scanner.nextLine().split(",");
-                Point point = new Point(Integer.parseInt(tempArray[0]), Integer.parseInt(tempArray[1]));
-                DoAttack(point);
-                break;
-            case "m":
-                System.out.print("x,y: ");
-                tempArray = BattleShip.scanner.nextLine().split(",");
-                Point oldPoint = new Point(Integer.parseInt(tempArray[0]), Integer.parseInt(tempArray[1]));
-                System.out.print("x,y: ");
-                tempArray = BattleShip.scanner.nextLine().split(",");
-                Point newPoint = new Point(Integer.parseInt(tempArray[0]), Integer.parseInt(tempArray[1]));
-                DoMove(oldPoint, newPoint);
-                break;
-        }
-    }
-}
-
-class BattleShip {
-    public static final Integer maxTurnCount = 60;
-
-    public static Scanner scanner = new Scanner(System.in);
-
-    public static void main(String args[]) {
-        CpuVsHuman();
-        // DeepTry(1000);
-    }
-
-    public static void CpuVsHuman() {
-
-        Board.Initialize(true);
-        Algorithm001 alphaAlgorithm = new Algorithm001(true);
-        AlgorithmHuman bravoAlgorithm = new AlgorithmHuman(false);
-
-        boolean alphaSide = true;
-        while (Board.IsContinue(false)) {
-            if (alphaSide) {
-                alphaAlgorithm.Think();
-            } else {
-                bravoAlgorithm.Think();
-            }
-            alphaSide = !alphaSide;
-            if (Board.GetTurnCount() >= maxTurnCount) {
-                Board.IsContinue(true);
-                break;
-            }
-        }
-    }
-
-    public static void DeepTry(Integer maxGameCount) {
-        Integer alphaWinCount = 0;
-        Integer bravoWinCount = 0;
-        for (Integer i = 0; i < maxGameCount; i++) {
-            Board.Initialize(false);
-
-            Algorithm001 alphaAlgorithm = new Algorithm001(true);
-            Algorithm001 bravoAlgorithm = new Algorithm001(false);
-
-            Board.GetCell(0, 0).SetHp(true, 3);
-            Board.GetCell(3, 1).SetHp(true, 3);
-            Board.GetCell(1, 3).SetHp(true, 3);
-            Board.GetCell(4, 4).SetHp(true, 3);
-
-            Board.GetCell(0, 0).SetHp(false, 3);
-            Board.GetCell(0, 4).SetHp(false, 3);
-            Board.GetCell(4, 0).SetHp(false, 3);
-            Board.GetCell(4, 4).SetHp(false, 3);
-
-            boolean alphaSide = true;
-            while (Board.IsContinue(false)) {
-                if (alphaSide) {
-                    alphaAlgorithm.Think();
-                } else {
-                    bravoAlgorithm.Think();
-                }
-                alphaSide = !alphaSide;
-                if (Board.GetTurnCount() >= maxTurnCount) {
-                    Board.IsContinue(true);
-                    break;
-                }
-            }
-            if (Board.GetAlphaWin()) {
-                alphaWinCount++;
-            } else if (Board.GetBravoWin()) {
-                bravoWinCount++;
-            }
-        }
-        System.out.println("α勝利数 = " + alphaWinCount);
-        System.out.println("β勝利数 = " + bravoWinCount);
-        System.out.println("引き分け数 = " + (maxGameCount - alphaWinCount - bravoWinCount));
+        Board.AttackPoint(alphaSide, point, isHack);
     }
 }
