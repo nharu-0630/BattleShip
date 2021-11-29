@@ -53,7 +53,7 @@ class Cell {
 
     public void SetIsAttak(boolean alphaSide, boolean isAttack) {
         if (isAttack) {
-            if (GetIsEmpty(alphaSide)) {
+            if (IsEmpty(alphaSide)) {
                 if (alphaSide) {
                     alphaIsAttack = true;
                 } else {
@@ -77,7 +77,7 @@ class Cell {
         }
     }
 
-    public boolean GetIsAlive(boolean alphaSide) {
+    public boolean IsAlive(boolean alphaSide) {
         if (alphaSide) {
             return alphaHp > 0;
         } else {
@@ -85,7 +85,7 @@ class Cell {
         }
     }
 
-    public boolean GetIsEmpty(boolean alphaSide) {
+    public boolean IsEmpty(boolean alphaSide) {
         if (alphaSide) {
             return alphaHp == -1;
         } else {
@@ -113,7 +113,7 @@ class Point {
 
     @Override
     public String toString() {
-        return "(x, y) = " + x + ", " + y;
+        return "(" + x + ", " + y + ")";
     }
 }
 
@@ -136,8 +136,8 @@ class Board {
 
     private static boolean visibleLog;
 
-    Board() {
-        Initialize(true);
+    Board(boolean visibleLog) {
+        Initialize(visibleLog);
     }
 
     public static void Initialize(boolean visibleLog) {
@@ -195,7 +195,7 @@ class Board {
         cells[point.x][point.y] = cell;
     }
 
-    public static void SetCell(int x, Integer y, Cell cell) {
+    public static void SetCell(Integer x, Integer y, Cell cell) {
         cells[x][y] = cell;
     }
 
@@ -245,7 +245,6 @@ class Board {
         }
     }
 
-    // ゲーム続行の可否
     public static boolean IsContinue(boolean interrupt) {
         Integer alphaCount = ShipPoints(true).size();
         Integer bravoCount = ShipPoints(false).size();
@@ -297,7 +296,6 @@ class Board {
         return true;
     }
 
-    // 重複を除くランダムなポイントリスト
     public static ArrayList<Point> RandomPoints(Integer count) {
         ArrayList<Point> points = new ArrayList<Point>();
         Random random = new Random();
@@ -311,19 +309,17 @@ class Board {
         return points;
     }
 
-    // ランダムな4箇所に配置
     public static void SetRandom4Points(boolean alphaSide) {
         for (Point point : RandomPoints(4)) {
             GetCell(point).SetHp(alphaSide, 3);
         }
     }
 
-    // 値が最大であるポイントリスト
     public static ArrayList<Point> MaxValuePoints(boolean alphaSide, boolean isAttackEnable) {
         HashMap<Point, Integer> pointsValue = new HashMap<Point, Integer>();
         for (Integer x = 0; x < Board.GetBoardSize(); x++) {
             for (Integer y = 0; y < Board.GetBoardSize(); y++) {
-                if ((isAttackEnable && Board.IsAttackEnablePoint(alphaSide, new Point(x, y))) || !isAttackEnable) {
+                if ((isAttackEnable && Board.IsAttackPoint(alphaSide, new Point(x, y))) || !isAttackEnable) {
                     pointsValue.put(new Point(x, y), Board.GetCell(x, y).GetValue(alphaSide));
                 }
             }
@@ -338,7 +334,6 @@ class Board {
         return points;
     }
 
-    // 指定ポイントから8方向のポイントリスト
     public static ArrayList<Point> PointRound(Point point) {
         ArrayList<Point> points = new ArrayList<Point>();
         if (point.x > 0) {
@@ -368,7 +363,6 @@ class Board {
         return points;
     }
 
-    // 指定ポイントから4方向のポイントリスト
     public static ArrayList<Point> PointCross(Point point, Integer length) {
         ArrayList<Point> points = new ArrayList<Point>();
         for (Integer i = 1; i <= length; i++) {
@@ -388,9 +382,8 @@ class Board {
         return points;
     }
 
-    // 指定ポイントから指定ポイントへの移動可否
     public static boolean IsMoveEnablePoint(boolean alphaSide, Point oldPoint, Point newPoint) {
-        if (Board.GetCell(oldPoint).GetIsAlive(alphaSide) && Board.GetCell(newPoint).GetIsEmpty(alphaSide)) {
+        if (Board.GetCell(oldPoint).IsAlive(alphaSide) && Board.GetCell(newPoint).IsEmpty(alphaSide)) {
             if (PointDistance(oldPoint, newPoint) == 1) {
                 return true;
             } else if (Math.abs(oldPoint.x - newPoint.x) == 2 && oldPoint.y == newPoint.y) {
@@ -405,17 +398,14 @@ class Board {
         }
     }
 
-    // 指定ポイントから指定ベクトル方向への移動可否
     public static boolean IsMoveEnableVector(boolean alphaSide, Point oldPoint, Point vectorPoint) {
         return IsMoveEnablePoint(alphaSide, oldPoint, oldPoint.Plus(vectorPoint));
     }
 
-    // 指定ポイントから指定ポイントへの距離（X距離 + Y距離）
     public static Integer PointDistance(Point aPoint, Point bPoint) {
         return (Math.abs(aPoint.x - bPoint.x) + Math.abs(aPoint.y - bPoint.y));
     }
 
-    // 指定ポイントから指定ポイントへの移動
     public static boolean MovePoint(boolean alphaSide, Point oldPoint, Point newPoint) {
         LogSide(alphaSide);
         if (IsMoveEnablePoint(alphaSide, oldPoint, newPoint)) {
@@ -438,8 +428,11 @@ class Board {
         }
     }
 
-    // 指定ベクトル方向への移動（強制）
-    public static void MovePointForce(boolean alphaSide, Point vectorPoint) {
+    public static boolean MoveVector(boolean alphaSide, Point oldPoint, Point vectorPoint) {
+        return MovePoint(alphaSide, oldPoint, oldPoint.Plus(vectorPoint));
+    }
+
+    public static void MoveVectorForce(boolean alphaSide, Point vectorPoint) {
         LogSide(alphaSide);
         LogLine("移動】 " + vectorPoint);
         if (alphaSide) {
@@ -453,12 +446,6 @@ class Board {
         }
     }
 
-    // 指定ポイントから指定ベクトル方向への移動
-    public static boolean MoveVector(boolean alphaSide, Point oldPoint, Point vectorPoint) {
-        return MovePoint(alphaSide, oldPoint, oldPoint.Plus(vectorPoint));
-    }
-
-    // 指定ポイントへ最も近い戦艦のポイントリスト
     public static ArrayList<Point> ShortPoint(boolean alphaSide, Point point) {
         HashMap<Point, Integer> pointsDistance = new HashMap<Point, Integer>();
         for (Point shipPoint : ShipPoints(alphaSide)) {
@@ -474,7 +461,6 @@ class Board {
         return points;
     }
 
-    // 値をすべて初期化
     public static void ClearValue(boolean alphaSide) {
         for (Integer x = 0; x < Board.GetBoardSize(); x++) {
             for (Integer y = 0; y < Board.GetBoardSize(); y++) {
@@ -483,7 +469,6 @@ class Board {
         }
     }
 
-    // 値をすべて平均化
     public static void NormalizeValue(boolean alphaSide) {
         for (Integer x = 0; x < Board.GetBoardSize(); x++) {
             for (Integer y = 0; y < Board.GetBoardSize(); y++) {
@@ -499,12 +484,11 @@ class Board {
         }
     }
 
-    // 戦艦のポイントリスト
     public static ArrayList<Point> ShipPoints(boolean alphaSide) {
         ArrayList<Point> points = new ArrayList<Point>();
         for (Integer x = 0; x < Board.GetBoardSize(); x++) {
             for (Integer y = 0; y < Board.GetBoardSize(); y++) {
-                if (Board.GetCell(x, y).GetIsAlive(alphaSide)) {
+                if (Board.GetCell(x, y).IsAlive(alphaSide)) {
                     points.add(new Point(x, y));
                 }
             }
@@ -512,8 +496,7 @@ class Board {
         return points;
     }
 
-    // 攻撃可能範囲の検索
-    public static void AttackEnableSearch(boolean alphaSide) {
+    public static void AttackPointsSearch(boolean alphaSide) {
         for (Integer x = 0; x < Board.GetBoardSize(); x++) {
             for (Integer y = 0; y < Board.GetBoardSize(); y++) {
                 Board.GetCell(x, y).SetIsAttak(alphaSide, false);
@@ -531,8 +514,7 @@ class Board {
         }
     }
 
-    // 攻撃可能なポイントリスト
-    public static ArrayList<Point> AttackEnablePoints(boolean alphaSide) {
+    public static ArrayList<Point> AttackPoints(boolean alphaSide) {
         ArrayList<Point> points = new ArrayList<Point>();
         for (Integer x = 0; x < Board.GetBoardSize(); x++) {
             for (Integer y = 0; y < Board.GetBoardSize(); y++) {
@@ -544,20 +526,18 @@ class Board {
         return points;
     }
 
-    // 指定ポイントへの攻撃可否
-    public static boolean IsAttackEnablePoint(boolean alphaSide, Point point) {
-        AttackEnableSearch(alphaSide);
+    public static boolean IsAttackPoint(boolean alphaSide, Point point) {
+        AttackPointsSearch(alphaSide);
         return Board.GetCell(point).GetIsAttack(alphaSide);
     }
 
-    // 指定ポイントへの攻撃
     public static boolean AttackPoint(boolean alphaSide, Point point, boolean judgeResult) {
         LogSide(alphaSide);
-        if (IsAttackEnablePoint(alphaSide, point)) {
+        if (IsAttackPoint(alphaSide, point)) {
             Integer attackResult = null;
             LogLine("攻撃】" + point);
             if (judgeResult) {
-                if (Board.GetCell(point).GetIsAlive(!alphaSide)) {
+                if (Board.GetCell(point).IsAlive(!alphaSide)) {
                     Board.GetCell(point).SetHp(!alphaSide, Board.GetCell(point).GetHp(!alphaSide) - 1);
                     // 命中！
                     attackResult = 2;
@@ -573,7 +553,7 @@ class Board {
                     LogLine("ハズレ！");
                 }
                 for (Point roundPoint : PointRound(point)) {
-                    if (Board.GetCell(roundPoint).GetIsAlive(!alphaSide)) {
+                    if (Board.GetCell(roundPoint).IsAlive(!alphaSide)) {
                         // 波高し！
                         attackResult = 1;
                         LogLine("波高し！");
@@ -605,7 +585,6 @@ class Board {
         }
     }
 
-    // 指定ポイントへの攻撃結果を上書き
     public static void AttackResultTransfer(boolean alphaSide, Integer attackResult) {
         switch (attackResult) {
             case 3:
@@ -628,12 +607,11 @@ class Board {
         }
     }
 
-    // 指定ポイントへの攻撃（強制）
     public static void AttackPointForce(boolean alphaSide, Point point) {
         LogSide(alphaSide);
         Integer attackResult = null;
         LogLine("攻撃】" + point);
-        if (Board.GetCell(point).GetIsAlive(!alphaSide)) {
+        if (Board.GetCell(point).IsAlive(!alphaSide)) {
             Board.GetCell(point).SetHp(!alphaSide, Board.GetCell(point).GetHp(!alphaSide) - 1);
             // 命中！
             attackResult = 2;
@@ -649,7 +627,7 @@ class Board {
             LogLine("ハズレ！");
         }
         for (Point roundPoint : PointRound(point)) {
-            if (Board.GetCell(roundPoint).GetIsAlive(!alphaSide)) {
+            if (Board.GetCell(roundPoint).IsAlive(!alphaSide)) {
                 // 波高し！
                 attackResult = 1;
                 LogLine("波高し！");
@@ -666,7 +644,6 @@ class Board {
         }
     }
 
-    // 盤面にHPを表示
     public static void WriteBoardHp(boolean alphaSide) {
         LogSide(alphaSide);
         LogLine("盤面】HP");
@@ -692,10 +669,9 @@ class Board {
         }
     }
 
-    // 盤面に攻撃可能範囲を表示
     public static void WriteBoardIsAttack(boolean alphaSide) {
         LogSide(alphaSide);
-        AttackEnableSearch(alphaSide);
+        AttackPointsSearch(alphaSide);
         LogLine("盤面】攻撃可能範囲");
         Log("  ");
         for (Integer i = 0; i < Board.GetBoardSize(); i++) {
@@ -735,7 +711,6 @@ class Board {
         }
     }
 
-    // ポイントリストからランダムに選ぶ
     public static Point RandomGet(ArrayList<Point> points) {
         Random random = new Random();
         return points.get(random.nextInt(points.size()));
@@ -772,7 +747,7 @@ class Interface {
 
     public void DoMoveForce(Point vectorPoint) {
         Board.LogLine(vectorPoint + " に移動！");
-        Board.MovePointForce(alphaSide, vectorPoint);
+        Board.MoveVectorForce(alphaSide, vectorPoint);
     }
 
     public void DoAttackForce(Point point) {

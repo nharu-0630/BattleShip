@@ -6,7 +6,7 @@ class Algorithm001 extends Interface {
     }
 
     public void Think() {
-        Board.AttackEnableSearch(alphaSide);
+        Board.AttackPointsSearch(alphaSide);
         if (Board.IsLastMove(!alphaSide)) {
             if (alphaSide) {
                 Board.ClearValue(alphaSide);
@@ -67,7 +67,7 @@ class Algorithm001 extends Interface {
                                 Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0);
                                 Board.GetCell(Board.GetLastAttackPoint(alphaSide)
                                         .Plus(Board.GetLastMoveVector(!alphaSide))).SetValue(alphaSide, 10);
-                                if (Board.IsAttackEnablePoint(alphaSide, Board.GetLastAttackPoint(alphaSide)
+                                if (Board.IsAttackPoint(alphaSide, Board.GetLastAttackPoint(alphaSide)
                                         .Plus(Board.GetLastMoveVector(!alphaSide)))) {
                                     // 攻撃可能範囲内なら攻撃する
                                     DoAttack(Board.GetLastAttackPoint(alphaSide)

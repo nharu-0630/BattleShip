@@ -40,7 +40,7 @@ public class ReleasePlay {
                         System.out.print("x,y: ");
                         tempArray = scanner.nextLine().split(",");
                         Point vectorPoint = new Point(Integer.parseInt(tempArray[0]), Integer.parseInt(tempArray[1]));
-                        Board.MovePointForce(alphaSide, vectorPoint);
+                        Board.MoveVectorForce(alphaSide, vectorPoint);
                         break;
                 }
             }
