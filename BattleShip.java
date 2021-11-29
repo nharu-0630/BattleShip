@@ -18,6 +18,8 @@ class Cell {
     Cell() {
         alphaHp = -1;
         bravoHp = -1;
+        alphaValue = 0;
+        bravoValue = 0;
         alphaCanAttack = false;
         bravoCanAttack = false;
     }
@@ -390,7 +392,7 @@ class BoardCells {
     }
 
     // 攻撃可能範囲の検索
-    public static void CanAttackSearch(boolean alphaSide) {
+    public static void AttackEnableSearch(boolean alphaSide) {
         for (Integer x = 0; x < BoardCells.GetBoardSize(); x++) {
             for (Integer y = 0; y < BoardCells.GetBoardSize(); y++) {
                 BoardCells.GetCell(x, y).SetCanAttak(alphaSide, false);
@@ -407,9 +409,22 @@ class BoardCells {
         }
     }
 
+    // 攻撃可能なポイントリスト
+    public static ArrayList<Point> AttackEnablePoints(boolean alphaSide) {
+        ArrayList<Point> points = new ArrayList<Point>();
+        for (Integer x = 0; x < BoardCells.GetBoardSize(); x++) {
+            for (Integer y = 0; y < BoardCells.GetBoardSize(); y++) {
+                if (BoardCells.GetCell(x, y).GetCanAttack(alphaSide)) {
+                    points.add(new Point(x, y));
+                }
+            }
+        }
+        return points;
+    }
+
     // 指定ポイントへの攻撃可否
-    public static boolean CanAttackPoint(boolean alphaSide, Point point) {
-        CanAttackSearch(alphaSide);
+    public static boolean CanAttackEnablePoint(boolean alphaSide, Point point) {
+        AttackEnableSearch(alphaSide);
         return BoardCells.GetCell(point).GetCanAttack(alphaSide);
     }
 
@@ -420,7 +435,7 @@ class BoardCells {
         } else {
             System.out.print("【β");
         }
-        if (CanAttackPoint(alphaSide, point)) {
+        if (CanAttackEnablePoint(alphaSide, point)) {
             Integer attackResult = 0;
             System.out.println("攻撃】" + point);
             if (BoardCells.GetCell(point).isAlive(!alphaSide)) {
@@ -568,7 +583,7 @@ class Algorithm {
     }
 
     public void Think() {
-        BoardCells.CanAttackSearch(alphaSide);
+        BoardCells.AttackEnableSearch(alphaSide);
         if (BoardCells.IsLastAttack(!alphaSide)) {
             // 敵に攻撃された
             switch (BoardCells.GetLastAttackResult(!alphaSide)) {
@@ -617,7 +632,7 @@ class Algorithm {
                             // 敵が移動した
                             if (enemyCount == 1) {
                                 // 敵が1機のみ
-                                if (BoardCells.CanAttackPoint(alphaSide, BoardCells.GetLastAttackPoint(alphaSide)
+                                if (BoardCells.CanAttackEnablePoint(alphaSide, BoardCells.GetLastAttackPoint(alphaSide)
                                         .Plus(BoardCells.GetLastMoveVector(!alphaSide)))) {
                                     // 攻撃可能範囲内なら攻撃する
                                     DoAttack(BoardCells.GetLastAttackPoint(alphaSide)
@@ -649,15 +664,8 @@ class Algorithm {
         }
         Random random = new Random();
         if (random.nextDouble() <= 1) {
-            ArrayList<Point> points = new ArrayList<Point>();
-            for (Integer x = 0; x < BoardCells.GetBoardSize(); x++) {
-                for (Integer y = 0; y < BoardCells.GetBoardSize(); y++) {
-                    if (BoardCells.GetCell(x, y).GetCanAttack(alphaSide)) {
-                        points.add(new Point(x, y));
-                    }
-                }
-            }
-            DoAttack(points.get(random.nextInt(points.size())));
+            DoAttack(BoardCells.AttackEnablePoints(alphaSide).get(random.nextInt(
+                    BoardCells.AttackEnablePoints(alphaSide).size())));
             return;
         }
     }
