@@ -141,7 +141,7 @@ RTX 3080 Ti
 | DoAttack*     | Point        |      | ポイントへの攻撃   |                 |
 | DoAttackForce | Point        |      | ポイントへの強制攻撃 |                 |
 
-メソッド名に`*`がついているメソッドは`Algorithm`内で一度限り使用可能
+メソッド名に`*`がついているメソッドのみ`Algorithm`内で一度限り使用可能
 
 ## AlgorithmXXX.java
 
