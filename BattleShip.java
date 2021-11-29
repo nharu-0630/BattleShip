@@ -311,6 +311,13 @@ class Board {
         return points;
     }
 
+    // ランダムな4箇所に配置
+    public static void SetRandom4Points(boolean alphaSide) {
+        for (Point point : RandomPoints(4)) {
+            GetCell(point).SetHp(alphaSide, 3);
+        }
+    }
+
     // 値が最大であるポイントリスト
     public static ArrayList<Point> MaxValuePoints(boolean alphaSide, boolean isAttackEnable) {
         HashMap<Point, Integer> pointsValue = new HashMap<Point, Integer>();

@@ -5,10 +5,6 @@ class AlgorithmHuman extends Interface {
 
     AlgorithmHuman(boolean alphaSide, boolean isEnemySecret) {
         super(alphaSide, isEnemySecret);
-        Board.GetCell(0, 0).SetHp(alphaSide, 3);
-        Board.GetCell(0, 4).SetHp(alphaSide, 3);
-        Board.GetCell(4, 0).SetHp(alphaSide, 3);
-        Board.GetCell(4, 4).SetHp(alphaSide, 3);
     }
 
     public void Think() {

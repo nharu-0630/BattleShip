@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class DebugPlay {
     public static final Integer maxTurnCount = 60;
 
@@ -11,7 +13,18 @@ public class DebugPlay {
         Algorithm001 alphaAlgorithm = new Algorithm001(true, false);
         AlgorithmHuman bravoAlgorithm = new AlgorithmHuman(false, false);
 
-        boolean alphaSide = true;
+        Board.GetCell(0, 0).SetHp(true, 3);
+        Board.GetCell(3, 1).SetHp(true, 3);
+        Board.GetCell(1, 3).SetHp(true, 3);
+        Board.GetCell(4, 4).SetHp(true, 3);
+
+        Board.GetCell(0, 0).SetHp(false, 3);
+        Board.GetCell(0, 4).SetHp(false, 3);
+        Board.GetCell(4, 0).SetHp(false, 3);
+        Board.GetCell(4, 4).SetHp(false, 3);
+
+        Random random = new Random();
+        boolean alphaSide = random.nextDouble() <= 0.5;
         while (Board.IsContinue(false)) {
             if (alphaSide) {
                 alphaAlgorithm.Think();
@@ -40,18 +53,9 @@ public class DebugPlay {
             Board.GetCell(1, 3).SetHp(true, 3);
             Board.GetCell(4, 4).SetHp(true, 3);
 
-            /*
-             * Board.GetCell(0, 0).SetHp(false, 3);
-             * Board.GetCell(0, 4).SetHp(false, 3);
-             * Board.GetCell(4, 0).SetHp(false, 3);
-             * Board.GetCell(4, 4).SetHp(false, 3);
-             */
+            Board.SetRandom4Points(false);
 
-            for (Point point : Board.RandomPoints(4)) {
-                Board.GetCell(point).SetHp(false, 3);
-            }
-
-            boolean alphaSide = true;
+            boolean alphaSide = (i % 2 == 0);
             while (Board.IsContinue(false)) {
                 if (alphaSide) {
                     alphaAlgorithm.Think();
@@ -70,8 +74,14 @@ public class DebugPlay {
                 bravoWinCount++;
             }
         }
-        System.out.println("α勝利数 = " + alphaWinCount);
-        System.out.println("β勝利数 = " + bravoWinCount);
-        System.out.println("引き分け数 = " + (maxGameCount - alphaWinCount - bravoWinCount));
+        System.out.println(
+                "α勝利数 = " + alphaWinCount + " (" + Math.round(alphaWinCount * 100.0 / maxGameCount)
+                        + "%)");
+        System.out.println(
+                "β勝利数 = " + bravoWinCount + " (" + Math.round(bravoWinCount * 100.0 / maxGameCount)
+                        + "%)");
+        System.out.println("引き分け数 = " + (maxGameCount - alphaWinCount - bravoWinCount) + " ("
+                + Math.round((maxGameCount - alphaWinCount - bravoWinCount) * 100.0 / maxGameCount)
+                + "%)");
     }
 }
