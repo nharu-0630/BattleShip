@@ -680,7 +680,7 @@ class BattleShip {
                 bravoAlgorithm.Think();
             }
             alphaSide = !alphaSide;
-            if (BoardCells.GetTurnCount() == maxTurnCount) {
+            if (BoardCells.GetTurnCount() >= maxTurnCount) {
                 BoardCells.IsContinue(true);
                 break;
             }
