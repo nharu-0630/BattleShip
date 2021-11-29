@@ -124,8 +124,12 @@ class Point {
 
 class BoardCells {
     private static final Integer boardSize = 5;
+
     private static Cell[][] boardCells;
     private static Integer turnCount;
+
+    private static boolean alphaWin;
+    private static boolean bravoWin;
 
     private static Point lastAlphaAttackPoint;
     private static Integer lastAlphaAttackResult;
@@ -135,7 +139,13 @@ class BoardCells {
     private static Integer lastBravoAttackResult;
     private static Point lastBravoMoveVector;
 
+    private static boolean visibleLog;
+
     BoardCells() {
+        Initialize(true);
+    }
+
+    public static void Initialize(boolean visibleLog) {
         boardCells = new Cell[GetBoardSize()][GetBoardSize()];
         for (Integer x = 0; x < GetBoardSize(); x++) {
             for (Integer y = 0; y < GetBoardSize(); y++) {
@@ -143,6 +153,27 @@ class BoardCells {
             }
         }
         turnCount = 0;
+
+        alphaWin = false;
+        bravoWin = false;
+
+        lastAlphaAttackPoint = null;
+        lastAlphaAttackResult = null;
+        lastAlphaMoveVector = null;
+
+        lastBravoAttackPoint = null;
+        lastBravoAttackResult = null;
+        lastBravoMoveVector = null;
+
+        BoardCells.visibleLog = visibleLog;
+    }
+
+    public static boolean GetAlphaWin() {
+        return alphaWin;
+    }
+
+    public static boolean GetBravoWin() {
+        return bravoWin;
     }
 
     public static void SetTurnCount() {
@@ -197,41 +228,73 @@ class BoardCells {
         }
     }
 
+    public static void LogSide(boolean alphaSide) {
+        if (visibleLog) {
+            if (alphaSide) {
+                System.out.print("【α");
+            } else {
+                System.out.print("【β");
+            }
+        }
+    }
+
+    public static void LogLine(String line) {
+        if (visibleLog) {
+            System.out.println(line);
+        }
+    }
+
+    public static void Log(String line) {
+        if (visibleLog) {
+            System.out.print(line);
+        }
+    }
+
     // ゲーム続行の可否
     public static boolean IsContinue(boolean interrupt) {
         Integer alphaCount = ShipPoints(true).size();
         Integer bravoCount = ShipPoints(false).size();
         Integer alphaSumHp = 0;
         for (Point point : ShipPoints(true)) {
-            alphaSumHp += BoardCells.GetCell(point).GetHp(true);
+            alphaSumHp += GetCell(point).GetHp(true);
         }
         Integer bravoSumHp = 0;
         for (Point point : ShipPoints(false)) {
-            bravoSumHp += BoardCells.GetCell(point).GetHp(false);
+            bravoSumHp += GetCell(point).GetHp(false);
         }
         if (!interrupt) {
-            BoardCells.SetTurnCount();
+            SetTurnCount();
         }
-        System.out.println("【戦況】 " + BoardCells.GetTurnCount() + "ターン目");
-        System.out.println("α残機 = " + alphaCount + " (総HP : " + alphaSumHp + ")");
-        System.out.println("β残機 = " + bravoCount + " (総HP : " + bravoSumHp + ")");
+        LogLine("【戦況】 " + BoardCells.GetTurnCount() + "ターン目");
+        LogLine("α残機 = " + alphaCount + " (総HP : " + alphaSumHp + ")");
+        LogLine("β残機 = " + bravoCount + " (総HP : " + bravoSumHp + ")");
         if (alphaCount == 0) {
-            System.out.println("αが全滅しました");
-            System.out.println("βの勝利です");
+            LogLine("αが全滅しました");
+            LogLine("βの勝利です");
+            alphaWin = false;
+            bravoWin = true;
             return false;
         }
         if (bravoCount == 0) {
-            System.out.println("βが全滅しました");
-            System.out.println("αの勝利です");
+            LogLine("βが全滅しました");
+            LogLine("αの勝利です");
+            alphaWin = true;
+            bravoWin = false;
             return false;
         }
         if (interrupt) {
             if (alphaSumHp > bravoSumHp) {
-                System.out.println("αの勝利です");
+                LogLine("αの勝利です");
+                alphaWin = true;
+                bravoWin = false;
             } else if (bravoSumHp > alphaSumHp) {
-                System.out.println("βの勝利です");
+                LogLine("βの勝利です");
+                alphaWin = false;
+                bravoWin = true;
             } else {
-                System.out.println("引き分けです");
+                LogLine("引き分けです");
+                alphaWin = false;
+                bravoWin = false;
             }
             return false;
         }
@@ -351,13 +414,9 @@ class BoardCells {
 
     // 指定ポイントから指定ポイントへの移動
     public static boolean MovePoint(boolean alphaSide, Point oldPoint, Point newPoint) {
-        if (alphaSide) {
-            System.out.print("【α");
-        } else {
-            System.out.print("【β");
-        }
+        LogSide(alphaSide);
         if (CanMovePoint(alphaSide, oldPoint, newPoint)) {
-            System.out.println("移動】 " + oldPoint + " → " + newPoint);
+            LogLine("移動】 " + oldPoint + " → " + newPoint);
             BoardCells.GetCell(newPoint).SetHp(alphaSide, BoardCells.GetCell(oldPoint).GetHp(alphaSide));
             BoardCells.GetCell(oldPoint).SetHp(alphaSide, -1);
             if (alphaSide) {
@@ -371,7 +430,7 @@ class BoardCells {
             }
             return true;
         } else {
-            System.out.println("移動】拒否されました");
+            LogLine("移動】拒否されました");
             return false;
         }
     }
@@ -474,34 +533,30 @@ class BoardCells {
 
     // 指定ポイントへの攻撃
     public static boolean AttackPoint(boolean alphaSide, Point point) {
-        if (alphaSide) {
-            System.out.print("【α");
-        } else {
-            System.out.print("【β");
-        }
+        LogSide(alphaSide);
         if (IsAttackEnablePoint(alphaSide, point)) {
             Integer attackResult = 0;
-            System.out.println("攻撃】" + point);
+            LogLine("攻撃】" + point);
             if (BoardCells.GetCell(point).isAlive(!alphaSide)) {
                 BoardCells.GetCell(point).SetHp(!alphaSide, BoardCells.GetCell(point).GetHp(!alphaSide) - 1);
                 // 命中！
                 attackResult = 2;
-                System.out.println("命中！");
+                LogLine("命中！");
                 if (BoardCells.GetCell(point).GetHp(!alphaSide) == 0) {
                     // 撃沈！
                     attackResult = 3;
-                    System.out.println("撃沈！");
+                    LogLine("撃沈！");
                 }
             } else {
                 // ハズレ！
                 attackResult = 0;
-                System.out.println("ハズレ！");
+                LogLine("ハズレ！");
             }
             for (Point roundPoint : PointRound(point)) {
                 if (BoardCells.GetCell(roundPoint).isAlive(!alphaSide)) {
                     // 波高し！
                     attackResult = 1;
-                    System.out.println("波高し！");
+                    LogLine("波高し！");
                 }
             }
             if (alphaSide) {
@@ -515,7 +570,7 @@ class BoardCells {
             }
             return true;
         } else {
-            System.out.println("攻撃】 拒否されました");
+            LogLine("攻撃】 拒否されました");
             if (alphaSide) {
                 lastAlphaAttackPoint = null;
                 lastAlphaAttackResult = null;
@@ -531,62 +586,54 @@ class BoardCells {
 
     // 盤面にHPを表示
     public static void WriteBoardHp(boolean alphaSide) {
-        if (alphaSide) {
-            System.out.print("【α");
-        } else {
-            System.out.print("【β");
-        }
-        System.out.println("盤面】HP");
-        System.out.print("  ");
+        LogSide(alphaSide);
+        LogLine("盤面】HP");
+        Log("  ");
         for (Integer i = 0; i < BoardCells.GetBoardSize(); i++) {
             if (i != 0) {
-                System.out.print("|");
+                Log("|");
             }
-            System.out.print((i));
+            Log(i.toString());
         }
-        System.out.println();
+        LogLine("");
         for (Integer y = 0; y < BoardCells.GetBoardSize(); y++) {
-            System.out.print(y + "|");
+            Log(y + "|");
             for (Integer x = 0; x < BoardCells.GetBoardSize(); x++) {
                 if (BoardCells.GetCell(x, y).GetHp(alphaSide) != -1) {
-                    System.out.print(BoardCells.GetCell(x, y).GetHp(alphaSide));
+                    Log(BoardCells.GetCell(x, y).GetHp(alphaSide).toString());
                 } else {
-                    System.out.print(" ");
+                    Log(" ");
                 }
-                System.out.print(" ");
+                Log(" ");
             }
-            System.out.println();
+            LogLine("");
         }
     }
 
     // 盤面に攻撃可能範囲を表示
     public static void WriteBoardIsAttack(boolean alphaSide) {
-        if (alphaSide) {
-            System.out.print("【α");
-        } else {
-            System.out.print("【β");
-        }
+        LogSide(alphaSide);
         AttackEnableSearch(alphaSide);
-        System.out.println("盤面】攻撃可能範囲");
-        System.out.print("  ");
+        LogLine("盤面】攻撃可能範囲");
+        Log("  ");
         for (Integer i = 0; i < BoardCells.GetBoardSize(); i++) {
             if (i != 0) {
-                System.out.print("|");
+                Log("|");
             }
-            System.out.print((i));
+            Log(i.toString());
         }
-        System.out.println();
+        LogLine("");
         for (Integer y = 0; y < BoardCells.GetBoardSize(); y++) {
-            System.out.print(y + "|");
+            Log(y.toString() + "|");
             for (Integer x = 0; x < BoardCells.GetBoardSize(); x++) {
                 if (BoardCells.GetCell(x, y).GetIsAttack(alphaSide)) {
-                    System.out.print("*");
+                    Log("*");
                 } else {
-                    System.out.print(" ");
+                    Log(" ");
                 }
-                System.out.print(" ");
+                Log(" ");
             }
-            System.out.println();
+            LogLine("");
         }
     }
 
@@ -606,29 +653,43 @@ class BoardCells {
         }
     }
 
+    // ポイントリストからランダムに選ぶ
     public static Point RandomGet(ArrayList<Point> points) {
         Random random = new Random();
         return points.get(random.nextInt(points.size()));
     }
 }
 
-class Algorithm {
-    private Integer allyCount;
-    private Integer allySumHp;
-    private Integer enemyCount;
-    private Integer enemySumHp;
+class Interface {
+    public Integer allyCount;
+    public Integer allySumHp;
+    public Integer enemyCount;
+    public Integer enemySumHp;
 
-    private ArrayList<Point> attackedPoints;
+    public final boolean alphaSide;
 
-    private final boolean alphaSide;
-
-    Algorithm(boolean alphaSide) {
-        super();
+    Interface(boolean alphaSide) {
         this.alphaSide = alphaSide;
         allyCount = 4;
         allySumHp = 12;
         enemyCount = 4;
         enemySumHp = 12;
+    }
+
+    public void DoMove(Point oldPoint, Point newPoint) {
+        BoardCells.LogLine(newPoint.Minus(oldPoint) + " に移動！");
+        BoardCells.MovePoint(alphaSide, oldPoint, newPoint);
+    }
+
+    public void DoAttack(Point point) {
+        BoardCells.LogLine(point + " に魚雷発射！");
+        BoardCells.AttackPoint(alphaSide, point);
+    }
+}
+
+class Algorithm001 extends Interface {
+    Algorithm001(boolean alphaSide) {
+        super(alphaSide);
     }
 
     public void Think() {
@@ -738,52 +799,55 @@ class Algorithm {
         return;
     }
 
-    private void DoMove(Point oldPoint, Point newPoint) {
-        System.out.println(newPoint.Minus(oldPoint) + " に移動！");
-        BoardCells.MovePoint(alphaSide, oldPoint, newPoint);
-    }
-
-    private void DoAttack(Point point) {
-        System.out.println(point + " に魚雷発射！");
-        BoardCells.AttackPoint(alphaSide, point);
-    }
 }
 
 class BattleShip {
-    public static final Integer maxTurnCount = 1000;
-
-    public static BoardCells boardCells = new BoardCells();
-    public static Algorithm alphAlgorithm = new Algorithm(true);
-    public static Algorithm bravoAlgorithm = new Algorithm(false);
+    public static final Integer maxTurnCount = 60;
 
     public static void main(String args[]) {
-
-        BoardCells.GetCell(0, 0).SetHp(true, 3);
-        BoardCells.GetCell(3, 1).SetHp(true, 3);
-        BoardCells.GetCell(1, 3).SetHp(true, 3);
-        BoardCells.GetCell(4, 4).SetHp(true, 3);
-
-        BoardCells.GetCell(1, 1).SetHp(false, 3);
-        BoardCells.GetCell(2, 2).SetHp(false, 3);
-        BoardCells.GetCell(3, 3).SetHp(false, 3);
-        BoardCells.GetCell(3, 0).SetHp(false, 3);
-        boolean alphaSide = true;
-        Scanner scanner = new Scanner(System.in);
-        while (BoardCells.IsContinue(false)) {
-            BoardCells.WriteBoardHp(alphaSide);
-            if (alphaSide) {
-                alphAlgorithm.Think();
-            } else {
-                bravoAlgorithm.Think();
-            }
-            alphaSide = !alphaSide;
-            if (BoardCells.GetTurnCount() >= maxTurnCount) {
-                BoardCells.IsContinue(true);
-                break;
-            }
-        }
-        System.out.println("ゲームが終了しました");
-        scanner.close();
+        DeepTry(1000);
     }
 
+    public static void DeepTry(Integer maxGameCount) {
+        Integer alphaWinCount = 0;
+        Integer bravoWinCount = 0;
+        for (Integer i = 0; i < maxGameCount; i++) {
+            BoardCells.Initialize(false);
+
+            Algorithm001 alphAlgorithm = new Algorithm001(true);
+            Algorithm001 bravoAlgorithm = new Algorithm001(false);
+
+            BoardCells.GetCell(0, 0).SetHp(true, 3);
+            BoardCells.GetCell(3, 1).SetHp(true, 3);
+            BoardCells.GetCell(1, 3).SetHp(true, 3);
+            BoardCells.GetCell(4, 4).SetHp(true, 3);
+
+            BoardCells.GetCell(0, 0).SetHp(false, 3);
+            BoardCells.GetCell(0, 4).SetHp(false, 3);
+            BoardCells.GetCell(4, 0).SetHp(false, 3);
+            BoardCells.GetCell(4, 4).SetHp(false, 3);
+
+            boolean alphaSide = true;
+            while (BoardCells.IsContinue(false)) {
+                if (alphaSide) {
+                    alphAlgorithm.Think();
+                } else {
+                    bravoAlgorithm.Think();
+                }
+                alphaSide = !alphaSide;
+                if (BoardCells.GetTurnCount() >= maxTurnCount) {
+                    BoardCells.IsContinue(true);
+                    break;
+                }
+            }
+            if (BoardCells.GetAlphaWin()) {
+                alphaWinCount++;
+            } else if (BoardCells.GetBravoWin()) {
+                bravoWinCount++;
+            }
+        }
+        System.out.println("α勝利数 = " + alphaWinCount);
+        System.out.println("β勝利数 = " + bravoWinCount);
+        System.out.println("引き分け数 = " + (maxGameCount - alphaWinCount - bravoWinCount));
+    }
 }
