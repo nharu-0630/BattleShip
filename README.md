@@ -74,9 +74,9 @@ RTX 3080 Ti
 | lastBravoMoveVector   | Point    |        | βの前回移動ベクトル |
 | visibleLog            | boolean  | false  | ログの表示      |
 
-| メソッド名                | 引数型                     | 戻り値型                |                         |                                       |
+| メソッド名                | 引数型                     | 戻り値型               |                         |                                       |
 | -------------------- | ----------------------- | ------------------ | ----------------------- | ------------------------------------- |
-| Initialize           | boolean                 |                    | `visibleLog`を渡し初期化      |                                       |
+| Initialize           | boolean                 |                    | 初期化                     | 引数はログの表示する場合のみ`true`にする               |
 | GetAlphaWin          |                         | boolean            | αの勝利を取得                 |                                       |
 | GetBravoWin          |                         | boolean            | βの勝利を取得                 |                                       |
 | SetTurnCount         |                         |                    | ターン数に1加算                |                                       |
