@@ -118,8 +118,6 @@ class Point {
 }
 
 class Board {
-    public static Scanner scanner = new Scanner(System.in);
-
     private static final Integer boardSize = 5;
 
     private static Cell[][] cells;
@@ -546,31 +544,33 @@ class Board {
     }
 
     // 指定ポイントへの攻撃
-    public static boolean AttackPoint(boolean alphaSide, Point point) {
+    public static boolean AttackPoint(boolean alphaSide, Point point, boolean judgeResult) {
         LogSide(alphaSide);
         if (IsAttackEnablePoint(alphaSide, point)) {
-            Integer attackResult = 0;
+            Integer attackResult = null;
             LogLine("攻撃】" + point);
-            if (Board.GetCell(point).isAlive(!alphaSide)) {
-                Board.GetCell(point).SetHp(!alphaSide, Board.GetCell(point).GetHp(!alphaSide) - 1);
-                // 命中！
-                attackResult = 2;
-                LogLine("命中！");
-                if (Board.GetCell(point).GetHp(!alphaSide) == 0) {
-                    // 撃沈！
-                    attackResult = 3;
-                    LogLine("撃沈！");
+            if (judgeResult) {
+                if (Board.GetCell(point).isAlive(!alphaSide)) {
+                    Board.GetCell(point).SetHp(!alphaSide, Board.GetCell(point).GetHp(!alphaSide) - 1);
+                    // 命中！
+                    attackResult = 2;
+                    LogLine("命中！");
+                    if (Board.GetCell(point).GetHp(!alphaSide) == 0) {
+                        // 撃沈！
+                        attackResult = 3;
+                        LogLine("撃沈！");
+                    }
+                } else {
+                    // ハズレ！
+                    attackResult = 0;
+                    LogLine("ハズレ！");
                 }
-            } else {
-                // ハズレ！
-                attackResult = 0;
-                LogLine("ハズレ！");
-            }
-            for (Point roundPoint : PointRound(point)) {
-                if (Board.GetCell(roundPoint).isAlive(!alphaSide)) {
-                    // 波高し！
-                    attackResult = 1;
-                    LogLine("波高し！");
+                for (Point roundPoint : PointRound(point)) {
+                    if (Board.GetCell(roundPoint).isAlive(!alphaSide)) {
+                        // 波高し！
+                        attackResult = 1;
+                        LogLine("波高し！");
+                    }
                 }
             }
             if (alphaSide) {
@@ -598,10 +598,33 @@ class Board {
         }
     }
 
+    // 指定ポイントへの攻撃結果を上書き
+    public static void AttackResultTransfer(boolean alphaSide, Integer attackResult) {
+        switch (attackResult) {
+            case 3:
+                LogLine("撃沈！");
+                break;
+            case 2:
+                LogLine("命中！");
+                break;
+            case 1:
+                LogLine("波高し！");
+                break;
+            case 0:
+                LogLine("ハズレ！");
+                break;
+        }
+        if (alphaSide) {
+            lastAlphaAttackResult = attackResult;
+        } else {
+            lastBravoAttackResult = attackResult;
+        }
+    }
+
     // 指定ポイントへの攻撃（強制）
     public static void AttackPointForce(boolean alphaSide, Point point) {
         LogSide(alphaSide);
-        Integer attackResult = 0;
+        Integer attackResult = null;
         LogLine("攻撃】" + point);
         if (Board.GetCell(point).isAlive(!alphaSide)) {
             Board.GetCell(point).SetHp(!alphaSide, Board.GetCell(point).GetHp(!alphaSide) - 1);
@@ -719,9 +742,11 @@ class Interface {
     public Integer enemySumHp;
 
     public final boolean alphaSide;
+    public final boolean isEnemySecret;
 
-    Interface(boolean alphaSide) {
+    Interface(boolean alphaSide, boolean isEnemySecret) {
         this.alphaSide = alphaSide;
+        this.isEnemySecret = isEnemySecret;
         allyCount = 4;
         allySumHp = 12;
         enemyCount = 4;
@@ -735,7 +760,7 @@ class Interface {
 
     public void DoAttack(Point point) {
         Board.LogLine(point + " に魚雷発射！");
-        Board.AttackPoint(alphaSide, point);
+        Board.AttackPoint(alphaSide, point, !isEnemySecret);
     }
 
     public void DoMoveForce(Point vectorPoint) {

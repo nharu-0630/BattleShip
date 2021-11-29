@@ -8,8 +8,8 @@ public class DebugPlay {
 
     public static void CpuVsHuman() {
         Board.Initialize(true);
-        Algorithm001 alphaAlgorithm = new Algorithm001(true);
-        AlgorithmHuman bravoAlgorithm = new AlgorithmHuman(false);
+        Algorithm001 alphaAlgorithm = new Algorithm001(true, false);
+        AlgorithmHuman bravoAlgorithm = new AlgorithmHuman(false, false);
 
         boolean alphaSide = true;
         while (Board.IsContinue(false)) {
@@ -32,8 +32,8 @@ public class DebugPlay {
         for (Integer i = 0; i < maxGameCount; i++) {
             Board.Initialize(false);
 
-            Algorithm001 alphaAlgorithm = new Algorithm001(true);
-            Algorithm001 bravoAlgorithm = new Algorithm001(false);
+            Algorithm001 alphaAlgorithm = new Algorithm001(true, false);
+            Algorithm001 bravoAlgorithm = new Algorithm001(false, false);
 
             Board.GetCell(0, 0).SetHp(true, 3);
             Board.GetCell(3, 1).SetHp(true, 3);
