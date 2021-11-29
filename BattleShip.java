@@ -153,7 +153,7 @@ class BoardCells {
     }
 
     // ゲーム続行の可否
-    public static boolean IsContinue() {
+    public static boolean IsContinue(boolean interrupt) {
         Integer alphaCount = ShipPoints(true).size();
         Integer bravoCount = ShipPoints(false).size();
         Integer alphaSumHp = 0;
@@ -164,16 +164,30 @@ class BoardCells {
         for (Point point : ShipPoints(false)) {
             bravoSumHp += BoardCells.GetCell(point).GetHp(false);
         }
-        BoardCells.SetTurnCount();
+        if (!interrupt) {
+            BoardCells.SetTurnCount();
+        }
         System.out.println("【戦況】 " + BoardCells.GetTurnCount() + "ターン目");
         System.out.println("α残機 = " + alphaCount + " (総HP : " + alphaSumHp + ")");
         System.out.println("β残機 = " + bravoCount + " (総HP : " + bravoSumHp + ")");
         if (alphaCount == 0) {
             System.out.println("αが全滅しました");
+            System.out.println("βの勝利です");
             return false;
         }
         if (bravoCount == 0) {
             System.out.println("βが全滅しました");
+            System.out.println("αの勝利です");
+            return false;
+        }
+        if (interrupt) {
+            if (alphaSumHp > bravoSumHp) {
+                System.out.println("αの勝利です");
+            } else if (bravoSumHp > alphaSumHp) {
+                System.out.println("βの勝利です");
+            } else {
+                System.out.println("引き分けです");
+            }
             return false;
         }
         return true;
@@ -377,9 +391,14 @@ class BoardCells {
 
     // 指定ポイントへの攻撃
     public static boolean AttackPoint(boolean alphaSide, Point point) {
+        if (alphaSide) {
+            System.out.print("【α");
+        } else {
+            System.out.print("【β");
+        }
         if (CanAttackPoint(alphaSide, point)) {
             Integer attackResult = 0;
-            System.out.println("【攻撃処理】" + point);
+            System.out.println("攻撃】" + point);
             if (BoardCells.GetCell(point).isAlive(!alphaSide)) {
                 BoardCells.GetCell(point).SetHp(!alphaSide, BoardCells.GetCell(point).GetHp(!alphaSide) - 1);
                 // 命中！
@@ -413,7 +432,7 @@ class BoardCells {
             }
             return true;
         } else {
-            System.out.println("【攻撃処理】 拒否されました");
+            System.out.println("攻撃】 拒否されました");
             if (alphaSide) {
                 lastAlphaAttackPoint = null;
                 lastAlphaAttackResult = null;
@@ -429,7 +448,12 @@ class BoardCells {
 
     // 盤面にHPを表示
     public static void WriteBoardHp(boolean alphaSide) {
-        System.out.println("【盤面表示】HP");
+        if (alphaSide) {
+            System.out.print("【α");
+        } else {
+            System.out.print("【β");
+        }
+        System.out.println("盤面】HP");
         System.out.print("  ");
         for (Integer i = 0; i < BoardCells.GetBoardSize(); i++) {
             if (i != 0) {
@@ -454,8 +478,13 @@ class BoardCells {
 
     // 盤面に攻撃可能範囲を表示
     public static void WriteBoardCanAttack(boolean alphaSide) {
+        if (alphaSide) {
+            System.out.print("【α");
+        } else {
+            System.out.print("【β");
+        }
         CanAttackSearch(alphaSide);
-        System.out.println("【盤面表示】攻撃可能範囲");
+        System.out.println("盤面】攻撃可能範囲");
         System.out.print("  ");
         for (Integer i = 0; i < BoardCells.GetBoardSize(); i++) {
             if (i != 0) {
@@ -608,6 +637,7 @@ class Algorithm {
 }
 
 class BattleShip {
+    public static final Integer maxTurnCount = 1000;
 
     public static BoardCells boardCells = new BoardCells();
     public static Algorithm alphAlgorithm = new Algorithm(true);
@@ -615,15 +645,14 @@ class BattleShip {
 
     public static void main(String args[]) {
         for (Point point : BoardCells.RandomPoints(4)) {
+            BoardCells.GetCell(point).SetHp(true, 3);
+        }
+        for (Point point : BoardCells.RandomPoints(4)) {
             BoardCells.GetCell(point).SetHp(false, 3);
         }
-        BoardCells.GetCell(1, 1).SetHp(true, 3);
-        BoardCells.GetCell(1, 3).SetHp(true, 3);
-        BoardCells.GetCell(3, 1).SetHp(true, 3);
-        BoardCells.GetCell(3, 3).SetHp(true, 3);
         boolean alphaSide = true;
         Scanner scanner = new Scanner(System.in);
-        while (BoardCells.IsContinue()) {
+        while (BoardCells.IsContinue(false)) {
             BoardCells.WriteBoardHp(alphaSide);
             if (alphaSide) {
                 alphAlgorithm.Think();
@@ -631,6 +660,10 @@ class BattleShip {
                 bravoAlgorithm.Think();
             }
             alphaSide = !alphaSide;
+            if (BoardCells.GetTurnCount() == maxTurnCount) {
+                BoardCells.IsContinue(true);
+                break;
+            }
         }
         System.out.println("ゲームが終了しました");
         scanner.nextLine();
