@@ -4,16 +4,16 @@
 認知科学2021 潜水艦撃沈ゲーム
 RTX 3080 Ti
 
-## Documentation
+# Documentation
 
-### ゲームロジック(BattleShip.java)
+## ゲームロジック(BattleShip.java)
 
 |     | alphaSide |
 | --- | --------- |
 | α   | true      |
 | β   | false     |
 
-#### セル(Cell)
+### セル(Cell)
 
 | 変数名           | 変数型     | デフォルト値 |                    |
 | :-----------: | :-----: | :----: | :----------------: |
@@ -37,7 +37,7 @@ RTX 3080 Ti
 
 第1引数には`alphaSide`を設定
 
-#### ポイント(Point)
+### ポイント(Point)
 
 | 変数名 | 変数型     | デフォルト値 |       |
 | --- | ------- | ------ | ----- |
@@ -50,7 +50,7 @@ RTX 3080 Ti
 | Minus    | Point | Point  | 引数のポイントを減算 |
 | toString |       | String | (x, y)     |
 
-#### ボード(Board)
+### ボード(Board)
 
 |      | attackResult |
 | ---- | ------------ |
@@ -122,7 +122,7 @@ RTX 3080 Ti
 
 一部メソッドの第1引数には`alphaSide`を設定
 
-#### インターフェイス(Interface)
+### インターフェイス(Interface)
 
 | 変数名           | 変数型     | デフォルト値 |                            |
 | ------------- | ------- | ------ | -------------------------- |
@@ -140,12 +140,12 @@ RTX 3080 Ti
 | DoAttack      | Point        |      | ポイントへの攻撃   |                 |
 | DoAttackForce | Point        |      | ポイントへの強制攻撃 |                 |
 
-### DebugPlay.java
+## DebugPlay.java
 
 2つのアルゴリズムを勝負する
 αとβの初期配置を設定する必要がある
 
-### ReleasePlay.java
+## ReleasePlay.java
 
 アルゴリズムを実際に使う
 αの初期配置のみ設定する必要がある
