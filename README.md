@@ -30,7 +30,7 @@ RTX 3080 Ti
 | SetHp       | boolean, Integer | なし      | 戦艦HPを設定    |                              |     |
 | GetValue    | boolean          | Integer | 評価値を取得     |                              |     |
 | SetValue    | boolean, Integer | なし      | 評価値を設定     |                              |     |
-| SetIsAttack | boolean, boolean | なし      | 攻撃の可否を設定 | セルに味方戦艦がいない場合は`true`を設定できる |     |
+| SetIsAttack | boolean, boolean | なし      | 攻撃の可否を設定 | セルに自軍戦艦がいない場合は`true`を設定できる |     |
 | GetIsAttack | boolean, boolean | boolean | 攻撃の可否を取得 |                              |     |
 | IsAlive  | boolean          | boolean | 戦艦の生死を取得   |                              |     |
 | IsEmpty  | boolean          | boolean | 戦艦の有無を取得   |                              |     |
@@ -44,7 +44,7 @@ RTX 3080 Ti
 | x   | Integer |        | 座標のX値 |
 | y   | Intger  |        | 座標のY値 |
 
-| メソッド名    | 引数型   | 戻り値    |            |
+| メソッド名    | 引数型   | 戻り値型    |            |
 | -------- | ----- | ------ | ---------- |
 | Plus     | Point | Point  | 引数のポイントを加算 |
 | Minus    | Point | Point  | 引数のポイントを減算 |
@@ -74,7 +74,7 @@ RTX 3080 Ti
 | lastBravoMoveVector   | Point    |        | βの前回移動ベクトル |
 | visibleLog            | boolean  | false  | ログの表示      |
 
-| メソッド名                | 引数型                     | 戻り値                |                         |                                       |
+| メソッド名                | 引数型                     | 戻り値型                |                         |                                       |
 | -------------------- | ----------------------- | ------------------ | ----------------------- | ------------------------------------- |
 | Initialize           | boolean                 |                    | `visibleLog`を渡し初期化      |                                       |
 | GetAlphaWin          |                         | boolean            | αの勝利を取得                 |                                       |
@@ -119,6 +119,26 @@ RTX 3080 Ti
 | IsLastMove           | boolean                 | boolean            | 前回攻撃の有無を取得              |                                       |
 | IsLastAttack         | boolean                 | boolean            | 前回移動の有無を取得              |                                       |
 | RandomGet            | Point                   | ArrayList\<Point\> | ポイントリストからランダムに取得        |                                       |
+
+一部メソッドの第1引数には`alphaSide`を設定
+
+#### インターフェイス(Interface)
+
+| 変数名           | 変数型     | デフォルト値 |                            |
+| ------------- | ------- | ------ | -------------------------- |
+| allyCount     | Integer | 4      | 自軍戦艦の数                     |
+| allySumHp     | Integer | 12     | 自軍戦艦の総HP                   |
+| enemyCount    | Integer | 4      | 敵軍戦艦の数                     |
+| enemySumHp    | Integer | 12     | 敵軍戦艦の総HP                   |
+| alphaSide     | boolean | false  | `Board`における`alphaSide`     |
+| isEnemySecret | boolean | false  | 攻撃結果をあとから設定する場合のみ`true`にする |
+
+| メソッド名         | 引数型          | 戻り値型 |            |                 |
+| ------------- | ------------ | ---- | ---------- | --------------- |
+| DoMove        | Point, Point |      | 戦艦の移動      | 第1, 2引数はポイントである |
+| DoMoveForce   | Point        |      | 戦艦の強制移動    | 第1引数はベクトルである    |
+| DoAttack      | Point        |      | ポイントへの攻撃   |                 |
+| DoAttackForce | Point        |      | ポイントへの強制攻撃 |                 |
 
 ### DebugPlay.java
 
