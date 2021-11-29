@@ -83,7 +83,7 @@ class Algorithm001 extends Interface {
                             }
                         } else {
                             // 敵が移動しなかった
-                            DoAttack(Board.GetLastAttackPoint(alphaSide), false);
+                            DoAttack(Board.GetLastAttackPoint(alphaSide));
                             return;
                         }
                     }
@@ -112,7 +112,7 @@ class Algorithm001 extends Interface {
                     break;
             }
         }
-        DoAttack(Board.RandomGet(Board.MaxValuePoints(alphaSide, true)), false);
+        DoAttack(Board.RandomGet(Board.MaxValuePoints(alphaSide, true)));
         return;
     }
 }
