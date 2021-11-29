@@ -3,9 +3,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
-
-import javax.swing.BorderFactory;
-
 import java.util.Collections;
 
 class Cell {
@@ -390,7 +387,7 @@ class BoardCells {
     }
 
     // 指定ポイントから指定ポイントへの移動可否
-    public static boolean CanMovePoint(boolean alphaSide, Point oldPoint, Point newPoint) {
+    public static boolean IsMoveEnablePoint(boolean alphaSide, Point oldPoint, Point newPoint) {
         if (BoardCells.GetCell(oldPoint).isAlive(alphaSide) && BoardCells.GetCell(newPoint).isEmpty(alphaSide)) {
             if (PointDistance(oldPoint, newPoint) == 1) {
                 return true;
@@ -407,8 +404,8 @@ class BoardCells {
     }
 
     // 指定ポイントから指定ベクトル方向への移動可否
-    public static boolean CanMoveVector(boolean alphaSide, Point oldPoint, Point vectorPoint) {
-        return CanMovePoint(alphaSide, oldPoint, oldPoint.Plus(vectorPoint));
+    public static boolean IsMoveEnableVector(boolean alphaSide, Point oldPoint, Point vectorPoint) {
+        return IsMoveEnablePoint(alphaSide, oldPoint, oldPoint.Plus(vectorPoint));
     }
 
     // 指定ポイントから指定ポイントへの距離（X距離 + Y距離）
@@ -419,7 +416,7 @@ class BoardCells {
     // 指定ポイントから指定ポイントへの移動
     public static boolean MovePoint(boolean alphaSide, Point oldPoint, Point newPoint) {
         LogSide(alphaSide);
-        if (CanMovePoint(alphaSide, oldPoint, newPoint)) {
+        if (IsMoveEnablePoint(alphaSide, oldPoint, newPoint)) {
             LogLine("移動】 " + oldPoint + " → " + newPoint);
             BoardCells.GetCell(newPoint).SetHp(alphaSide, BoardCells.GetCell(oldPoint).GetHp(alphaSide));
             BoardCells.GetCell(oldPoint).SetHp(alphaSide, -1);
@@ -508,6 +505,11 @@ class BoardCells {
         for (Point shipPoint : BoardCells.ShipPoints(alphaSide)) {
             for (Point point : PointRound(shipPoint)) {
                 BoardCells.GetCell(point).SetCanAttak(alphaSide, true);
+            }
+        }
+        for (Point shipPoint : BoardCells.ShipPoints(!alphaSide)) {
+            if (BoardCells.GetCell(shipPoint).GetHp(!alphaSide) == 0) {
+                BoardCells.GetCell(shipPoint).SetCanAttak(alphaSide, false);
             }
         }
     }
@@ -718,7 +720,7 @@ class Algorithm001 extends Interface {
                         // 敵に命中された
                         ArrayList<Point> points = new ArrayList<Point>();
                         for (Point point : BoardCells.PointCross(BoardCells.GetLastAttackPoint(!alphaSide), 2)) {
-                            if (BoardCells.CanMovePoint(alphaSide, BoardCells.GetLastAttackPoint(!alphaSide),
+                            if (BoardCells.IsMoveEnablePoint(alphaSide, BoardCells.GetLastAttackPoint(!alphaSide),
                                     point)) {
                                 points.add(point);
                             }
