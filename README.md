@@ -1,7 +1,7 @@
 
 # BattleShip
 
-認知科学2021 潜水艦撃沈ゲーム
+認知科学2021 潜水艦撃沈ゲーム  
 RTX 3080 Ti
 
 # Documentation
@@ -120,8 +120,8 @@ RTX 3080 Ti
 | IsLastAttack*        | boolean*                 | boolean            | 前回移動の有無を取得              |                                       |
 | RandomGet*           | Point                    | ArrayList\<Point\> | ポイントリストからランダムに取得        |                                       |
 
-`*`が引数型についている第1引数は`alphaSide`を割当
-`*`がメソッド名についているメソッドは`Algorithm`内で使用可能
+引数型に`*`がついている第1引数は`alphaSide`を割当  
+メソッド名に`*`がついているメソッドは`Algorithm`内で使用可能
 
 ### インターフェイス(Interface)
 
@@ -141,7 +141,7 @@ RTX 3080 Ti
 | DoAttack*     | Point        |      | ポイントへの攻撃   |                 |
 | DoAttackForce | Point        |      | ポイントへの強制攻撃 |                 |
 
-`*`がメソッド名についているメソッドは`Algorithm`内で一度限り使用可能
+メソッド名に`*`がついているメソッドは`Algorithm`内で一度限り使用可能
 
 ## AlgorithmXXX.java
 
