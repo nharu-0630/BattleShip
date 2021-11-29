@@ -3,6 +3,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
+
+import javax.swing.BorderFactory;
+
 import java.util.Collections;
 
 class Cell {
@@ -76,9 +79,9 @@ class Cell {
 
     public boolean isEmpty(boolean alphaSide) {
         if (alphaSide) {
-            return alphaHp == -1 && bravoHp != 0;
+            return alphaHp == -1;
         } else {
-            return bravoHp == -1 && alphaHp != 0;
+            return bravoHp == -1;
         }
     }
 
@@ -265,6 +268,7 @@ class BoardCells {
         if (!interrupt) {
             SetTurnCount();
         }
+        LogLine("--------------------");
         LogLine("【戦況】 " + BoardCells.GetTurnCount() + "ターン目");
         LogLine("α残機 = " + alphaCount + " (総HP : " + alphaSumHp + ")");
         LogLine("β残機 = " + bravoCount + " (総HP : " + bravoSumHp + ")");
@@ -501,13 +505,9 @@ class BoardCells {
                 BoardCells.GetCell(x, y).SetCanAttak(alphaSide, false);
             }
         }
-        for (Integer x = 0; x < BoardCells.GetBoardSize(); x++) {
-            for (Integer y = 0; y < BoardCells.GetBoardSize(); y++) {
-                if (BoardCells.GetCell(x, y).isAlive(alphaSide)) {
-                    for (Point point : PointRound(new Point(x, y))) {
-                        BoardCells.GetCell(point).SetCanAttak(alphaSide, true);
-                    }
-                }
+        for (Point shipPoint : BoardCells.ShipPoints(alphaSide)) {
+            for (Point point : PointRound(shipPoint)) {
+                BoardCells.GetCell(point).SetCanAttak(alphaSide, true);
             }
         }
     }
@@ -798,14 +798,84 @@ class Algorithm001 extends Interface {
         DoAttack(BoardCells.RandomGet(BoardCells.MaxValuePoints(alphaSide, true)));
         return;
     }
+}
 
+class Algorithm002 extends Interface {
+    Algorithm002(boolean alphaSide) {
+        super(alphaSide);
+    }
+
+    public void Think() {
+        BoardCells.AttackEnableSearch(alphaSide);
+        BoardCells.WriteBoardHp(alphaSide);
+        BoardCells.WriteBoardIsAttack(alphaSide);
+        System.out.print("a(Attack), m(Move): ");
+        String action = BattleShip.scanner.nextLine();
+        switch (action) {
+            case "a":
+                System.out.print("x,y: ");
+                String[] tempArray = BattleShip.scanner.nextLine().split(",");
+                Point point = new Point(Integer.parseInt(tempArray[0]), Integer.parseInt(tempArray[1]));
+                DoAttack(point);
+                break;
+            case "m":
+                System.out.print("x,y: ");
+                tempArray = BattleShip.scanner.nextLine().split(",");
+                Point oldPoint = new Point(Integer.parseInt(tempArray[0]), Integer.parseInt(tempArray[1]));
+                System.out.print("x,y: ");
+                tempArray = BattleShip.scanner.nextLine().split(",");
+                Point newPoint = new Point(Integer.parseInt(tempArray[0]), Integer.parseInt(tempArray[1]));
+                DoMove(oldPoint, newPoint);
+                break;
+        }
+    }
 }
 
 class BattleShip {
     public static final Integer maxTurnCount = 60;
 
+    public static Scanner scanner = new Scanner(System.in);
+
     public static void main(String args[]) {
-        DeepTry(1000);
+        CpuVsHuman();
+        // DeepTry(1000);
+    }
+
+    public static void CpuVsHuman() {
+
+        BoardCells.Initialize(true);
+        Algorithm001 alphaAlgorithm = new Algorithm001(true);
+        Algorithm002 bravoAlgorithm = new Algorithm002(false);
+
+        /*
+         * BoardCells.GetCell(0, 0).SetHp(true, 3);
+         * BoardCells.GetCell(0, 4).SetHp(true, 3);
+         * BoardCells.GetCell(4, 0).SetHp(true, 3);
+         * BoardCells.GetCell(4, 4).SetHp(true, 3);
+         */
+
+        for (Point point : BoardCells.RandomPoints(4)) {
+            BoardCells.GetCell(point).SetHp(true, 3);
+        }
+
+        BoardCells.GetCell(0, 0).SetHp(false, 3);
+        BoardCells.GetCell(0, 4).SetHp(false, 3);
+        BoardCells.GetCell(4, 0).SetHp(false, 3);
+        BoardCells.GetCell(4, 4).SetHp(false, 3);
+
+        boolean alphaSide = true;
+        while (BoardCells.IsContinue(false)) {
+            if (alphaSide) {
+                alphaAlgorithm.Think();
+            } else {
+                bravoAlgorithm.Think();
+            }
+            alphaSide = !alphaSide;
+            if (BoardCells.GetTurnCount() >= maxTurnCount) {
+                BoardCells.IsContinue(true);
+                break;
+            }
+        }
     }
 
     public static void DeepTry(Integer maxGameCount) {
@@ -814,7 +884,7 @@ class BattleShip {
         for (Integer i = 0; i < maxGameCount; i++) {
             BoardCells.Initialize(false);
 
-            Algorithm001 alphAlgorithm = new Algorithm001(true);
+            Algorithm001 alphaAlgorithm = new Algorithm001(true);
             Algorithm001 bravoAlgorithm = new Algorithm001(false);
 
             BoardCells.GetCell(0, 0).SetHp(true, 3);
@@ -830,7 +900,7 @@ class BattleShip {
             boolean alphaSide = true;
             while (BoardCells.IsContinue(false)) {
                 if (alphaSide) {
-                    alphAlgorithm.Think();
+                    alphaAlgorithm.Think();
                 } else {
                     bravoAlgorithm.Think();
                 }
