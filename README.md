@@ -140,6 +140,40 @@ RTX 3080 Ti
 | DoAttack      | Point        |      | ポイントへの攻撃   |                 |
 | DoAttackForce | Point        |      | ポイントへの強制攻撃 |                 |
 
+## AlgorithmXXX.java
+
+### アルゴリズム(Algorithm)の開発
+
+`Algorithm001.java`を参照
+
+```java
+import java.util.*;
+
+class AlgorithmXXX extends Interface {
+    AlgorithmXXX(boolean alphaSide, boolean isEnemySecret) {
+        super(alphaSide, isEnemySecret);
+    }
+
+    public void Think() {
+        Board.AttackPointsSearch(alphaSide);
+        /* 
+        アルゴリズム
+        
+        移動する場合
+            DoMove(oldPoint, newPoint);
+            return;
+
+        攻撃する場合
+            DoAttack(point);
+            return;
+
+        移動・攻撃したあとにはreturn;を書いてThink()を終わらせる
+        */       
+        return;
+    }
+}
+```
+
 ## DebugPlay.java
 
 2つのアルゴリズムを勝負する
