@@ -41,7 +41,7 @@ class Algorithm001 extends Interface {
                             }
                         }
                         // 移動できる範囲からランダムに移動
-                        DoMove(Board.GetLastAttackPoint(!alphaSide), Board.RandomGet(points), false);
+                        DoMove(Board.GetLastAttackPoint(!alphaSide), Board.RandomGet(points));
                         return;
                     }
                     break;
@@ -75,7 +75,7 @@ class Algorithm001 extends Interface {
                                         .Plus(Board.GetLastMoveVector(!alphaSide)))) {
                                     // 攻撃可能範囲内なら攻撃する
                                     DoAttack(Board.GetLastAttackPoint(alphaSide)
-                                            .Plus(Board.GetLastMoveVector(!alphaSide)), false);
+                                            .Plus(Board.GetLastMoveVector(!alphaSide)));
                                     return;
                                 }
                             } else {

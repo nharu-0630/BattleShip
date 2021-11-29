@@ -411,9 +411,9 @@ class Board {
     }
 
     // 指定ポイントから指定ポイントへの移動
-    public static boolean MovePoint(boolean alphaSide, Point oldPoint, Point newPoint, boolean isHack) {
+    public static boolean MovePoint(boolean alphaSide, Point oldPoint, Point newPoint) {
         LogSide(alphaSide);
-        if (IsMoveEnablePoint(alphaSide, oldPoint, newPoint) || isHack) {
+        if (IsMoveEnablePoint(alphaSide, oldPoint, newPoint)) {
             LogLine("移動】 " + oldPoint + " → " + newPoint);
             Board.GetCell(newPoint).SetHp(alphaSide, Board.GetCell(oldPoint).GetHp(alphaSide));
             Board.GetCell(oldPoint).SetHp(alphaSide, -1);
@@ -433,9 +433,24 @@ class Board {
         }
     }
 
+    // 指定ベクトル方向への移動（強制）
+    public static void MovePointForce(boolean alphaSide, Point vectorPoint) {
+        LogSide(alphaSide);
+        LogLine("移動】 " + vectorPoint);
+        if (alphaSide) {
+            lastAlphaAttackPoint = null;
+            lastAlphaAttackResult = null;
+            lastAlphaMoveVector = vectorPoint;
+        } else {
+            lastBravoAttackPoint = null;
+            lastBravoAttackResult = null;
+            lastBravoMoveVector = vectorPoint;
+        }
+    }
+
     // 指定ポイントから指定ベクトル方向への移動
-    public static boolean MoveVector(boolean alphaSide, Point oldPoint, Point vectorPoint, boolean isHack) {
-        return MovePoint(alphaSide, oldPoint, oldPoint.Plus(vectorPoint), isHack);
+    public static boolean MoveVector(boolean alphaSide, Point oldPoint, Point vectorPoint) {
+        return MovePoint(alphaSide, oldPoint, oldPoint.Plus(vectorPoint));
     }
 
     // 指定ポイントへ最も近い戦艦のポイントリスト
@@ -531,9 +546,9 @@ class Board {
     }
 
     // 指定ポイントへの攻撃
-    public static boolean AttackPoint(boolean alphaSide, Point point, boolean isHack) {
+    public static boolean AttackPoint(boolean alphaSide, Point point) {
         LogSide(alphaSide);
-        if (IsAttackEnablePoint(alphaSide, point) || isHack) {
+        if (IsAttackEnablePoint(alphaSide, point)) {
             Integer attackResult = 0;
             LogLine("攻撃】" + point);
             if (Board.GetCell(point).isAlive(!alphaSide)) {
@@ -580,6 +595,44 @@ class Board {
                 lastBravoMoveVector = null;
             }
             return false;
+        }
+    }
+
+    // 指定ポイントへの攻撃（強制）
+    public static void AttackPointForce(boolean alphaSide, Point point) {
+        LogSide(alphaSide);
+        Integer attackResult = 0;
+        LogLine("攻撃】" + point);
+        if (Board.GetCell(point).isAlive(!alphaSide)) {
+            Board.GetCell(point).SetHp(!alphaSide, Board.GetCell(point).GetHp(!alphaSide) - 1);
+            // 命中！
+            attackResult = 2;
+            LogLine("命中！");
+            if (Board.GetCell(point).GetHp(!alphaSide) == 0) {
+                // 撃沈！
+                attackResult = 3;
+                LogLine("撃沈！");
+            }
+        } else {
+            // ハズレ！
+            attackResult = 0;
+            LogLine("ハズレ！");
+        }
+        for (Point roundPoint : PointRound(point)) {
+            if (Board.GetCell(roundPoint).isAlive(!alphaSide)) {
+                // 波高し！
+                attackResult = 1;
+                LogLine("波高し！");
+            }
+        }
+        if (alphaSide) {
+            lastAlphaAttackPoint = point;
+            lastAlphaAttackResult = attackResult;
+            lastAlphaMoveVector = null;
+        } else {
+            lastBravoAttackPoint = point;
+            lastBravoAttackResult = attackResult;
+            lastBravoMoveVector = null;
         }
     }
 
@@ -675,13 +728,23 @@ class Interface {
         enemySumHp = 12;
     }
 
-    public void DoMove(Point oldPoint, Point newPoint, boolean isHack) {
+    public void DoMove(Point oldPoint, Point newPoint) {
         Board.LogLine(newPoint.Minus(oldPoint) + " に移動！");
-        Board.MovePoint(alphaSide, oldPoint, newPoint, isHack);
+        Board.MovePoint(alphaSide, oldPoint, newPoint);
     }
 
-    public void DoAttack(Point point, boolean isHack) {
+    public void DoAttack(Point point) {
         Board.LogLine(point + " に魚雷発射！");
-        Board.AttackPoint(alphaSide, point, isHack);
+        Board.AttackPoint(alphaSide, point);
+    }
+
+    public void DoMoveForce(Point vectorPoint) {
+        Board.LogLine(vectorPoint + " に移動！");
+        Board.MovePointForce(alphaSide, vectorPoint);
+    }
+
+    public void DoAttackForce(Point point) {
+        Board.LogLine(point + " に魚雷発射！");
+        Board.AttackPointForce(alphaSide, point);
     }
 }

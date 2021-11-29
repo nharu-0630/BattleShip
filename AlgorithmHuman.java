@@ -17,7 +17,7 @@ class AlgorithmHuman extends Interface {
                 System.out.print("x,y: ");
                 String[] tempArray = Board.scanner.nextLine().split(",");
                 Point point = new Point(Integer.parseInt(tempArray[0]), Integer.parseInt(tempArray[1]));
-                DoAttack(point, false);
+                DoAttack(point);
                 break;
             case "m":
                 System.out.print("x,y: ");
@@ -26,7 +26,7 @@ class AlgorithmHuman extends Interface {
                 System.out.print("x,y: ");
                 tempArray = Board.scanner.nextLine().split(",");
                 Point newPoint = new Point(Integer.parseInt(tempArray[0]), Integer.parseInt(tempArray[1]));
-                DoMove(oldPoint, newPoint, false);
+                DoMove(oldPoint, newPoint);
                 break;
         }
     }

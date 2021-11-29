@@ -7,7 +7,6 @@ public class ReleasePlay {
         boolean alphaSide = (Board.scanner.nextLine() == "f");
 
         while (true) {
-            Board.IsContinue(false);
             if (alphaSide) {
                 alphaAlgorithm.Think();
             } else {
@@ -17,16 +16,13 @@ public class ReleasePlay {
                         System.out.print("x,y: ");
                         String[] tempArray = Board.scanner.nextLine().split(",");
                         Point point = new Point(Integer.parseInt(tempArray[0]), Integer.parseInt(tempArray[1]));
-                        Board.AttackPoint(alphaSide, point, true);
+                        Board.AttackPointForce(alphaSide, point);
                         break;
                     case "m":
                         System.out.print("x,y: ");
                         tempArray = Board.scanner.nextLine().split(",");
-                        Point oldPoint = new Point(Integer.parseInt(tempArray[0]), Integer.parseInt(tempArray[1]));
-                        System.out.print("x,y: ");
-                        tempArray = Board.scanner.nextLine().split(",");
-                        Point newPoint = new Point(Integer.parseInt(tempArray[0]), Integer.parseInt(tempArray[1]));
-                        Board.MovePoint(alphaSide, oldPoint, newPoint, true);
+                        Point vectorPoint = new Point(Integer.parseInt(tempArray[0]), Integer.parseInt(tempArray[1]));
+                        Board.MovePointForce(alphaSide, vectorPoint);
                         break;
                 }
             }

@@ -2,8 +2,8 @@ public class DebugPlay {
     public static final Integer maxTurnCount = 60;
 
     public static void main(String args[]) {
-        CpuVsHuman();
-        // DeepTry(1000);
+        // CpuVsHuman();
+        DeepTry(1000);
     }
 
     public static void CpuVsHuman() {
@@ -40,10 +40,16 @@ public class DebugPlay {
             Board.GetCell(1, 3).SetHp(true, 3);
             Board.GetCell(4, 4).SetHp(true, 3);
 
-            Board.GetCell(0, 0).SetHp(false, 3);
-            Board.GetCell(0, 4).SetHp(false, 3);
-            Board.GetCell(4, 0).SetHp(false, 3);
-            Board.GetCell(4, 4).SetHp(false, 3);
+            /*
+             * Board.GetCell(0, 0).SetHp(false, 3);
+             * Board.GetCell(0, 4).SetHp(false, 3);
+             * Board.GetCell(4, 0).SetHp(false, 3);
+             * Board.GetCell(4, 4).SetHp(false, 3);
+             */
+
+            for (Point point : Board.RandomPoints(4)) {
+                Board.GetCell(point).SetHp(false, 3);
+            }
 
             boolean alphaSide = true;
             while (Board.IsContinue(false)) {
