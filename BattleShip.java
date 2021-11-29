@@ -35,9 +35,25 @@ class Cell {
         }
     }
 
-    public void SetCanAttak(boolean alphaSide, boolean isAttack) {
+    public Integer GetValue(boolean alphaSide) {
+        if (alphaSide) {
+            return alphaValue;
+        } else {
+            return bravoValue;
+        }
+    }
+
+    public void SetValue(boolean alphaSide, Integer value) {
+        if (alphaSide) {
+            alphaValue = value;
+        } else {
+            bravoValue = value;
+        }
+    }
+
+    public void SetIsAttak(boolean alphaSide, boolean isAttack) {
         if (isAttack) {
-            if (isEmpty(alphaSide)) {
+            if (GetIsEmpty(alphaSide)) {
                 if (alphaSide) {
                     alphaIsAttack = true;
                 } else {
@@ -61,7 +77,7 @@ class Cell {
         }
     }
 
-    public boolean isAlive(boolean alphaSide) {
+    public boolean GetIsAlive(boolean alphaSide) {
         if (alphaSide) {
             return alphaHp > 0;
         } else {
@@ -69,27 +85,11 @@ class Cell {
         }
     }
 
-    public boolean isEmpty(boolean alphaSide) {
+    public boolean GetIsEmpty(boolean alphaSide) {
         if (alphaSide) {
             return alphaHp == -1;
         } else {
             return bravoHp == -1;
-        }
-    }
-
-    public Integer GetValue(boolean alphaSide) {
-        if (alphaSide) {
-            return alphaValue;
-        } else {
-            return bravoValue;
-        }
-    }
-
-    public void SetValue(boolean alphaSide, Integer value) {
-        if (alphaSide) {
-            alphaValue = value;
-        } else {
-            bravoValue = value;
         }
     }
 }
@@ -390,7 +390,7 @@ class Board {
 
     // 指定ポイントから指定ポイントへの移動可否
     public static boolean IsMoveEnablePoint(boolean alphaSide, Point oldPoint, Point newPoint) {
-        if (Board.GetCell(oldPoint).isAlive(alphaSide) && Board.GetCell(newPoint).isEmpty(alphaSide)) {
+        if (Board.GetCell(oldPoint).GetIsAlive(alphaSide) && Board.GetCell(newPoint).GetIsEmpty(alphaSide)) {
             if (PointDistance(oldPoint, newPoint) == 1) {
                 return true;
             } else if (Math.abs(oldPoint.x - newPoint.x) == 2 && oldPoint.y == newPoint.y) {
@@ -504,7 +504,7 @@ class Board {
         ArrayList<Point> points = new ArrayList<Point>();
         for (Integer x = 0; x < Board.GetBoardSize(); x++) {
             for (Integer y = 0; y < Board.GetBoardSize(); y++) {
-                if (Board.GetCell(x, y).isAlive(alphaSide)) {
+                if (Board.GetCell(x, y).GetIsAlive(alphaSide)) {
                     points.add(new Point(x, y));
                 }
             }
@@ -516,17 +516,17 @@ class Board {
     public static void AttackEnableSearch(boolean alphaSide) {
         for (Integer x = 0; x < Board.GetBoardSize(); x++) {
             for (Integer y = 0; y < Board.GetBoardSize(); y++) {
-                Board.GetCell(x, y).SetCanAttak(alphaSide, false);
+                Board.GetCell(x, y).SetIsAttak(alphaSide, false);
             }
         }
         for (Point shipPoint : Board.ShipPoints(alphaSide)) {
             for (Point point : PointRound(shipPoint)) {
-                Board.GetCell(point).SetCanAttak(alphaSide, true);
+                Board.GetCell(point).SetIsAttak(alphaSide, true);
             }
         }
         for (Point shipPoint : Board.ShipPoints(!alphaSide)) {
             if (Board.GetCell(shipPoint).GetHp(!alphaSide) == 0) {
-                Board.GetCell(shipPoint).SetCanAttak(alphaSide, false);
+                Board.GetCell(shipPoint).SetIsAttak(alphaSide, false);
             }
         }
     }
@@ -557,7 +557,7 @@ class Board {
             Integer attackResult = null;
             LogLine("攻撃】" + point);
             if (judgeResult) {
-                if (Board.GetCell(point).isAlive(!alphaSide)) {
+                if (Board.GetCell(point).GetIsAlive(!alphaSide)) {
                     Board.GetCell(point).SetHp(!alphaSide, Board.GetCell(point).GetHp(!alphaSide) - 1);
                     // 命中！
                     attackResult = 2;
@@ -573,7 +573,7 @@ class Board {
                     LogLine("ハズレ！");
                 }
                 for (Point roundPoint : PointRound(point)) {
-                    if (Board.GetCell(roundPoint).isAlive(!alphaSide)) {
+                    if (Board.GetCell(roundPoint).GetIsAlive(!alphaSide)) {
                         // 波高し！
                         attackResult = 1;
                         LogLine("波高し！");
@@ -633,7 +633,7 @@ class Board {
         LogSide(alphaSide);
         Integer attackResult = null;
         LogLine("攻撃】" + point);
-        if (Board.GetCell(point).isAlive(!alphaSide)) {
+        if (Board.GetCell(point).GetIsAlive(!alphaSide)) {
             Board.GetCell(point).SetHp(!alphaSide, Board.GetCell(point).GetHp(!alphaSide) - 1);
             // 命中！
             attackResult = 2;
@@ -649,7 +649,7 @@ class Board {
             LogLine("ハズレ！");
         }
         for (Point roundPoint : PointRound(point)) {
-            if (Board.GetCell(roundPoint).isAlive(!alphaSide)) {
+            if (Board.GetCell(roundPoint).GetIsAlive(!alphaSide)) {
                 // 波高し！
                 attackResult = 1;
                 LogLine("波高し！");
