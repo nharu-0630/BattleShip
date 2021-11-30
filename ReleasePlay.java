@@ -24,7 +24,7 @@ public class ReleasePlay {
                 alphaAlgorithm.Think();
                 if (Board.IsLastAttack(alphaSide)) {
                     System.out.print("0(No Hit), 1(Near), 2(Hit), 3(Sink): ");
-                    Integer attackResult = Integer.parseInt(scanner.nextLine());
+                    int attackResult = Integer.parseInt(scanner.nextLine());
                     Board.AttackResultTransfer(alphaSide, attackResult);
                 }
             } else {

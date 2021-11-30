@@ -2,19 +2,11 @@ import java.util.*;
 
 public class DebugPlay {
     public static final int maxTurnCount = 60;
+    public static final int deepTryCount = 1000;
 
     public static void main(String args[]) {
         // CpuVsHuman();
-        HashMap<Double[], Integer> parameterWinCounts = new HashMap<Double[], Integer>();
-        for (double parameter = 0; parameter <= 1; parameter += 0.01) {
-            parameterWinCounts.put(new Double[] { parameter }, DeepTry(new double[] { parameter }, 1000));
-        }
-        java.util.stream.Stream<Map.Entry<Double[], Integer>> sortedParameterWinCounts = parameterWinCounts.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByValue());
-        sortedParameterWinCounts
-                .forEach(entry -> System.out
-                        .println(Arrays.toString(entry.getKey()) + " = " + entry.getValue()));
+        parameterDeepTry();
     }
 
     public static void CpuVsHuman() {
@@ -48,10 +40,23 @@ public class DebugPlay {
         }
     }
 
-    public static int DeepTry(double[] parameters, Integer maxGameCount) {
+    public static void parameterDeepTry() {
+        HashMap<Double[], Integer> parameterWinCounts = new HashMap<Double[], Integer>();
+        for (double parameter = 0; parameter <= 1; parameter += 0.01) {
+            parameterWinCounts.put(new Double[] { parameter }, DeepTry(new double[] { parameter }));
+        }
+        java.util.stream.Stream<Map.Entry<Double[], Integer>> sortedParameterWinCounts = parameterWinCounts.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue());
+        sortedParameterWinCounts
+                .forEach(entry -> System.out
+                        .println(Arrays.toString(entry.getKey()) + " = " + entry.getValue()));
+    }
+
+    public static int DeepTry(double[] parameters) {
         int alphaWinCount = 0;
         int bravoWinCount = 0;
-        for (int i = 0; i < maxGameCount; i++) {
+        for (int i = 0; i < deepTryCount; i++) {
             Board.Initialize(false);
 
             Algorithm001 alphaAlgorithm = new Algorithm001(true, false);
@@ -88,13 +93,13 @@ public class DebugPlay {
             }
         }
         System.out.println(
-                "α勝利数 = " + alphaWinCount + " (" + Math.round(alphaWinCount * 100.0 / maxGameCount)
+                "α勝利数 = " + alphaWinCount + " (" + Math.round(alphaWinCount * 100.0 / deepTryCount)
                         + "%)");
         System.out.println(
-                "β勝利数 = " + bravoWinCount + " (" + Math.round(bravoWinCount * 100.0 / maxGameCount)
+                "β勝利数 = " + bravoWinCount + " (" + Math.round(bravoWinCount * 100.0 / deepTryCount)
                         + "%)");
-        System.out.println("引き分け数 = " + (maxGameCount - alphaWinCount - bravoWinCount) + " ("
-                + Math.round((maxGameCount - alphaWinCount - bravoWinCount) * 100.0 / maxGameCount)
+        System.out.println("引き分け数 = " + (deepTryCount - alphaWinCount - bravoWinCount) + " ("
+                + Math.round((deepTryCount - alphaWinCount - bravoWinCount) * 100.0 / deepTryCount)
                 + "%)");
         return alphaWinCount;
     }
