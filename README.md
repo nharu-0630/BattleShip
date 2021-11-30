@@ -158,6 +158,28 @@ class AlgorithmXXX extends Interface {
     }
 
     public void Think() {
+        if (Board.IsLastAttack(!alphaSide)){
+            switch (Board.GetLastAttackResult(!alphaSide)){
+                case 3:
+                    allySumHp--;
+                    allyCount--;
+                    break;
+                case 2:
+                    allySumHp--;
+                    break;
+            }
+        }
+        if (Board.IsLastAttack(alphaSide)){
+            switch (Board.GetLastAttackResult(alphaSide)){
+                case 3:
+                    enemySumHp--;
+                    enemyCount--;
+                    break;
+                case 2:
+                    enemySumHp--;
+                    break;
+            }
+        }
         Board.AttackPointsSearch(alphaSide);
         /* 
         アルゴリズム
