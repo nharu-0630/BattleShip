@@ -179,12 +179,12 @@ class AlgorithmXXX extends Interface {
 
 ## DebugPlay.java
 
-2つのアルゴリズムを勝負する
+2つのアルゴリズムを勝負する  
 αとβの初期配置を設定する必要がある
 
 ## ReleasePlay.java
 
-アルゴリズムを実際に使う
+アルゴリズムを実際に使う  
 αの初期配置のみ設定する必要がある
 
 ---
