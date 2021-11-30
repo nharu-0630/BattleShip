@@ -35,7 +35,7 @@ RTX 3080 Ti
 | IsAlive     | boolean          | boolean | 戦艦の生死を取得 |                            |     |
 | IsEmpty     | boolean          | boolean | 戦艦の有無を取得 |                            |     |
 
-第1引数には`alphaSide`を割当
+第1引数には`alphaSide`を割当  
 
 ### ポイント(Point)
 
@@ -121,7 +121,7 @@ RTX 3080 Ti
 | RandomGet*           | Point                    | ArrayList\<Point\> | ポイントリストからランダムに取得        |                                       |
 
 引数型に`*`がついている第1引数は`alphaSide`を割当  
-メソッド名に`*`がついているメソッドは`Algorithm`内で使用可能
+メソッド名に`*`がついているメソッドは`Algorithm`内で使用可能  
 
 ### インターフェイス(Interface)
 
@@ -141,7 +141,7 @@ RTX 3080 Ti
 | DoAttack*     | Point        |      | ポイントへの攻撃   |                 |
 | DoAttackForce | Point        |      | ポイントへの強制攻撃 |                 |
 
-メソッド名に`*`がついているメソッドのみ`Algorithm`内で一度限り使用可能
+メソッド名に`*`がついているメソッドのみ`Algorithm`内で一度限り使用可能  
 
 ## AlgorithmXXX.java
 
@@ -202,12 +202,12 @@ class AlgorithmXXX extends Interface {
 ## DebugPlay.java
 
 2つのアルゴリズムを勝負する  
-αとβの初期配置を設定する必要がある
+αとβの初期配置を設定する必要がある  
 
 ## ReleasePlay.java
 
 アルゴリズムを実際に使う  
-αの初期配置のみ設定する必要がある
+αの初期配置のみ設定する必要がある  
 
 ---
 
