@@ -1,11 +1,20 @@
-import java.util.Random;
+import java.util.*;
 
 public class DebugPlay {
-    public static final Integer maxTurnCount = 60;
+    public static final int maxTurnCount = 60;
 
     public static void main(String args[]) {
         // CpuVsHuman();
-        DeepTry(1000);
+        HashMap<Double[], Integer> parameterWinCounts = new HashMap<Double[], Integer>();
+        for (double parameter = 0; parameter <= 1; parameter += 0.01) {
+            parameterWinCounts.put(new Double[] { parameter }, DeepTry(new double[] { parameter }, 1000));
+        }
+        java.util.stream.Stream<Map.Entry<Double[], Integer>> sortedParameterWinCounts = parameterWinCounts.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue());
+        sortedParameterWinCounts
+                .forEach(entry -> System.out
+                        .println(Arrays.toString(entry.getKey()) + " = " + entry.getValue()));
     }
 
     public static void CpuVsHuman() {
@@ -39,10 +48,10 @@ public class DebugPlay {
         }
     }
 
-    public static void DeepTry(Integer maxGameCount) {
-        Integer alphaWinCount = 0;
-        Integer bravoWinCount = 0;
-        for (Integer i = 0; i < maxGameCount; i++) {
+    public static int DeepTry(double[] parameters, Integer maxGameCount) {
+        int alphaWinCount = 0;
+        int bravoWinCount = 0;
+        for (int i = 0; i < maxGameCount; i++) {
             Board.Initialize(false);
 
             Algorithm001 alphaAlgorithm = new Algorithm001(true, false);
@@ -53,7 +62,11 @@ public class DebugPlay {
             Board.GetCell(1, 3).SetHp(true, 3);
             Board.GetCell(4, 4).SetHp(true, 3);
 
+            // Board.SetRandom4Points(true);
             Board.SetRandom4Points(false);
+
+            alphaAlgorithm.SetParameter(parameters);
+            bravoAlgorithm.SetParameter(new double[] { 1 });
 
             boolean alphaSide = (i % 2 == 0);
             while (Board.IsContinue(false)) {
@@ -83,5 +96,6 @@ public class DebugPlay {
         System.out.println("引き分け数 = " + (maxGameCount - alphaWinCount - bravoWinCount) + " ("
                 + Math.round((maxGameCount - alphaWinCount - bravoWinCount) * 100.0 / maxGameCount)
                 + "%)");
+        return alphaWinCount;
     }
 }
