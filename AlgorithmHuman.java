@@ -8,7 +8,7 @@ class AlgorithmHuman extends Interface {
     }
 
     public void Think() {
-        Board.AttackPointsSearch(alphaSide);
+        Board.SearchAttackPoints(alphaSide);
         Board.WriteBoardHp(alphaSide);
         Board.WriteBoardIsAttack(alphaSide);
         System.out.print("a(Attack), m(Move): ");

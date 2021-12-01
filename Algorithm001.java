@@ -34,19 +34,15 @@ class Algorithm001 extends Interface {
                     break;
             }
         }
-        Board.AttackPointsSearch(alphaSide);
+        Board.SearchAttackPoints(alphaSide);
 
         if (Board.IsLastMove(!alphaSide)) {
-            if (alphaSide) {
-                Board.ClearValue(alphaSide);
-            } else {
-                Board.NormalizeValue(alphaSide);
-            }
+            Board.NormalizeValues(alphaSide);
         }
         if (Board.IsLastAttack(!alphaSide)) {
             // 敵に攻撃された
             Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValue(alphaSide, 0);
-            for (Point point : Board.PointRound(Board.GetLastAttackPoint(!alphaSide))) {
+            for (Point point : Board.GetRoundPoints(Board.GetLastAttackPoint(!alphaSide))) {
                 Board.GetCell(point).SetValue(alphaSide, Board.GetCell(point).GetValue(alphaSide) + 1);
             }
             switch (Board.GetLastAttackResult(!alphaSide)) {
@@ -56,14 +52,14 @@ class Algorithm001 extends Interface {
                 case 2:
                     // 敵に命中された
                     ArrayList<Point> points = new ArrayList<Point>();
-                    for (Point point : Board.PointCross(Board.GetLastAttackPoint(!alphaSide), 2)) {
+                    for (Point point : Board.GetCrossPoints(Board.GetLastAttackPoint(!alphaSide), 2)) {
                         if (Board.IsMoveEnablePoint(alphaSide, Board.GetLastAttackPoint(!alphaSide),
                                 point)) {
                             points.add(point);
                         }
                     }
                     // 移動できる範囲からランダムに移動
-                    DoMove(Board.GetLastAttackPoint(!alphaSide), Board.RandomGet(points));
+                    DoMove(Board.GetLastAttackPoint(!alphaSide), Board.GetRandomPoint(points));
                     return;
                 case 1:
                     // 波高しされた
@@ -107,7 +103,7 @@ class Algorithm001 extends Interface {
                 case 1:
                     // 敵を波高しした
                     Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0);
-                    for (Point point : Board.PointRound(Board.GetLastAttackPoint(alphaSide))) {
+                    for (Point point : Board.GetRoundPoints(Board.GetLastAttackPoint(alphaSide))) {
                         Board.GetCell(point).SetValue(alphaSide,
                                 Board.GetCell(point).GetValue(alphaSide) + 1);
                     }
@@ -122,7 +118,7 @@ class Algorithm001 extends Interface {
                 case 0:
                     // 前ターンで敵に命中しなかった
                     Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0);
-                    for (Point point : Board.PointRound(Board.GetLastAttackPoint(alphaSide))) {
+                    for (Point point : Board.GetRoundPoints(Board.GetLastAttackPoint(alphaSide))) {
                         Board.GetCell(point).SetValue(alphaSide, 0);
                     }
                     break;
@@ -130,16 +126,16 @@ class Algorithm001 extends Interface {
         }
         Random random = new Random();
         if (random.nextDouble() <= attackProbability) {
-            DoAttack(Board.RandomGet(Board.MaxValuePoints(alphaSide, true)));
+            DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true)));
         } else {
-            Point oldPoint = Board.RandomGet(Board.ShipPoints(alphaSide));
+            Point oldPoint = Board.GetRandomPoint(Board.GetShipPoints(alphaSide));
             ArrayList<Point> points = new ArrayList<Point>();
-            for (Point point : Board.PointCross(oldPoint, 2)) {
+            for (Point point : Board.GetCrossPoints(oldPoint, 2)) {
                 if (Board.IsMoveEnablePoint(alphaSide, oldPoint, point)) {
                     points.add(point);
                 }
             }
-            DoMove(oldPoint, Board.RandomGet(points));
+            DoMove(oldPoint, Board.GetRandomPoint(points));
         }
         return;
     }
