@@ -6,7 +6,44 @@ public class DebugPlay {
 
     public static void main(String args[]) {
         // CpuVsHuman();
-        parameterDeepTry();
+        // parameterDeepTry();
+        Try();
+    }
+
+    public static void Try() {
+        Logger.CreateLogger();
+
+        Board.Initialize(false);
+
+        Algorithm001 alphaAlgorithm = new Algorithm001(true, false);
+        Algorithm001 bravoAlgorithm = new Algorithm001(false, false);
+
+        Board.GetCell(0, 0).SetHp(true, 3);
+        Board.GetCell(3, 1).SetHp(true, 3);
+        Board.GetCell(1, 3).SetHp(true, 3);
+        Board.GetCell(4, 4).SetHp(true, 3);
+
+        // Board.SetRandom4Points(true);
+        Board.SetRandom4Points(false);
+
+        alphaAlgorithm.SetParameter(new double[] { 1 });
+        bravoAlgorithm.SetParameter(new double[] { 1 });
+
+        boolean alphaSide = true;
+        while (Board.IsContinue(false)) {
+            if (alphaSide) {
+                alphaAlgorithm.Think();
+            } else {
+                bravoAlgorithm.Think();
+            }
+            alphaSide = !alphaSide;
+            if (Board.GetTurnCount() >= maxTurnCount) {
+                Board.IsContinue(true);
+                break;
+            }
+        }
+
+        Logger.SaveLogger("test.json");
     }
 
     public static void CpuVsHuman() {

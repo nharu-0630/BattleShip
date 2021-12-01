@@ -532,6 +532,7 @@ class Board {
     }
 
     public static boolean MovePoint(boolean alphaSide, Point oldPoint, Point newPoint) {
+        Logger.AddLogger();
         WriteLogSide(alphaSide);
         if (IsMoveEnablePoint(alphaSide, oldPoint, newPoint)) {
             WriteLogLine("移動】 " + oldPoint + " → " + newPoint);
@@ -607,6 +608,7 @@ class Board {
     }
 
     public static boolean AttackPoint(boolean alphaSide, Point point, boolean judgeResult) {
+        Logger.AddLogger();
         WriteLogSide(alphaSide);
         if (IsAttackPoint(alphaSide, point)) {
             int attackResult = -1;
@@ -767,18 +769,59 @@ class Logger {
         jsonObject = new JSONObject();
     }
 
-    public static void AddLogger(int turnCount, boolean alphaSide, ArrayList<Integer> hpArrayList,
-            ArrayList<Integer> valueArrayList,
-            ArrayList<Integer> isAttackArrayList) {
+    public static void AddLogger() {
         JSONObject childJsonObject = new JSONObject();
-        childJsonObject.put("alphaSide", alphaSide);
-        childJsonObject.put("hp", hpArrayList);
-        childJsonObject.put("value", valueArrayList);
-        childJsonObject.put("isAttack", isAttackArrayList);
-        jsonObject.put(String.valueOf(turnCount), childJsonObject);
+        JSONObject alphaJsonObject = new JSONObject();
+        alphaJsonObject.put("hp", GetHpArrayList(true));
+        alphaJsonObject.put("value", GetValueArrayList(true));
+        alphaJsonObject.put("isAttack", GetIsAttackArrayList(true));
+        childJsonObject.put("true", alphaJsonObject);
+        JSONObject bravoJsonObject = new JSONObject();
+        bravoJsonObject.put("hp", GetHpArrayList(false));
+        bravoJsonObject.put("value", GetValueArrayList(false));
+        bravoJsonObject.put("isAttack", GetIsAttackArrayList(false));
+        childJsonObject.put("false", bravoJsonObject);
+        jsonObject.put(String.valueOf(Board.GetTurnCount()), childJsonObject);
+    }
+
+    public static ArrayList<Integer> GetHpArrayList(boolean alphaSide) {
+        ArrayList<Integer> hpArrayList = new ArrayList<Integer>();
+        for (int x = 0; x < Board.GetBoardSize(); x++) {
+            for (int y = 0; y < Board.GetBoardSize(); y++) {
+                hpArrayList.add(Board.GetCell(x, y).GetHp(alphaSide));
+            }
+        }
+        return hpArrayList;
+    }
+
+    public static ArrayList<Integer> GetValueArrayList(boolean alphaSide) {
+        ArrayList<Integer> valueArrayList = new ArrayList<Integer>();
+        for (int x = 0; x < Board.GetBoardSize(); x++) {
+            for (int y = 0; y < Board.GetBoardSize(); y++) {
+                valueArrayList.add(Board.GetCell(x, y).GetValue(alphaSide));
+            }
+        }
+        return valueArrayList;
+    }
+
+    public static ArrayList<Boolean> GetIsAttackArrayList(boolean alphaSide) {
+        ArrayList<Boolean> isAttackArrayList = new ArrayList<Boolean>();
+        for (int x = 0; x < Board.GetBoardSize(); x++) {
+            for (int y = 0; y < Board.GetBoardSize(); y++) {
+                isAttackArrayList.add(Board.GetCell(x, y).GetIsAttack(alphaSide));
+            }
+        }
+        return isAttackArrayList;
     }
 
     public static void SaveLogger(String fileName) {
-        // TODO
+        try {
+            FileWriter fileWriter = new FileWriter(fileName);
+            fileWriter.write(jsonObject.toString());
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (IOException exception) {
+
+        }
     }
 }
