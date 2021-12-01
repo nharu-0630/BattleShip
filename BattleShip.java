@@ -1,4 +1,6 @@
 import java.util.*;
+import java.io.*;
+import org.json.*;
 
 class Cell {
     private int alphaHp;
@@ -755,5 +757,28 @@ class Interface {
     public void DoAttackForce(Point point) {
         Board.WriteLogLine(point + " に魚雷発射！");
         Board.AttackPointForce(alphaSide, point);
+    }
+}
+
+class Logger {
+    private static JSONObject jsonObject;
+
+    public static void CreateLogger() {
+        jsonObject = new JSONObject();
+    }
+
+    public static void AddLogger(int turnCount, boolean alphaSide, ArrayList<Integer> hpArrayList,
+            ArrayList<Integer> valueArrayList,
+            ArrayList<Integer> isAttackArrayList) {
+        JSONObject childJsonObject = new JSONObject();
+        childJsonObject.put("alphaSide", alphaSide);
+        childJsonObject.put("hp", hpArrayList);
+        childJsonObject.put("value", valueArrayList);
+        childJsonObject.put("isAttack", isAttackArrayList);
+        jsonObject.put(String.valueOf(turnCount), childJsonObject);
+    }
+
+    public static void SaveLogger(String fileName) {
+        // TODO
     }
 }
