@@ -121,20 +121,20 @@ class Board {
     private static final int boardSize = 5;
 
     private static Cell[][] cells;
-    private static int turnCount;
+    private static int turnCount = 0;
 
-    private static boolean alphaWin;
-    private static boolean bravoWin;
+    private static boolean alphaWin = false;
+    private static boolean bravoWin = false;
 
-    private static Point lastAlphaAttackPoint;
-    private static int lastAlphaAttackResult;
-    private static Point lastAlphaMoveVector;
+    private static Point lastAlphaAttackPoint = null;
+    private static int lastAlphaAttackResult = -1;
+    private static Point lastAlphaMoveVector = null;
 
-    private static Point lastBravoAttackPoint;
-    private static int lastBravoAttackResult;
-    private static Point lastBravoMoveVector;
+    private static Point lastBravoAttackPoint = null;
+    private static int lastBravoAttackResult = -1;
+    private static Point lastBravoMoveVector = null;
 
-    private static boolean visibleLog;
+    private static boolean visibleLog = false;
 
     Board(boolean visibleLog) {
         Initialize(visibleLog);
@@ -147,6 +147,7 @@ class Board {
                 SetCell(x, y, new Cell());
             }
         }
+
         turnCount = 0;
 
         alphaWin = false;

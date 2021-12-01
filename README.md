@@ -17,20 +17,20 @@ RTX 3080 Ti
 
 | 変数名           | 変数型     | デフォルト値 |                    |
 | :-----------: | :-----: | :----: | :----------------: |
-| alphaHp       | Integer | -1     | αの戦艦HP(存在しない場合は-1) |
-| bravoHp       | Integer | -1     | βの戦艦HP(存在しない場合は-1) |
-| alphaValue    | Integer | 0      | αのアルゴリズム用の評価値      |
-| bravoValue    | Integer | 0      | βのアルゴリズム用の評価値      |
-| alphaIsAttack | boolean | false  | αの攻撃の可否         |
-| bravoIsAttack | boolean | false  | βの攻撃の可否         |
+| alphaHp       | int     | -1     | αの戦艦HP(存在しない場合は-1) |
+| bravoHp       | int     | -1     | βの戦艦HP(存在しない場合は-1) |
+| alphaValue    | int     | 0      | αのアルゴリズム用の評価値      |
+| bravoValue    | int     | 0      | βのアルゴリズム用の評価値      |
+| alphaIsAttack | boolean | false  | αの攻撃の可否            |
+| bravoIsAttack | boolean | false  | βの攻撃の可否            |
 
 | メソッド名       | 引数型              | 戻り値型    |          |                            |     |
 | ----------- | ---------------- | ------- | -------- | -------------------------- | --- |
-| GetHp       | boolean          | Integer | 戦艦HPを取得  |                            |     |
-| SetHp       | boolean, Integer | なし      | 戦艦HPを設定  |                            |     |
-| GetValue    | boolean          | Integer | 評価値を取得   |                            |     |
-| SetValue    | boolean, Integer | なし      | 評価値を設定   |                            |     |
-| SetIsAttack | boolean, boolean | なし      | 攻撃の可否を設定 | セルに自軍戦艦がいない場合は`true`を設定できる |     |
+| GetHp       | boolean          | int     | 戦艦HPを取得  |                            |     |
+| SetHp       | boolean, int     |         | 戦艦HPを設定  |                            |     |
+| GetValue    | boolean          | int     | 評価値を取得   |                            |     |
+| SetValue    | boolean, int     |         | 評価値を設定   |                            |     |
+| SetIsAttack | boolean, boolean |         | 攻撃の可否を設定 | セルに自軍戦艦がいない場合は`true`を設定できる |     |
 | GetIsAttack | boolean, boolean | boolean | 攻撃の可否を取得 |                            |     |
 | IsAlive     | boolean          | boolean | 戦艦の生死を取得 |                            |     |
 | IsEmpty     | boolean          | boolean | 戦艦の有無を取得 |                            |     |
@@ -39,10 +39,10 @@ RTX 3080 Ti
 
 ### ポイント(Point)
 
-| 変数名 | 変数型     | デフォルト値 |       |
-| --- | ------- | ------ | ----- |
-| x   | Integer |        | 座標のX値 |
-| y   | Intger  |        | 座標のY値 |
+| 変数名 | 変数型 | デフォルト値 |       |
+| --- | --- | ------ | ----- |
+| x   | int | 0      | 座標のX値 |
+| y   | int | 0      | 座標のY値 |
 
 | メソッド名    | 引数型   | 戻り値型    |            |
 | -------- | ----- | ------ | ---------- |
@@ -52,7 +52,7 @@ RTX 3080 Ti
 
 ### ボード(Board)
 
-| Integer | attackResult |
+| int | attackResult |
 | ------- | ------------ |
 | 撃沈！     | 3            |
 | 命中！     | 2            |
@@ -61,16 +61,16 @@ RTX 3080 Ti
 
 | 変数名                   | 変数型      | デフォルト値 |            |
 | --------------------- | -------- | ------ | ---------- |
-| boardSize             | Integer  | 5      | ボードの1辺の長さ     |
+| boardSize             | int      | 5      | ボードの1辺の長さ  |
 | cells                 | Cell[][] |        | セルの2次元配列   |
-| turnCount             | Integer  |        | ターン数       |
+| turnCount             | int      | 0      | ターン数       |
 | alphaWin              | boolean  | false  | αの勝利       |
 | bravoWin              | boolean  | false  | βの勝利       |
 | lastAlphaAttackPoint  | Point    |        | αの前回攻撃ポイント |
-| lastAlphaAttackResult | Integer  |        | αの前回攻撃結果   |
+| lastAlphaAttackResult | int      | -1     | αの前回攻撃結果   |
 | lastAlphaMoveVector   | Point    |        | αの前回移動ベクトル |
 | lastBravoAttackPoint  | Point    |        | βの前回攻撃ポイント |
-| lastBravoAttackResult | Integer  |        | βの前回攻撃結果   |
+| lastBravoAttackResult | int      | -1     | βの前回攻撃結果   |
 | lastBravoMoveVector   | Point    |        | βの前回移動ベクトル |
 | visibleLog            | boolean  | false  | ログの表示      |
 
@@ -80,27 +80,27 @@ RTX 3080 Ti
 | GetAlphaWin          |                          | boolean            | αの勝利を取得                 |                                       |
 | GetBravoWin          |                          | boolean            | βの勝利を取得                 |                                       |
 | SetTurnCount         |                          |                    | ターン数に1加算                |                                       |
-| GetTurnCount*        |                          | Integer            | ターン数を取得                 |                                       |
-| GetBoardSize*        |                          | Integer            | ボードの1辺の長さを取得            |                                       |
+| GetTurnCount*        |                          | int                | ターン数を取得                 |                                       |
+| GetBoardSize*        |                          | int                | ボードの1辺の長さを取得            |                                       |
 | GetCell*             | Point                    | Cell               | ポイントのセルを取得              |                                       |
-| GetCell*             | Integer, Integer         | Cell               | ポイントのセルを取得              |                                       |
+| GetCell*             | int, int                 | Cell               | ポイントのセルを取得              |                                       |
 | SetCell              | Point, Cell              |                    | ポイントにセルを設定              |                                       |
-| SetCell              | Integer, Integer, Cell   |                    | ポイントにセルを設定              |                                       |
+| SetCell              | int, int, Cell           |                    | ポイントにセルを設定              |                                       |
 | GetLastAttackPoint*  | boolean*                 | Point              | 前回攻撃ポイントを取得             |                                       |
-| GetLastAttackResult* | boolean*                 | Integer            | 前回攻撃結果を取得               |                                       |
+| GetLastAttackResult* | boolean*                 | int                | 前回攻撃結果を取得               |                                       |
 | GetLastMoveVector*   | boolean*                 | Point              | 前回移動ベクトルを取得             |                                       |
 | LogSide              | boolean                  |                    | ログの表示                   |                                       |
 | LogLine              | String                   |                    | ログの表示                   |                                       |
 | Log                  | String                   |                    | ログの表示                   |                                       |
 | IsContinue           | boolean                  | boolean            | ターン続行の可否                | 引数は強制終了する場合のみ`true`にする                |
-| RandomPoints*        | Integer                  | ArrayList\<Point\> | ランダムなポイントリストを取得         |                                       |
+| RandomPoints*        | int                      | ArrayList\<Point\> | ランダムなポイントリストを取得         |                                       |
 | SetRandom4Points     | boolean*                 |                    | ランダムな4ポイントに戦艦を配置        |                                       |
 | MaxValuePoints*      | boolean*                 | ArrayList\<Point\> | 評価値が最大であるポイントリストを取得     |                                       |
 | PointRound*          | Point                    | ArrayList\<Point\> | ポイントの周囲8ポイントリストを取得      |                                       |
-| PointCross*          | Point, Integer           | ArrayList\<Point\> | ポイントの周囲4ポイントリストを取得      | 第2引数は距離であり、2の場合は移動可能な範囲である            |
+| PointCross*          | Point, int               | ArrayList\<Point\> | ポイントの周囲4ポイントリストを取得      | 第2引数は距離であり、2の場合は移動可能な範囲である            |
 | IsMoveEnablePoint*   | boolean*, Point, Point   | boolean            | 移動の可否                   | 第2, 3引数はポイントである                       |
 | IsMoveEnableVector*  | boolean*, Point, Point   | boolean            | 移動の可否                   | 第2引数はポイントであり、第3引数はベクトルである             |
-| PointDistance*       | Point, Point             | Integer            | ポイント間の距離                | X軸間の距離 + Y軸間の距離である                    |
+| PointDistance*       | Point, Point             | int                | ポイント間の距離                | X軸間の距離 + Y軸間の距離である                    |
 | MovePoint            | boolean*, Point, Point   | boolean            | 戦艦の移動                   | 第2, 3引数はポイントである                       |
 | MoveVector           | boolean*, Point, Point   | boolean            | 戦艦の移動                   | 第2引数はポイントであり、第3引数はベクトルである             |
 | MoveVectorForce      | boolean*, Point          |                    | 戦艦の強制移動                 | 第2引数はベクトルである                          |
@@ -112,7 +112,7 @@ RTX 3080 Ti
 | AttackPoints*        | boolean*                 | ArrayList\<Point\> | 攻撃が可能なポイントリストを取得        |                                       |
 | IsAttackPoint*       | boolean*, Point          | boolean            | ポイントの攻撃の可否を取得           |                                       |
 | AttackPoint          | boolean*, Point, boolean | boolean            | ポイントへの攻撃                | 第3引数は攻撃結果をあとから設定する場合のみ`false`にする      |
-| AttackResultTransfer | boolean*, Integer        |                    | ポイントへの攻撃結果を設定           | `AttackPoint`の第3引数を`false`にした場合のみ使用する |
+| AttackResultTransfer | boolean*, int            |                    | ポイントへの攻撃結果を設定           | `AttackPoint`の第3引数を`false`にした場合のみ使用する |
 | AttackPointForce     | boolean*, Point          |                    | ポイントへの強制攻撃              |                                       |
 | WriteBoardHp         | boolean*                 |                    | 戦艦HPを表示                 |                                       |
 | WriteBoardIsAttack   | boolean*                 |                    | 攻撃の可否を表示                |                                       |
@@ -127,10 +127,10 @@ RTX 3080 Ti
 
 | 変数名           | 変数型     | デフォルト値 |                            |
 | ------------- | ------- | ------ | -------------------------- |
-| allyCount     | Integer | 4      | 自軍戦艦の数                     |
-| allySumHp     | Integer | 12     | 自軍戦艦の総HP                   |
-| enemyCount    | Integer | 4      | 敵軍戦艦の数                     |
-| enemySumHp    | Integer | 12     | 敵軍戦艦の総HP                   |
+| allyCount     | int     | 4      | 自軍戦艦の数                     |
+| allySumHp     | int     | 12     | 自軍戦艦の総HP                   |
+| enemyCount    | int     | 4      | 敵軍戦艦の数                     |
+| enemySumHp    | int     | 12     | 敵軍戦艦の総HP                   |
 | alphaSide     | boolean | false  | `Board`における`alphaSide`     |
 | isEnemySecret | boolean | false  | 攻撃結果をあとから設定する場合のみ`true`にする |
 
