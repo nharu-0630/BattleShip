@@ -1,3 +1,5 @@
+import java.time.*;
+import java.time.format.*;
 import java.util.*;
 
 public class DebugPlay {
@@ -7,10 +9,11 @@ public class DebugPlay {
     public static void main(String args[]) {
         // CpuVsHuman();
         // parameterDeepTry();
-        Try();
+        LocalDateTime nowDate = LocalDateTime.now();
+        Try(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(nowDate) + ".json");
     }
 
-    public static void Try() {
+    public static void Try(String fileName) {
         Logger.CreateLogger();
 
         Board.Initialize(false);
@@ -43,7 +46,7 @@ public class DebugPlay {
             }
         }
 
-        Logger.SaveLogger("test.json");
+        Logger.SaveLogger(fileName);
     }
 
     public static void CpuVsHuman() {

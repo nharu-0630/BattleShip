@@ -816,7 +816,7 @@ class Logger {
 
     public static void SaveLogger(String fileName) {
         try {
-            FileWriter fileWriter = new FileWriter(fileName);
+            FileWriter fileWriter = new FileWriter("log/" + fileName);
             fileWriter.write(jsonObject.toString());
             fileWriter.flush();
             fileWriter.close();
