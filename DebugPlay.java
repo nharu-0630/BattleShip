@@ -8,9 +8,8 @@ public class DebugPlay {
 
     public static void main(String args[]) {
         // CpuVsHuman();
-        DeepTry(new double[] { 1 });
-        Try(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(LocalDateTime.now())
-                + ".json");
+        // DeepTry(new double[] { 1 });
+        Try(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(LocalDateTime.now()) + ".json");
     }
 
     public static void Try(String fileName) {
