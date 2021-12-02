@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>DebugPlay</title>
+    <title>BattleShip</title>
     <link href=https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css rel="stylesheet"
         integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <meta name="theme-color" content="#7952b3">
@@ -28,7 +28,7 @@
 
 <body>
     <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">DebugPlay</a>
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">BattleShip</a>
         <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
             data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
             aria-label="Toggle navigation">
@@ -43,7 +43,7 @@
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link" href="#">
-                                ダッシュボード
+                                BattleShip
                             </a>
                         </li>
                     </ul>
@@ -53,38 +53,105 @@
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div
                     class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">ダッシュボード</h1>
+                    <h1 class="h2">BattleShip</h1>
                 </div>
                 <div class="input-group mb-3">
                     <input type="file" class="form-control" id="fileInput">
                     <button class="btn btn-outline-secondary" type="button" id="loadButton">読込</button>
                 </div>
-                <input type="range" class="form-range mb-3" min="0" max="5" id="progressRange">
+                <input type="range" class="form-range mb-3" min="1" max="1" id="progressRange">
                 <div class="btn-group mb-3" role="group">
                     <button type="button" class="btn btn-outline-secondary" id="previousButton">前のターン</button>
                     <button type="button" class="btn btn-primary" id="nextButton">次のターン</button>
                 </div>
                 <script>
+                    function HpArrayToTable(id, array) {
+                        let table = document.getElementById(id);
+                        for (let index = 0; index < array.length; index++) {
+                            const element = array[index];
+                            switch (element) {
+                                case 3:
+                                    table.getElementsByTagName("td")[index].setAttribute("class", "table-success");
+                                    break;
+                                case 2:
+                                    table.getElementsByTagName("td")[index].setAttribute("class", "table-warning");
+                                    break;
+                                case 1:
+                                    table.getElementsByTagName("td")[index].setAttribute("class", "table-danger");
+                                    break;
+                                case 0:
+                                    table.getElementsByTagName("td")[index].setAttribute("class", "table-dark");
+                                    break;
+                                default:
+                                    table.getElementsByTagName("td")[index].setAttribute("class", "");
+                                    break;
+                            }
+
+                        }
+                    }
+                    function ValueArrayToTable(id, array) {
+                        let table = document.getElementById(id);
+                        for (let index = 0; index < array.length; index++) {
+                            const element = array[index];
+                            switch (element) {
+                                default:
+                                    table.getElementsByTagName("td")[index].innerText = element;
+                                    break;
+                            }
+
+                        }
+                    }
+                    function IsAttackArrayToTable(id, array) {
+                        let table = document.getElementById(id);
+                        for (let index = 0; index < array.length; index++) {
+                            const element = array[index];
+                            switch (element) {
+                                case true:
+                                    table.getElementsByTagName("td")[index].setAttribute("class", "table-danger");
+                                    break;
+                                case false:
+                                    table.getElementsByTagName("td")[index].setAttribute("class", "");
+                                    break;
+                                default:
+                                    table.getElementsByTagName("td")[index].setAttribute("class", "");
+                                    break;
+                            }
+
+                        }
+                    }
+                    function TableRefresh() {
+                        HpArrayToTable("alphaHp", json[document.getElementById("progressRange").value][true]["hp"]);
+                        ValueArrayToTable("alphaValue", json[document.getElementById("progressRange").value][true]["value"]);
+                        IsAttackArrayToTable("alphaIsAttack", json[document.getElementById("progressRange").value][true]["isAttack"]);
+                        HpArrayToTable("bravoHp", json[document.getElementById("progressRange").value][false]["hp"]);
+                        ValueArrayToTable("bravoValue", json[document.getElementById("progressRange").value][false]["value"]);
+                        IsAttackArrayToTable("bravoIsAttack", json[document.getElementById("progressRange").value][false]["isAttack"]);
+                    }
+                    let json;
                     document.getElementById("previousButton").addEventListener('click', function () {
                         if (document.getElementById("progressRange").value !== 0) {
                             document.getElementById("progressRange").value--;
+                            AllTableRewrite();
                         }
                     });
                     document.getElementById("nextButton").addEventListener('click', function () {
                         if (document.getElementById("progressRange").value !== document.getElementById("progressRange").attributes["max"]) {
                             document.getElementById("progressRange").value++;
+                            AllTableRewrite();
                         }
                     });
-                    document.getElementById("progressRange").addEventListener('oninput', function () {
-                        console.log(document.getElementById("progressRange").value);
+                    document.getElementById("progressRange").addEventListener('input', function () {
+                        AllTableRewrite();
                     });
                     document.getElementById("loadButton").addEventListener('click', function () {
-                        var fileReader = new FileReader();
+                        let fileReader = new FileReader();
                         fileReader.readAsText(document.getElementById("fileInput").files[0]);
                         fileReader.addEventListener("load", function () {
-                            console.log(fileReader.result);
+                            json = JSON.parse(fileReader.result);
+                            document.getElementById("progressRange").value = 1;
+                            document.getElementById("progressRange").setAttribute("max", Object.keys(json).length);
                         });
-                    })
+                    });
 
 
                 </script>
@@ -102,7 +169,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm">
-                            <table class="table table-bordered table-board">
+                            <table class="table table-bordered table-board" id="alphaHp">
                                 <thead>
                                     <tr>
                                         <th scope="col">α</th>
@@ -158,7 +225,7 @@
                             </table>
                         </div>
                         <div class="col-sm">
-                            <table class="table table-bordered table-board">
+                            <table class="table table-bordered table-board" id="alphaValue">
                                 <thead>
                                     <tr>
                                         <th scope="col">α</th>
@@ -214,7 +281,7 @@
                             </table>
                         </div>
                         <div class="col-sm">
-                            <table class="table table-bordered table-board">
+                            <table class="table table-bordered table-board" id="alphaIsAttack">
                                 <thead>
                                     <tr>
                                         <th scope="col">α</th>
@@ -272,7 +339,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm">
-                            <table class="table table-bordered table-board">
+                            <table class="table table-bordered table-board" id="bravoHp">
                                 <thead>
                                     <tr>
                                         <th scope="col">β</th>
@@ -328,7 +395,7 @@
                             </table>
                         </div>
                         <div class="col-sm">
-                            <table class="table table-bordered table-board">
+                            <table class="table table-bordered table-board" id="bravoValue">
                                 <thead>
                                     <tr>
                                         <th scope="col">β</th>
@@ -384,7 +451,7 @@
                             </table>
                         </div>
                         <div class="col-sm">
-                            <table class="table table-bordered table-board">
+                            <table class="table table-bordered table-board" id="bravoIsAttack">
                                 <thead>
                                     <tr>
                                         <th scope="col">β</th>
