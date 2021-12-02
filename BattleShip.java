@@ -815,6 +815,10 @@ class Logger {
     }
 
     public static void SaveLogger(String fileName) {
+        File file = new File("log");
+        if (!file.exists() || !file.isDirectory()) {
+            file.mkdir();
+        }
         try {
             FileWriter fileWriter = new FileWriter("log/" + fileName);
             fileWriter.write(jsonObject.toString());
