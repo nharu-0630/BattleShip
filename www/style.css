@@ -105,6 +105,7 @@ body {
 table.table-board {
   width: 240px !important;
   height: 240px !important;
+  table-layout: fixed;
 }
 
 table.table-board th, td {

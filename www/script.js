@@ -67,6 +67,9 @@ function TableRefresh() {
 let json;
 
 document.getElementById("previousButton").addEventListener('click', function () {
+    if (json == undefined) {
+        return;
+    }
     if (document.getElementById("progressRange").value !== 0) {
         document.getElementById("progressRange").value--;
         TableRefresh();
@@ -74,6 +77,9 @@ document.getElementById("previousButton").addEventListener('click', function () 
 });
 
 document.getElementById("nextButton").addEventListener('click', function () {
+    if (json == undefined) {
+        return;
+    }
     if (document.getElementById("progressRange").value !== document.getElementById("progressRange").attributes["max"]) {
         document.getElementById("progressRange").value++;
         TableRefresh();
@@ -81,6 +87,9 @@ document.getElementById("nextButton").addEventListener('click', function () {
 });
 
 document.getElementById("progressRange").addEventListener('input', function () {
+    if (json == undefined) {
+        return;
+    }
     TableRefresh();
 });
 
