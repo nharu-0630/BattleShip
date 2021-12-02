@@ -55,25 +55,28 @@
                     class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">BattleShip</h1>
                 </div>
-                <div class="input-group mb-3">
+                <div class="mb-3">
                     <input type="file" class="form-control" id="fileInput">
-                    <button class="btn btn-outline-secondary" type="button" id="loadButton">読込</button>
                 </div>
                 <input type="range" class="form-range mb-3" min="1" max="1" id="progressRange">
-                <div class="btn-group mb-3" role="group">
-                    <button type="button" class="btn btn-outline-secondary" id="previousButton">前のターン</button>
-                    <button type="button" class="btn btn-primary" id="nextButton">次のターン</button>
+                <div class="d-flex flex-row bd-highlight mb-3">
+                    <div class="p-2 bd-highlight">
+                        <div class="btn-group mb-3" role="group">
+                            <button type="button" class="btn btn-outline-secondary" id="previousButton">前のターン</button>
+                            <button type="button" class="btn btn-primary" id="nextButton">次のターン</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="container">
                     <div class="row">
                         <div class="col-sm">
-                            <h2 class="h3">戦艦HP</h2>
+                            <h2 class="h4">戦艦HP</h2>
                         </div>
                         <div class="col-sm">
-                            <h2 class="h3">評価値</h2>
+                            <h2 class="h4">評価値</h2>
                         </div>
                         <div class="col-sm">
-                            <h2 class="h3">攻撃可否</h2>
+                            <h2 class="h4">攻撃可否</h2>
                         </div>
                     </div>
                     <div class="row">

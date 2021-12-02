@@ -84,7 +84,7 @@ document.getElementById("progressRange").addEventListener('input', function () {
     TableRefresh();
 });
 
-document.getElementById("loadButton").addEventListener('click', function () {
+document.getElementById("fileInput").addEventListener('change', function () {
     let fileReader = new FileReader();
     fileReader.readAsText(document.getElementById("fileInput").files[0]);
     fileReader.addEventListener("load", function () {
