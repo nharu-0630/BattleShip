@@ -8,9 +8,9 @@ public class DebugPlay {
 
     public static void main(String args[]) {
         // CpuVsHuman();
-        // parameterDeepTry();
-        LocalDateTime nowDate = LocalDateTime.now();
-        Try(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(nowDate) + ".json");
+        DeepTry(new double[] { 1 });
+        Try(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(LocalDateTime.now())
+                + ".json");
     }
 
     public static void Try(String fileName) {
@@ -18,7 +18,7 @@ public class DebugPlay {
 
         Board.Initialize(false);
 
-        Algorithm001 alphaAlgorithm = new Algorithm001(true, false);
+        Algorithm002 alphaAlgorithm = new Algorithm002(true, false);
         Algorithm001 bravoAlgorithm = new Algorithm001(false, false);
 
         Board.GetCell(0, 0).SetHp(true, 3);
@@ -50,8 +50,10 @@ public class DebugPlay {
     }
 
     public static void CpuVsHuman() {
+        Logger.CreateLogger();
+
         Board.Initialize(true);
-        Algorithm001 alphaAlgorithm = new Algorithm001(true, false);
+        Algorithm002 alphaAlgorithm = new Algorithm002(true, false);
         AlgorithmHuman bravoAlgorithm = new AlgorithmHuman(false, false);
 
         Board.GetCell(0, 0).SetHp(true, 3);
@@ -97,9 +99,11 @@ public class DebugPlay {
         int alphaWinCount = 0;
         int bravoWinCount = 0;
         for (int i = 0; i < deepTryCount; i++) {
+            Logger.CreateLogger();
+
             Board.Initialize(false);
 
-            Algorithm001 alphaAlgorithm = new Algorithm001(true, false);
+            Algorithm002 alphaAlgorithm = new Algorithm002(true, false);
             Algorithm001 bravoAlgorithm = new Algorithm001(false, false);
 
             Board.GetCell(0, 0).SetHp(true, 3);
