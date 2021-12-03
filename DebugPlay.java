@@ -8,9 +8,9 @@ public class DebugPlay {
 
     public static void main(String args[]) {
         // CpuVsHuman();
-        // DeepTry(new double[] { 1 });
-        Try(true, new double[] { 1 });
-        Try(false, new double[] { 1 });
+        DeepTry(new double[] { 1 });
+        // Try(true, new double[] { 1 });
+        // Try(false, new double[] { 1 });
     }
 
     public static void Try(boolean alphaSide, double[] parameters) {
