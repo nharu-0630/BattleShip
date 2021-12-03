@@ -1,3 +1,4 @@
+import java.lang.reflect.Parameter;
 import java.util.*;
 
 class Algorithm002 extends Interface {
@@ -75,8 +76,9 @@ class Algorithm002 extends Interface {
                     // 敵を命中した
                     Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 10);
                     if (Board.IsLastMove(!alphaSide)) {
+                        Random random = new Random();
                         // 敵が移動した
-                        if (enemyCount == 1) {
+                        if (enemyCount == 1 || random.nextDouble() < attackProbability) {
                             // 敵が1機のみ
                             Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0);
                             Board.GetCell(Board.GetLastAttackPoint(alphaSide)
