@@ -9,10 +9,11 @@ public class DebugPlay {
     public static void main(String args[]) {
         // CpuVsHuman();
         // DeepTry(new double[] { 1 });
-        Try(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(LocalDateTime.now()) + ".json");
+        Try(true, new double[] { 1 });
+        Try(false, new double[] { 1 });
     }
 
-    public static void Try(String fileName) {
+    public static void Try(boolean alphaSide, double[] parameters) {
         Logger.CreateLogger();
 
         Board.Initialize(false);
@@ -28,10 +29,9 @@ public class DebugPlay {
         // Board.SetRandom4Points(true);
         Board.SetRandom4Points(false);
 
-        alphaAlgorithm.SetParameter(new double[] { 1 });
+        alphaAlgorithm.SetParameter(parameters);
         bravoAlgorithm.SetParameter(new double[] { 1 });
 
-        boolean alphaSide = true;
         while (Board.IsContinue(false)) {
             if (alphaSide) {
                 alphaAlgorithm.Think();
@@ -45,7 +45,9 @@ public class DebugPlay {
             }
         }
 
-        Logger.SaveLogger(fileName);
+        Logger.SaveLogger(
+                DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(LocalDateTime.now()) + "-" + alphaAlgorithm
+                        .getClass().getCanonicalName() + "-" + bravoAlgorithm.getClass().getCanonicalName() + ".json");
     }
 
     public static void CpuVsHuman() {
@@ -79,6 +81,8 @@ public class DebugPlay {
                 break;
             }
         }
+
+        Logger.SaveLogger(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(LocalDateTime.now()) + ".json");
     }
 
     public static void parameterDeepTry() {
@@ -98,37 +102,7 @@ public class DebugPlay {
         int alphaWinCount = 0;
         int bravoWinCount = 0;
         for (int i = 0; i < deepTryCount; i++) {
-            Logger.CreateLogger();
-
-            Board.Initialize(false);
-
-            Algorithm002 alphaAlgorithm = new Algorithm002(true, false);
-            Algorithm001 bravoAlgorithm = new Algorithm001(false, false);
-
-            Board.GetCell(0, 0).SetHp(true, 3);
-            Board.GetCell(3, 1).SetHp(true, 3);
-            Board.GetCell(1, 3).SetHp(true, 3);
-            Board.GetCell(4, 4).SetHp(true, 3);
-
-            // Board.SetRandom4Points(true);
-            Board.SetRandom4Points(false);
-
-            alphaAlgorithm.SetParameter(parameters);
-            bravoAlgorithm.SetParameter(new double[] { 1 });
-
-            boolean alphaSide = (i % 2 == 0);
-            while (Board.IsContinue(false)) {
-                if (alphaSide) {
-                    alphaAlgorithm.Think();
-                } else {
-                    bravoAlgorithm.Think();
-                }
-                alphaSide = !alphaSide;
-                if (Board.GetTurnCount() >= maxTurnCount) {
-                    Board.IsContinue(true);
-                    break;
-                }
-            }
+            Try(i % 2 == 0, parameters);
             if (Board.GetAlphaWin()) {
                 alphaWinCount++;
             } else if (Board.GetBravoWin()) {
