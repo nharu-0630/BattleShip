@@ -8,7 +8,7 @@ class Algorithm001 extends Interface {
     private double attackProbability;
 
     public void SetParameter(double[] parameters) {
-        this.attackProbability = parameters[0];
+        attackProbability = parameters[0];
     }
 
     public void Think() {

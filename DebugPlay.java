@@ -4,11 +4,13 @@ import java.util.*;
 
 public class DebugPlay {
     public static final int maxTurnCount = 60;
-    public static final int deepTryCount = 1000;
+    // public static final int deepTryCount = 1000;
+    public static final int deepTryCount = 100;
 
     public static void main(String args[]) {
         // CpuVsHuman();
-        DeepTry(new double[] { 1 });
+        // ParameterDeepTry();
+        DeepTry(new double[] { 1, 0 });
         // Try(true, new double[] { 1 });
         // Try(false, new double[] { 1 });
     }
@@ -90,10 +92,10 @@ public class DebugPlay {
         Logger.SaveLogger(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(LocalDateTime.now()) + ".json");
     }
 
-    public static void parameterDeepTry() {
+    public static void ParameterDeepTry() {
         HashMap<Double[], Integer> parameterWinCounts = new HashMap<Double[], Integer>();
-        for (double parameter = 0; parameter <= 1; parameter += 0.01) {
-            parameterWinCounts.put(new Double[] { parameter }, DeepTry(new double[] { parameter }));
+        for (double parameter = 0; parameter <= 1; parameter += 0.05) {
+            parameterWinCounts.put(new Double[] { 1d, parameter }, DeepTry(new double[] { 1, parameter }));
         }
         java.util.stream.Stream<Map.Entry<Double[], Integer>> sortedParameterWinCounts = parameterWinCounts.entrySet()
                 .stream()

@@ -1,3 +1,4 @@
+import java.nio.channels.NonReadableChannelException;
 import java.util.*;
 
 class Algorithm002 extends Interface {
@@ -5,10 +6,13 @@ class Algorithm002 extends Interface {
         super(alphaSide, isEnemySecret);
     }
 
+    private Random random = new Random();
     private double attackProbability;
+    private double fakeMoveProbability;
 
     public void SetParameter(double[] parameters) {
-        this.attackProbability = parameters[0];
+        attackProbability = parameters[0];
+        fakeMoveProbability = parameters[1];
     }
 
     public void Think() {
@@ -45,19 +49,40 @@ class Algorithm002 extends Interface {
             switch (Board.GetLastAttackResult(!alphaSide)) {
                 case 3:
                     // 敵に撃沈された
+                    
                     break;
                 case 2:
                     // 敵に命中された
-                    ArrayList<Point> points = new ArrayList<Point>();
-                    for (Point point : Board.GetCrossPoints(Board.GetLastAttackPoint(!alphaSide), 2)) {
-                        if (Board.IsMoveEnablePoint(alphaSide, Board.GetLastAttackPoint(!alphaSide),
-                                point)) {
-                            points.add(point);
+                    if (random.nextDouble() < fakeMoveProbability && allyCount > 1) {
+                        Point fakePoint = new Point(-1, -1);
+                        while (true) {
+                            fakePoint = Board.GetRandomPoint(Board.GetShipPoints(alphaSide));
+                            if (Board.GetLastAttackPoint(!alphaSide) != fakePoint) {
+                                break;
+                            }
                         }
+                        ArrayList<Point> points = new ArrayList<Point>();
+                        for (Point point : Board.GetCrossPoints(fakePoint, 2)) {
+                            if (Board.IsMoveEnablePoint(alphaSide,
+                                    fakePoint,
+                                    point)) {
+                                points.add(point);
+                            }
+                        }
+                        DoMove(fakePoint, Board.GetRandomPoint(points));
+                        return;
+                    } else {
+                        ArrayList<Point> points = new ArrayList<Point>();
+                        for (Point point : Board.GetCrossPoints(Board.GetLastAttackPoint(!alphaSide), 2)) {
+                            if (Board.IsMoveEnablePoint(alphaSide, Board.GetLastAttackPoint(!alphaSide),
+                                    point)) {
+                                points.add(point);
+                            }
+                        }
+                        // 移動できる範囲からランダムに移動
+                        DoMove(Board.GetLastAttackPoint(!alphaSide), Board.GetRandomPoint(points));
+                        return;
                     }
-                    // 移動できる範囲からランダムに移動
-                    DoMove(Board.GetLastAttackPoint(!alphaSide), Board.GetRandomPoint(points));
-                    return;
                 case 1:
                     // 波高しされた
 
@@ -122,7 +147,6 @@ class Algorithm002 extends Interface {
                     break;
             }
         }
-        Random random = new Random();
         if (random.nextDouble() <= attackProbability) {
             DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true)));
         } else {
