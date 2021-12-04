@@ -9,8 +9,8 @@ public class DebugPlay {
     public static void main(String args[]) {
         // CpuVsHuman();
         DeepTry(new double[] { 1 });
-        //Try(true, new double[] { 1 });
-        //Try(false, new double[] { 1 });
+        // Try(true, new double[] { 1 });
+        // Try(false, new double[] { 1 });
     }
 
     public static void Try(boolean alphaSide, double[] parameters) {
@@ -19,18 +19,18 @@ public class DebugPlay {
         Board.Initialize(false);
 
         Algorithm002 alphaAlgorithm = new Algorithm002(true, false);
-        // Board.GetCell(0, 0).SetHp(true, 3);
-        // Board.GetCell(3, 1).SetHp(true, 3);
-        // Board.GetCell(1, 3).SetHp(true, 3);
-        // Board.GetCell(4, 4).SetHp(true, 3);
-        Board.SetRandom4Points(true);
+        Board.GetCell(0, 0).SetHp(true, 3);
+        Board.GetCell(3, 1).SetHp(true, 3);
+        Board.GetCell(1, 3).SetHp(true, 3);
+        Board.GetCell(4, 4).SetHp(true, 3);
+        // Board.SetRandom4Points(true);
 
         Algorithm001 bravoAlgorithm = new Algorithm001(false, false);
-        // Board.GetCell(0, 0).SetHp(false, 3);
-        // Board.GetCell(3, 1).SetHp(false, 3);
-        // Board.GetCell(1, 3).SetHp(false, 3);
-        // Board.GetCell(4, 4).SetHp(false, 3);
-        Board.SetRandom4Points(false);
+        Board.GetCell(4, 0).SetHp(false, 3);
+        Board.GetCell(1, 1).SetHp(false, 3);
+        Board.GetCell(3, 3).SetHp(false, 3);
+        Board.GetCell(0, 4).SetHp(false, 3);
+        // Board.SetRandom4Points(false);
 
         alphaAlgorithm.SetParameter(parameters);
         bravoAlgorithm.SetParameter(new double[] { 1 });
@@ -64,11 +64,13 @@ public class DebugPlay {
         Board.GetCell(3, 1).SetHp(true, 3);
         Board.GetCell(1, 3).SetHp(true, 3);
         Board.GetCell(4, 4).SetHp(true, 3);
+        // Board.SetRandom4Points(true);
 
-        Board.GetCell(0, 0).SetHp(false, 3);
-        Board.GetCell(0, 4).SetHp(false, 3);
         Board.GetCell(4, 0).SetHp(false, 3);
-        Board.GetCell(4, 4).SetHp(false, 3);
+        Board.GetCell(1, 1).SetHp(false, 3);
+        Board.GetCell(3, 3).SetHp(false, 3);
+        Board.GetCell(0, 4).SetHp(false, 3);
+        // Board.SetRandom4Points(false);
 
         Random random = new Random();
         boolean alphaSide = random.nextDouble() <= 0.5;
