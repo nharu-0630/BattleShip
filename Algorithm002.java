@@ -1,4 +1,3 @@
-import java.nio.channels.NonReadableChannelException;
 import java.util.*;
 
 class Algorithm002 extends Interface {
@@ -49,7 +48,7 @@ class Algorithm002 extends Interface {
             switch (Board.GetLastAttackResult(!alphaSide)) {
                 case 3:
                     // 敵に撃沈された
-                    
+
                     break;
                 case 2:
                     // 敵に命中された
