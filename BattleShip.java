@@ -115,7 +115,7 @@ class Point {
 
     @Override
     public String toString() {
-        return "(" + x + ", " + y + ")";
+        return "(" + y + ", " + x + ")";
     }
 }
 
@@ -129,11 +129,11 @@ class Board {
     private static boolean bravoWin = false;
 
     private static Point lastAlphaAttackPoint = null;
-    private static int lastAlphaAttackResult = -1;
+    private static ArrayList<Integer> lastAlphaAttackResult = new ArrayList<Integer>(Arrays.asList(-1));
     private static Point lastAlphaMoveVector = null;
 
     private static Point lastBravoAttackPoint = null;
-    private static int lastBravoAttackResult = -1;
+    private static ArrayList<Integer> lastBravoAttackResult = new ArrayList<Integer>(Arrays.asList(-1));
     private static Point lastBravoMoveVector = null;
 
     private static boolean visibleLog = false;
@@ -156,11 +156,11 @@ class Board {
         bravoWin = false;
 
         lastAlphaAttackPoint = null;
-        lastAlphaAttackResult = -1;
+        lastAlphaAttackResult = new ArrayList<Integer>(Arrays.asList(-1));
         lastAlphaMoveVector = null;
 
         lastBravoAttackPoint = null;
-        lastBravoAttackResult = -1;
+        lastBravoAttackResult = new ArrayList<Integer>(Arrays.asList(-1));
         lastBravoMoveVector = null;
 
         Board.visibleLog = visibleLog;
@@ -350,7 +350,7 @@ class Board {
         }
     }
 
-    public static int GetLastAttackResult(boolean alphaSide) {
+    public static ArrayList<Integer> GetLastAttackResult(boolean alphaSide) {
         if (alphaSide) {
             return lastAlphaAttackResult;
         } else {
@@ -540,11 +540,11 @@ class Board {
             Board.GetCell(oldPoint).SetHp(alphaSide, -1);
             if (alphaSide) {
                 lastAlphaAttackPoint = null;
-                lastAlphaAttackResult = -1;
+                lastAlphaAttackResult = new ArrayList<Integer>(Arrays.asList(-1));
                 lastAlphaMoveVector = newPoint.Minus(oldPoint);
             } else {
                 lastBravoAttackPoint = null;
-                lastBravoAttackResult = -1;
+                lastBravoAttackResult = new ArrayList<Integer>(Arrays.asList(-1));
                 lastBravoMoveVector = newPoint.Minus(oldPoint);
             }
             return true;
@@ -563,11 +563,11 @@ class Board {
         WriteLogLine("移動】 " + vectorPoint);
         if (alphaSide) {
             lastAlphaAttackPoint = null;
-            lastAlphaAttackResult = -1;
+            lastAlphaAttackResult = new ArrayList<Integer>(Arrays.asList(-1));
             lastAlphaMoveVector = vectorPoint;
         } else {
             lastBravoAttackPoint = null;
-            lastBravoAttackResult = -1;
+            lastBravoAttackResult = new ArrayList<Integer>(Arrays.asList(-1));
             lastBravoMoveVector = vectorPoint;
         }
     }
@@ -611,28 +611,28 @@ class Board {
         Logger.AddLogger();
         WriteLogSide(alphaSide);
         if (IsAttackPoint(alphaSide, point)) {
-            int attackResult = -1;
+            ArrayList<Integer> attackResult = new ArrayList<Integer>();
             WriteLogLine("攻撃】" + point);
             if (judgeResult) {
                 if (Board.GetCell(point).IsAlive(!alphaSide)) {
                     Board.GetCell(point).SetHp(!alphaSide, Board.GetCell(point).GetHp(!alphaSide) - 1);
                     // 命中！
-                    attackResult = 2;
+                    attackResult = new ArrayList<Integer>(Arrays.asList(2));
                     WriteLogLine("命中！");
                     if (Board.GetCell(point).GetHp(!alphaSide) == 0) {
                         // 撃沈！
-                        attackResult = 3;
+                        attackResult = new ArrayList<Integer>(Arrays.asList(3));
                         WriteLogLine("撃沈！");
                     }
                 } else {
                     // ハズレ！
-                    attackResult = 0;
+                    attackResult = new ArrayList<Integer>(Arrays.asList(0));
                     WriteLogLine("ハズレ！");
                 }
                 for (Point roundPoint : GetRoundPoints(point)) {
                     if (Board.GetCell(roundPoint).IsAlive(!alphaSide)) {
                         // 波高し！
-                        attackResult = 1;
+                        attackResult.add(1);
                         WriteLogLine("波高し！");
                     }
                 }
@@ -651,31 +651,33 @@ class Board {
             WriteLogLine("攻撃】 拒否されました");
             if (alphaSide) {
                 lastAlphaAttackPoint = null;
-                lastAlphaAttackResult = -1;
+                lastAlphaAttackResult = new ArrayList<Integer>(Arrays.asList(-1));
                 lastAlphaMoveVector = null;
             } else {
                 lastBravoAttackPoint = null;
-                lastBravoAttackResult = -1;
+                lastBravoAttackResult = new ArrayList<Integer>(Arrays.asList(-1));
                 lastBravoMoveVector = null;
             }
             return false;
         }
     }
 
-    public static void AttackResultTransfer(boolean alphaSide, int attackResult) {
-        switch (attackResult) {
-            case 3:
-                WriteLogLine("撃沈！");
-                break;
-            case 2:
-                WriteLogLine("命中！");
-                break;
-            case 1:
-                WriteLogLine("波高し！");
-                break;
-            case 0:
-                WriteLogLine("ハズレ！");
-                break;
+    public static void AttackResultTransfer(boolean alphaSide, ArrayList<Integer> attackResult) {
+        for (int i = 0; i < attackResult.size(); i++) {
+            switch (attackResult.get(i)) {
+                case 3:
+                    WriteLogLine("撃沈！");
+                    break;
+                case 2:
+                    WriteLogLine("命中！");
+                    break;
+                case 1:
+                    WriteLogLine("波高し！");
+                    break;
+                case 0:
+                    WriteLogLine("ハズレ！");
+                    break;
+            }
         }
         if (alphaSide) {
             lastAlphaAttackResult = attackResult;
@@ -686,27 +688,27 @@ class Board {
 
     public static void AttackPointForce(boolean alphaSide, Point point) {
         WriteLogSide(alphaSide);
-        int attackResult = -1;
+        ArrayList<Integer> attackResult = new ArrayList<Integer>();
         WriteLogLine("攻撃】" + point);
         if (Board.GetCell(point).IsAlive(!alphaSide)) {
             Board.GetCell(point).SetHp(!alphaSide, Board.GetCell(point).GetHp(!alphaSide) - 1);
             // 命中！
-            attackResult = 2;
+            attackResult = new ArrayList<Integer>(Arrays.asList(2));
             WriteLogLine("命中！");
             if (Board.GetCell(point).GetHp(!alphaSide) == 0) {
                 // 撃沈！
-                attackResult = 3;
+                attackResult = new ArrayList<Integer>(Arrays.asList(3));
                 WriteLogLine("撃沈！");
             }
         } else {
             // ハズレ！
-            attackResult = 0;
+            attackResult = new ArrayList<Integer>(Arrays.asList(0));
             WriteLogLine("ハズレ！");
         }
         for (Point roundPoint : GetRoundPoints(point)) {
             if (Board.GetCell(roundPoint).IsAlive(!alphaSide)) {
                 // 波高し！
-                attackResult = 1;
+                attackResult.add(1);
                 WriteLogLine("波高し！");
             }
         }
@@ -775,11 +777,17 @@ class Logger {
         alphaJsonObject.put("hp", GetHpArrayList(true));
         alphaJsonObject.put("value", GetValueArrayList(true));
         alphaJsonObject.put("isAttack", GetIsAttackArrayList(true));
+        alphaJsonObject.put("lastAttackPoint", Board.GetLastAttackPoint(true));
+        alphaJsonObject.put("lastAttackResult", Board.GetLastAttackResult(true));
+        alphaJsonObject.put("lastMoveVector", Board.GetLastMoveVector(true));
         childJsonObject.put("true", alphaJsonObject);
         JSONObject bravoJsonObject = new JSONObject();
         bravoJsonObject.put("hp", GetHpArrayList(false));
         bravoJsonObject.put("value", GetValueArrayList(false));
         bravoJsonObject.put("isAttack", GetIsAttackArrayList(false));
+        bravoJsonObject.put("lastAttackPoint", Board.GetLastAttackPoint(false));
+        bravoJsonObject.put("lastAttackResult", Board.GetLastAttackResult(false));
+        bravoJsonObject.put("lastMoveVector", Board.GetLastMoveVector(false));
         childJsonObject.put("false", bravoJsonObject);
         jsonObject.put(String.valueOf(Board.GetTurnCount()), childJsonObject);
     }

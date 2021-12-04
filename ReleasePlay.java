@@ -25,7 +25,7 @@ public class ReleasePlay {
                 if (Board.IsLastAttack(alphaSide)) {
                     System.out.print("0(No Hit), 1(Near), 2(Hit), 3(Sink): ");
                     int attackResult = Integer.parseInt(scanner.nextLine());
-                    Board.AttackResultTransfer(alphaSide, attackResult);
+                    Board.AttackResultTransfer(alphaSide, new ArrayList<Integer>(Arrays.asList(attackResult)));
                 }
             } else {
                 System.out.print("a(Attack), m(Move): ");

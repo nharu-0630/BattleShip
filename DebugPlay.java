@@ -10,15 +10,15 @@ public class DebugPlay {
     public static void main(String args[]) {
         // CpuVsHuman();
         // ParameterDeepTry();
-        DeepTry(new double[] { 1, 0 });
-        // Try(true, new double[] { 1 });
+        // DeepTry(new double[] { 1 });
+        Try(true, new double[] { 1 });
         // Try(false, new double[] { 1 });
     }
 
     public static void Try(boolean alphaSide, double[] parameters) {
         Logger.CreateLogger();
 
-        Board.Initialize(false);
+        Board.Initialize(true);
 
         Algorithm002 alphaAlgorithm = new Algorithm002(true, false);
         Board.GetCell(0, 0).SetHp(true, 3);
@@ -27,7 +27,7 @@ public class DebugPlay {
         Board.GetCell(4, 4).SetHp(true, 3);
         // Board.SetRandom4Points(true);
 
-        Algorithm001 bravoAlgorithm = new Algorithm001(false, false);
+        Algorithm002 bravoAlgorithm = new Algorithm002(false, false);
         Board.GetCell(4, 0).SetHp(false, 3);
         Board.GetCell(1, 1).SetHp(false, 3);
         Board.GetCell(3, 3).SetHp(false, 3);
@@ -95,7 +95,7 @@ public class DebugPlay {
     public static void ParameterDeepTry() {
         HashMap<Double[], Integer> parameterWinCounts = new HashMap<Double[], Integer>();
         for (double parameter = 0; parameter <= 1; parameter += 0.05) {
-            parameterWinCounts.put(new Double[] { 1d, parameter }, DeepTry(new double[] { 1, parameter }));
+            parameterWinCounts.put(new Double[] { parameter }, DeepTry(new double[] { parameter }));
         }
         java.util.stream.Stream<Map.Entry<Double[], Integer>> sortedParameterWinCounts = parameterWinCounts.entrySet()
                 .stream()
