@@ -532,7 +532,6 @@ class Board {
     }
 
     public static boolean MovePoint(boolean alphaSide, Point oldPoint, Point newPoint) {
-        Logger.AddLogger();
         WriteLogSide(alphaSide);
         if (IsMoveEnablePoint(alphaSide, oldPoint, newPoint)) {
             WriteLogLine("移動】 " + oldPoint + " → " + newPoint);
@@ -547,9 +546,11 @@ class Board {
                 lastBravoAttackResult = new ArrayList<Integer>(Arrays.asList(-1));
                 lastBravoMoveVector = newPoint.Minus(oldPoint);
             }
+            Logger.AddLogger(alphaSide);
             return true;
         } else {
             WriteLogLine("移動】拒否されました");
+            Logger.AddLogger(alphaSide);
             return false;
         }
     }
@@ -570,6 +571,7 @@ class Board {
             lastBravoAttackResult = new ArrayList<Integer>(Arrays.asList(-1));
             lastBravoMoveVector = vectorPoint;
         }
+        Logger.AddLogger(alphaSide);
     }
 
     public static void SearchAttackPoints(boolean alphaSide) {
@@ -608,7 +610,6 @@ class Board {
     }
 
     public static boolean AttackPoint(boolean alphaSide, Point point, boolean judgeResult) {
-        Logger.AddLogger();
         WriteLogSide(alphaSide);
         if (IsAttackPoint(alphaSide, point)) {
             ArrayList<Integer> attackResult = new ArrayList<Integer>();
@@ -646,6 +647,7 @@ class Board {
                 lastBravoAttackResult = attackResult;
                 lastBravoMoveVector = null;
             }
+            Logger.AddLogger(alphaSide);
             return true;
         } else {
             WriteLogLine("攻撃】 拒否されました");
@@ -658,6 +660,7 @@ class Board {
                 lastBravoAttackResult = new ArrayList<Integer>(Arrays.asList(-1));
                 lastBravoMoveVector = null;
             }
+            Logger.AddLogger(alphaSide);
             return false;
         }
     }
@@ -721,8 +724,8 @@ class Board {
             lastBravoAttackResult = attackResult;
             lastBravoMoveVector = null;
         }
+        Logger.AddLogger(alphaSide);
     }
-
 }
 
 class Interface {
@@ -771,8 +774,9 @@ class Logger {
         jsonObject = new JSONObject();
     }
 
-    public static void AddLogger() {
+    public static void AddLogger(boolean alphaSide) {
         JSONObject childJsonObject = new JSONObject();
+        childJsonObject.put("alphaSide", alphaSide);
         JSONObject alphaJsonObject = new JSONObject();
         alphaJsonObject.put("hp", GetHpArrayList(true));
         alphaJsonObject.put("value", GetValueArrayList(true));

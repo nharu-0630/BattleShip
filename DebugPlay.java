@@ -12,13 +12,13 @@ public class DebugPlay {
         // ParameterDeepTry();
         // DeepTry(new double[] { 1 });
         Try(true, new double[] { 1 });
-        // Try(false, new double[] { 1 });
+        Try(false, new double[] { 1 });
     }
 
     public static void Try(boolean alphaSide, double[] parameters) {
         Logger.CreateLogger();
 
-        Board.Initialize(true);
+        Board.Initialize(false);
 
         Algorithm002 alphaAlgorithm = new Algorithm002(true, false);
         Board.GetCell(0, 0).SetHp(true, 3);
