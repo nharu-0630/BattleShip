@@ -116,6 +116,7 @@ class Algorithm001 extends Interface {
         Random random = new Random();
         if (random.nextDouble() <= attackProbability) {
             DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true)));
+            return;
         } else {
             Point oldPoint = Board.GetRandomPoint(Board.GetShipPoints(alphaSide));
             ArrayList<Point> points = new ArrayList<Point>();
@@ -125,7 +126,7 @@ class Algorithm001 extends Interface {
                 }
             }
             DoMove(oldPoint, Board.GetRandomPoint(points));
+            return;
         }
-        return;
     }
 }

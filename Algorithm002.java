@@ -53,6 +53,7 @@ class Algorithm002 extends Interface {
                 }
                 // 移動できる範囲からランダムに移動
                 DoMove(Board.GetLastAttackPoint(!alphaSide), Board.GetRandomPoint(points));
+                return;
             }
             if (Board.GetLastAttackResult(!alphaSide).contains(1)) {
                 // 敵に波高しされた
@@ -112,6 +113,7 @@ class Algorithm002 extends Interface {
         }
         if (random.nextDouble() <= attackProbability) {
             DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true)));
+            return;
         } else {
             Point oldPoint = Board.GetRandomPoint(Board.GetShipPoints(alphaSide));
             ArrayList<Point> points = new ArrayList<Point>();
@@ -121,7 +123,7 @@ class Algorithm002 extends Interface {
                 }
             }
             DoMove(oldPoint, Board.GetRandomPoint(points));
+            return;
         }
-        return;
     }
 }
