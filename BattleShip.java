@@ -837,7 +837,7 @@ class Logger {
             fileWriter.flush();
             fileWriter.close();
         } catch (IOException exception) {
-
+            System.err.println(exception);
         }
     }
 }
