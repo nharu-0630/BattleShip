@@ -89,9 +89,9 @@ class Cell {
 
     public boolean IsEmpty(boolean alphaSide) {
         if (alphaSide) {
-            return alphaHp == -1;
+            return alphaHp == -1 && bravoHp != 0;
         } else {
-            return bravoHp == -1;
+            return bravoHp == -1 && alphaHp != 0;
         }
     }
 }
@@ -670,6 +670,7 @@ class Board {
             switch (attackResult.get(i)) {
                 case 3:
                     WriteLogLine("撃沈！");
+                    Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetHp(!alphaSide, 0);
                     break;
                 case 2:
                     WriteLogLine("命中！");
