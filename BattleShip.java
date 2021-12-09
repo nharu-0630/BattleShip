@@ -748,21 +748,29 @@ class Interface {
     }
 
     public void DoMove(Point oldPoint, Point newPoint) {
+        Board.WriteBoardHp(alphaSide);
+        Board.WriteBoardIsAttack(alphaSide);
         Board.WriteLogLine(newPoint.Minus(oldPoint) + " に移動！");
         Board.MovePoint(alphaSide, oldPoint, newPoint);
     }
 
     public void DoAttack(Point point) {
+        Board.WriteBoardHp(alphaSide);
+        Board.WriteBoardIsAttack(alphaSide);
         Board.WriteLogLine(point + " に魚雷発射！");
         Board.AttackPoint(alphaSide, point, !isEnemySecret);
     }
 
     public void DoMoveForce(Point vectorPoint) {
+        Board.WriteBoardHp(alphaSide);
+        Board.WriteBoardIsAttack(alphaSide);
         Board.WriteLogLine(vectorPoint + " に移動！");
         Board.MoveVectorForce(alphaSide, vectorPoint);
     }
 
     public void DoAttackForce(Point point) {
+        Board.WriteBoardHp(alphaSide);
+        Board.WriteBoardIsAttack(alphaSide);
         Board.WriteLogLine(point + " に魚雷発射！");
         Board.AttackPointForce(alphaSide, point);
     }
