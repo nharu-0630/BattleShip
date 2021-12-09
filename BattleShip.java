@@ -516,9 +516,9 @@ class Board {
             if (GetPointDistance(oldPoint, newPoint) == 1) {
                 return true;
             } else if (Math.abs(oldPoint.x - newPoint.x) == 2 && oldPoint.y == newPoint.y) {
-                return true;
+                return (Board.GetCell(new Point((oldPoint.x + newPoint.x) / 2, oldPoint.y)).IsEmpty(alphaSide));
             } else if (Math.abs(oldPoint.y - newPoint.y) == 2 && oldPoint.x == newPoint.x) {
-                return true;
+                return (Board.GetCell(new Point(oldPoint.x, (oldPoint.y + newPoint.y) / 2)).IsEmpty(alphaSide));
             } else {
                 return false;
             }
