@@ -3,9 +3,13 @@ import java.util.*;
 public class ReleasePlay {
     public static Scanner scanner = new Scanner(System.in);
 
+    public static final boolean isVisibleLog = true;
+    public static final boolean isAttackResultArray = false;
+    public static final boolean isEnemySecret = true;
+
     public static void main(String args[]) {
-        Board.Initialize(true);
-        Algorithm001 alphaAlgorithm = new Algorithm001(true, true);
+        Board.Initialize(isVisibleLog, isAttackResultArray);
+        Algorithm001 alphaAlgorithm = new Algorithm001(true, isEnemySecret);
 
         System.out.print("f(First) s(Second): ");
         boolean alphaSide = true;

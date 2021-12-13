@@ -136,13 +136,14 @@ class Board {
     private static ArrayList<Integer> lastBravoAttackResult = new ArrayList<Integer>(Arrays.asList(-1));
     private static Point lastBravoMoveVector = null;
 
-    private static boolean visibleLog = false;
+    private static boolean isVisibleLog = false;
+    private static boolean isAttackResultArray = false;
 
-    Board(boolean visibleLog) {
-        Initialize(visibleLog);
+    Board(boolean isVisibleLog, boolean isAttackResultArray) {
+        Initialize(isVisibleLog, isAttackResultArray);
     }
 
-    public static void Initialize(boolean visibleLog) {
+    public static void Initialize(boolean isVisibleLog, boolean isAttackResultArray) {
         cells = new Cell[GetBoardSize()][GetBoardSize()];
         for (int x = 0; x < GetBoardSize(); x++) {
             for (int y = 0; y < GetBoardSize(); y++) {
@@ -163,7 +164,8 @@ class Board {
         lastBravoAttackResult = new ArrayList<Integer>(Arrays.asList(-1));
         lastBravoMoveVector = null;
 
-        Board.visibleLog = visibleLog;
+        Board.isVisibleLog = isVisibleLog;
+        Board.isAttackResultArray = isAttackResultArray;
     }
 
     public static void WriteBoardHp(boolean alphaSide) {
@@ -218,7 +220,7 @@ class Board {
     }
 
     public static void WriteLogSide(boolean alphaSide) {
-        if (visibleLog) {
+        if (isVisibleLog) {
             if (alphaSide) {
                 System.out.print("【α");
             } else {
@@ -228,13 +230,13 @@ class Board {
     }
 
     public static void WriteLogLine(String line) {
-        if (visibleLog) {
+        if (isVisibleLog) {
             System.out.println(line);
         }
     }
 
     public static void WriteLog(String line) {
-        if (visibleLog) {
+        if (isVisibleLog) {
             System.out.print(line);
         }
     }
@@ -633,7 +635,11 @@ class Board {
                 for (Point roundPoint : GetRoundPoints(point)) {
                     if (Board.GetCell(roundPoint).IsAlive(!alphaSide)) {
                         // 波高し！
-                        attackResult.add(1);
+                        if (isAttackResultArray) {
+                            attackResult.add(1);
+                        } else {
+                            attackResult = new ArrayList<Integer>(Arrays.asList(1));
+                        }
                         WriteLogLine("波高し！");
                     }
                 }
@@ -712,7 +718,11 @@ class Board {
         for (Point roundPoint : GetRoundPoints(point)) {
             if (Board.GetCell(roundPoint).IsAlive(!alphaSide)) {
                 // 波高し！
-                attackResult.add(1);
+                if (isAttackResultArray) {
+                    attackResult.add(1);
+                } else {
+                    attackResult = new ArrayList<Integer>(Arrays.asList(1));
+                }
                 WriteLogLine("波高し！");
             }
         }
