@@ -25,16 +25,16 @@ https://xyzyxjp.github.io/BattleShip/
 | alphaIsAttack | boolean | false  | αの攻撃の可否            |
 | bravoIsAttack | boolean | false  | βの攻撃の可否            |
 
-| メソッド名       | 引数型              | 戻り値型    |          |                            |     |
-| ----------- | ---------------- | ------- | -------- | -------------------------- | --- |
-| GetHp       | boolean          | int     | 戦艦HPを取得  |                            |     |
-| SetHp       | boolean, int     |         | 戦艦HPを設定  |                            |     |
-| GetValue    | boolean          | int     | 評価値を取得   |                            |     |
-| SetValue    | boolean, int     |         | 評価値を設定   |                            |     |
-| SetIsAttack | boolean, boolean |         | 攻撃の可否を設定 | セルに自軍戦艦がいない場合は`true`を設定できる |     |
-| GetIsAttack | boolean, boolean | boolean | 攻撃の可否を取得 |                            |     |
-| IsAlive     | boolean          | boolean | 戦艦の生死を取得 |                            |     |
-| IsEmpty     | boolean          | boolean | 戦艦の有無を取得 |                            |     |
+| メソッド名       | 引数型              | 戻り値型    |          |                            |
+| ----------- | ---------------- | ------- | -------- | -------------------------- |
+| GetHp       | boolean          | int     | 戦艦HPを取得  |                            |
+| SetHp       | boolean, int     |         | 戦艦HPを設定  |                            |
+| GetValue    | boolean          | int     | 評価値を取得   |                            |
+| SetValue    | boolean, int     |         | 評価値を設定   |                            |
+| SetIsAttack | boolean, boolean |         | 攻撃の可否を設定 | セルに自軍戦艦がいない場合は`true`を設定できる |
+| GetIsAttack | boolean, boolean | boolean | 攻撃の可否を取得 |                            |
+| IsAlive     | boolean          | boolean | 戦艦の生死を取得 |                            |
+| IsEmpty     | boolean          | boolean | 戦艦の有無を取得 |                            |
 
 第1引数には`alphaSide`を割当  
 
@@ -151,13 +151,13 @@ https://xyzyxjp.github.io/BattleShip/
 | ---------- | ---------- | ------ | --- |
 | jsonObject | JSONObject |        |     |
 
-| メソッド名                | 引数型     | 戻り値型                 |               |     |
-| -------------------- | ------- | -------------------- | ------------- | --- |
-| AddLogger            | boolean |                      | 現在の戦況をJsonに書込 |     |
-| GetHpArrayList       | boolean | ArrayList/<Integer/> |               |     |
-| GetValueArrayList    | boolean | ArrayList/<Integer/> |               |     |
-| GetIsAttackArrayList | boolean | ArrayList/<Boolean/> |               |     |
-| SaveLogger           | String  |                      | Jsonを保存       |     |
+| メソッド名                | 引数型     | 戻り値型                 |               |
+| -------------------- | ------- | -------------------- | ------------- |
+| AddLogger            | boolean |                      | 現在の戦況をログに追加 |
+| GetHpArrayList       | boolean | ArrayList/<Integer/> |               |
+| GetValueArrayList    | boolean | ArrayList/<Integer/> |               |
+| GetIsAttackArrayList | boolean | ArrayList/<Boolean/> |               |
+| SaveLogger           | String  |                      | ログを保存       |
 
 ## AlgorithmXXX.java
 
