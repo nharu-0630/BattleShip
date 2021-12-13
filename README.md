@@ -60,66 +60,67 @@ https://xyzyxjp.github.io/BattleShip/
 | 波高し！    | 1            |
 | ハズレ！    | 0            |
 
-| 変数名                   | 変数型                | デフォルト値 |            |
-| --------------------- | ------------------ | ------ | ---------- |
-| boardSize             | int                | 5      | ボードの1辺の長さ  |
-| cells                 | Cell[][]           |        | セルの2次元配列   |
-| turnCount             | int                | 0      | ターン数       |
-| alphaWin              | boolean            | false  | αの勝利       |
-| bravoWin              | boolean            | false  | βの勝利       |
-| lastAlphaAttackPoint  | Point              |        | αの前回攻撃ポイント |
-| lastAlphaAttackResult | ArrayList\<Integer\> | -1     | αの前回攻撃結果   |
-| lastAlphaMoveVector   | Point              |        | αの前回移動ベクトル |
-| lastBravoAttackPoint  | Point              |        | βの前回攻撃ポイント |
-| lastBravoAttackResult | ArrayList\<Integer\> | -1     | βの前回攻撃結果   |
-| lastBravoMoveVector   | Point              |        | βの前回移動ベクトル |
-| visibleLog            | boolean            | false  | ログの表示      |
+| 変数名                   | 変数型                  | デフォルト値 |                       |
+| --------------------- | -------------------- | ------ | --------------------- |
+| boardSize             | int                  | 5      | ボードの1辺の長さ             |
+| cells                 | Cell[][]             |        | セルの2次元配列              |
+| turnCount             | int                  | 0      | ターン数                  |
+| alphaWin              | boolean              | false  | αの勝利                  |
+| bravoWin              | boolean              | false  | βの勝利                  |
+| lastAlphaAttackPoint  | Point                |        | αの前回攻撃ポイント            |
+| lastAlphaAttackResult | ArrayList\<Integer\> | -1     | αの前回攻撃結果              |
+| lastAlphaMoveVector   | Point                |        | αの前回移動ベクトル            |
+| lastBravoAttackPoint  | Point                |        | βの前回攻撃ポイント            |
+| lastBravoAttackResult | ArrayList\<Integer\> | -1     | βの前回攻撃結果              |
+| lastBravoMoveVector   | Point                |        | βの前回移動ベクトル            |
+| isVisibleLog          | boolean              | false  | ログの表示                 |
+| isAttackResultArray   | boolean              | false  | 攻撃結果を複数返す場合は`true`にする |
 
-| メソッド名                | 引数型                          | 戻り値型               |                         |                                       |
-| -------------------- | ---------------------------- | ------------------ | ----------------------- | ------------------------------------- |
-| Initialize           | boolean                      |                    | 初期化                     | 引数はログの表示する場合のみ`true`にする               |
-| WriteBoardHp         | boolean*                     |                    | 戦艦HPを表示                 |                                       |
-| WriteBoardIsAttack   | boolean*                     |                    | 攻撃の可否を表示                |                                       |
-| WriteLogSide         | boolean                      |                    | ログの表示                   |                                       |
-| WriteLogLine         | String                       |                    | ログの表示                   |                                       |
-| WriteLog             | String                       |                    | ログの表示                   |                                       |
-| IsContinue           | boolean                      | boolean            | ターン続行の可否                | 引数は強制終了する場合のみ`true`にする                |
-| GetAlphaWin          |                              | boolean            | αの勝利を取得                 |                                       |
-| GetBravoWin          |                              | boolean            | βの勝利を取得                 |                                       |
-| SetTurnCount         |                              |                    | ターン数に1加算                |                                       |
-| GetTurnCount*        |                              | int                | ターン数を取得                 |                                       |
-| GetBoardSize*        |                              | int                | ボードの1辺の長さを取得            |                                       |
-| GetCell*             | Point                        | Cell               | ポイントのセルを取得              |                                       |
-| GetCell*             | int, int                     | Cell               | ポイントのセルを取得              |                                       |
-| SetCell              | Point, Cell                  |                    | ポイントにセルを設定              |                                       |
-| SetCell              | int, int, Cell               |                    | ポイントにセルを設定              |                                       |
-| IsLastAttack*        | boolean*                     | boolean            | 前回移動の有無を取得              |                                       |
-| IsLastMove*          | boolean*                     | boolean            | 前回攻撃の有無を取得              |                                       |
-| GetLastAttackPoint*  | boolean*                     | Point              | 前回攻撃ポイントを取得             |                                       |
-| GetLastAttackResult* | boolean*                     | ArrayList\<Integer\> | 前回攻撃結果を取得               |                                       |
-| GetLastMoveVector*   | boolean*                     | Point              | 前回移動ベクトルを取得             |                                       |
-| InitializeValues*    | boolean*                     |                    | 全ての評価値を0に設定             |                                       |
-| NormalizeValues*     | boolean*                     |                    | 全ての評価値を周囲4ポイントリストの個数に設定 |                                       |
-| GetShipPoints*       | boolean*                     | ArrayList\<Point\> | 戦艦のポイントリストを取得           |                                       |
-| GetRandomPoint*      | Point                        | ArrayList\<Point\> | ポイントリストからランダムに取得        |                                       |
-| GetRandomPoints*     | int                          | ArrayList\<Point\> | ランダムなポイントリストを取得         |                                       |
-| SetRandom4Points     | boolean*                     |                    | ランダムな4ポイントに戦艦を配置        |                                       |
-| GetMaxValuePoints*   | boolean*                     | ArrayList\<Point\> | 評価値が最大であるポイントリストを取得     |                                       |
-| GetShortPoints*      | boolean*, Point              | ArrayList\<Point\> | ポイントに最も近い戦艦のポイントリストを取得  |                                       |
-| GetRoundPoints*      | Point                        | ArrayList\<Point\> | ポイントの周囲8ポイントリストを取得      |                                       |
-| GetCrossPoints*      | Point, int                   | ArrayList\<Point\> | ポイントの周囲4ポイントリストを取得      | 第2引数は距離であり、2の場合は移動可能な範囲である            |
-| GetPointDistance*    | Point, Point                 | int                | ポイント間の距離                | X軸間の距離 + Y軸間の距離である                    |
-| IsMoveEnablePoint*   | boolean*, Point, Point       | boolean            | 移動の可否                   | 第2, 3引数はポイントである                       |
-| IsMoveEnableVector*  | boolean*, Point, Point       | boolean            | 移動の可否                   | 第2引数はポイントであり、第3引数はベクトルである             |
-| MovePoint            | boolean*, Point, Point       | boolean            | 戦艦の移動                   | 第2, 3引数はポイントである                       |
-| MoveVector           | boolean*, Point, Point       | boolean            | 戦艦の移動                   | 第2引数はポイントであり、第3引数はベクトルである             |
-| MoveVectorForce      | boolean*, Point              |                    | 戦艦の強制移動                 | 第2引数はベクトルである                          |
-| SearchAttackPoints*  | boolean*                     |                    | 攻撃の可否を検索                |                                       |
-| GetAttackPoints*     | boolean*                     | ArrayList\<Point\> | 攻撃が可能なポイントリストを取得        |                                       |
-| IsAttackPoint*       | boolean*, Point              | boolean            | ポイントの攻撃の可否を取得           |                                       |
-| AttackPoint          | boolean*, Point, boolean     | boolean            | ポイントへの攻撃                | 第3引数は攻撃結果をあとから設定する場合のみ`false`にする      |
-| AttackResultTransfer | boolean*, ArrayList\<Integer\> |                    | ポイントへの攻撃結果を設定           | `AttackPoint`の第3引数を`false`にした場合のみ使用する |
-| AttackPointForce     | boolean*, Point              |                    | ポイントへの強制攻撃              |                                       |
+| メソッド名                | 引数型                            | 戻り値型                 |                         |                                       |
+| -------------------- | ------------------------------ | -------------------- | ----------------------- | ------------------------------------- |
+| Initialize           | boolean, boolean               |                      | 初期化                     | isVisibleLog, isAttackResultArray     |
+| WriteBoardHp         | boolean*                       |                      | 戦艦HPを表示                 |                                       |
+| WriteBoardIsAttack   | boolean*                       |                      | 攻撃の可否を表示                |                                       |
+| WriteLogSide         | boolean                        |                      | ログの表示                   |                                       |
+| WriteLogLine         | String                         |                      | ログの表示                   |                                       |
+| WriteLog             | String                         |                      | ログの表示                   |                                       |
+| IsContinue           | boolean                        | boolean              | ターン続行の可否                | 引数は強制終了する場合のみ`true`にする                |
+| GetAlphaWin          |                                | boolean              | αの勝利を取得                 |                                       |
+| GetBravoWin          |                                | boolean              | βの勝利を取得                 |                                       |
+| SetTurnCount         |                                |                      | ターン数に1加算                |                                       |
+| GetTurnCount*        |                                | int                  | ターン数を取得                 |                                       |
+| GetBoardSize*        |                                | int                  | ボードの1辺の長さを取得            |                                       |
+| GetCell*             | Point                          | Cell                 | ポイントのセルを取得              |                                       |
+| GetCell*             | int, int                       | Cell                 | ポイントのセルを取得              |                                       |
+| SetCell              | Point, Cell                    |                      | ポイントにセルを設定              |                                       |
+| SetCell              | int, int, Cell                 |                      | ポイントにセルを設定              |                                       |
+| IsLastAttack*        | boolean*                       | boolean              | 前回移動の有無を取得              |                                       |
+| IsLastMove*          | boolean*                       | boolean              | 前回攻撃の有無を取得              |                                       |
+| GetLastAttackPoint*  | boolean*                       | Point                | 前回攻撃ポイントを取得             |                                       |
+| GetLastAttackResult* | boolean*                       | ArrayList\<Integer\> | 前回攻撃結果を取得               |                                       |
+| GetLastMoveVector*   | boolean*                       | Point                | 前回移動ベクトルを取得             |                                       |
+| InitializeValues*    | boolean*                       |                      | 全ての評価値を0に設定             |                                       |
+| NormalizeValues*     | boolean*                       |                      | 全ての評価値を周囲4ポイントリストの個数に設定 |                                       |
+| GetShipPoints*       | boolean*                       | ArrayList\<Point\>   | 戦艦のポイントリストを取得           |                                       |
+| GetRandomPoint*      | Point                          | ArrayList\<Point\>   | ポイントリストからランダムに取得        |                                       |
+| GetRandomPoints*     | int                            | ArrayList\<Point\>   | ランダムなポイントリストを取得         |                                       |
+| SetRandom4Points     | boolean*                       |                      | ランダムな4ポイントに戦艦を配置        |                                       |
+| GetMaxValuePoints*   | boolean*                       | ArrayList\<Point\>   | 評価値が最大であるポイントリストを取得     |                                       |
+| GetShortPoints*      | boolean*, Point                | ArrayList\<Point\>   | ポイントに最も近い戦艦のポイントリストを取得  |                                       |
+| GetRoundPoints*      | Point                          | ArrayList\<Point\>   | ポイントの周囲8ポイントリストを取得      |                                       |
+| GetCrossPoints*      | Point, int                     | ArrayList\<Point\>   | ポイントの周囲4ポイントリストを取得      | 第2引数は距離であり、2の場合は移動可能な範囲である            |
+| GetPointDistance*    | Point, Point                   | int                  | ポイント間の距離                | X軸間の距離 + Y軸間の距離である                    |
+| IsMoveEnablePoint*   | boolean*, Point, Point         | boolean              | 移動の可否                   | 第2, 3引数はポイントである                       |
+| IsMoveEnableVector*  | boolean*, Point, Point         | boolean              | 移動の可否                   | 第2引数はポイントであり、第3引数はベクトルである             |
+| MovePoint            | boolean*, Point, Point         | boolean              | 戦艦の移動                   | 第2, 3引数はポイントである                       |
+| MoveVector           | boolean*, Point, Point         | boolean              | 戦艦の移動                   | 第2引数はポイントであり、第3引数はベクトルである             |
+| MoveVectorForce      | boolean*, Point                |                      | 戦艦の強制移動                 | 第2引数はベクトルである                          |
+| SearchAttackPoints*  | boolean*                       |                      | 攻撃の可否を検索                |                                       |
+| GetAttackPoints*     | boolean*                       | ArrayList\<Point\>   | 攻撃が可能なポイントリストを取得        |                                       |
+| IsAttackPoint*       | boolean*, Point                | boolean              | ポイントの攻撃の可否を取得           |                                       |
+| AttackPoint          | boolean*, Point, boolean       | boolean              | ポイントへの攻撃                | 第3引数は攻撃結果をあとから設定する場合のみ`false`にする      |
+| AttackResultTransfer | boolean*, ArrayList\<Integer\> |                      | ポイントへの攻撃結果を設定           | `AttackPoint`の第3引数を`false`にした場合のみ使用する |
+| AttackPointForce     | boolean*, Point                |                      | ポイントへの強制攻撃              |                                       |
 
 引数型に`*`がついている第1引数は`alphaSide`を割当  
 メソッド名に`*`がついているメソッドは`Algorithm`内で使用可能  
