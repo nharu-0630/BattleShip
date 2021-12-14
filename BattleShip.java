@@ -39,10 +39,15 @@ class Cell {
 
     public int GetValue(boolean alphaSide, int layer) {
         if (alphaSide) {
-            return alphaValues.get(layer);
+            if (alphaValues.size() > layer) {
+                return alphaValues.get(layer);
+            }
         } else {
-            return bravoValues.get(layer);
+            if (bravoValues.size() > layer) {
+                return bravoValues.get(layer);
+            }
         }
+        return -1;
     }
 
     public ArrayList<Integer> GetValues(boolean alphaSide) {
@@ -55,8 +60,14 @@ class Cell {
 
     public void SetValue(boolean alphaSide, int layer, int value) {
         if (alphaSide) {
+            for (int i = 0; i < layer - alphaValues.size(); i++) {
+                alphaValues.set(alphaValues.size() + i, 0);
+            }
             alphaValues.set(layer, value);
         } else {
+            for (int i = 0; i < layer - bravoValues.size(); i++) {
+                bravoValues.set(bravoValues.size() + i, 0);
+            }
             bravoValues.set(layer, value);
         }
     }
