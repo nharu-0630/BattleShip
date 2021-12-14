@@ -154,9 +154,9 @@ https://xyzyxjp.github.io/BattleShip/
 | メソッド名                | 引数型     | 戻り値型                 |               |
 | -------------------- | ------- | -------------------- | ------------- |
 | AddLogger            | boolean |                      | 現在の戦況をログに追加 |
-| GetHpArrayList       | boolean | ArrayList/<Integer/> |               |
-| GetValueArrayList    | boolean | ArrayList/<Integer/> |               |
-| GetIsAttackArrayList | boolean | ArrayList/<Boolean/> |               |
+| GetHpArrayList       | boolean | ArrayList\<Integer\> |               |
+| GetValueArrayList    | boolean | ArrayList\<Integer\> |               |
+| GetIsAttackArrayList | boolean | ArrayList\<Boolean\> |               |
 | SaveLogger           | String  |                      | ログを保存       |
 
 ## AlgorithmXXX.java
