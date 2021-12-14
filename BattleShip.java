@@ -6,8 +6,8 @@ class Cell {
     private int alphaHp;
     private int bravoHp;
 
-    private int alphaValue;
-    private int bravoValue;
+    private ArrayList<Integer> alphaValues;
+    private ArrayList<Integer> bravoValues;
 
     private boolean alphaIsAttack;
     private boolean bravoIsAttack;
@@ -15,8 +15,8 @@ class Cell {
     Cell() {
         alphaHp = -1;
         bravoHp = -1;
-        alphaValue = 0;
-        bravoValue = 0;
+        alphaValues = new ArrayList<Integer>(Arrays.asList(0));
+        bravoValues = new ArrayList<Integer>(Arrays.asList(0));
         alphaIsAttack = false;
         bravoIsAttack = false;
     }
@@ -37,19 +37,27 @@ class Cell {
         }
     }
 
-    public int GetValue(boolean alphaSide) {
+    public int GetValue(boolean alphaSide, int layer) {
         if (alphaSide) {
-            return alphaValue;
+            return alphaValues.get(layer);
         } else {
-            return bravoValue;
+            return bravoValues.get(layer);
         }
     }
 
-    public void SetValue(boolean alphaSide, int value) {
+    public ArrayList<Integer> GetValues(boolean alphaSide) {
         if (alphaSide) {
-            alphaValue = value;
+            return alphaValues;
         } else {
-            bravoValue = value;
+            return bravoValues;
+        }
+    }
+
+    public void SetValue(boolean alphaSide, int layer, int value) {
+        if (alphaSide) {
+            alphaValues.set(layer, value);
+        } else {
+            bravoValues.set(layer, value);
         }
     }
 
@@ -368,15 +376,15 @@ class Board {
         }
     }
 
-    public static void InitializeValues(boolean alphaSide) {
+    public static void InitializeValues(boolean alphaSide, int layer) {
         for (int x = 0; x < Board.GetBoardSize(); x++) {
             for (int y = 0; y < Board.GetBoardSize(); y++) {
-                Board.GetCell(x, y).SetValue(alphaSide, 0);
+                Board.GetCell(x, y).SetValue(alphaSide, layer, 0);
             }
         }
     }
 
-    public static void NormalizeValues(boolean alphaSide) {
+    public static void NormalizeValues(boolean alphaSide, int layer) {
         for (int x = 0; x < Board.GetBoardSize(); x++) {
             for (int y = 0; y < Board.GetBoardSize(); y++) {
                 int value = 3;
@@ -386,7 +394,7 @@ class Board {
                 if (y != 0 && y != Board.GetBoardSize() - 1) {
                     value += 2;
                 }
-                Board.GetCell(x, y).SetValue(alphaSide, value);
+                Board.GetCell(x, y).SetValue(alphaSide, layer, value);
             }
         }
     }
@@ -427,12 +435,12 @@ class Board {
         }
     }
 
-    public static ArrayList<Point> GetMaxValuePoints(boolean alphaSide, boolean isAttackEnable) {
+    public static ArrayList<Point> GetMaxValuePoints(boolean alphaSide, boolean isAttackEnable, int layer) {
         HashMap<Point, Integer> pointsValue = new HashMap<Point, Integer>();
         for (int x = 0; x < Board.GetBoardSize(); x++) {
             for (int y = 0; y < Board.GetBoardSize(); y++) {
                 if ((isAttackEnable && Board.IsAttackPoint(alphaSide, new Point(x, y))) || !isAttackEnable) {
-                    pointsValue.put(new Point(x, y), Board.GetCell(x, y).GetValue(alphaSide));
+                    pointsValue.put(new Point(x, y), Board.GetCell(x, y).GetValue(alphaSide, layer));
                 }
             }
         }
@@ -798,7 +806,7 @@ class Logger {
         childJsonObject.put("alphaSide", alphaSide);
         JSONObject alphaJsonObject = new JSONObject();
         alphaJsonObject.put("hp", GetHpArrayList(true));
-        alphaJsonObject.put("value", GetValueArrayList(true));
+        alphaJsonObject.put("values", GetValuesArrayList(true));
         alphaJsonObject.put("isAttack", GetIsAttackArrayList(true));
         alphaJsonObject.put("lastAttackPoint", Board.GetLastAttackPoint(true));
         alphaJsonObject.put("lastAttackResult", Board.GetLastAttackResult(true));
@@ -806,7 +814,7 @@ class Logger {
         childJsonObject.put("true", alphaJsonObject);
         JSONObject bravoJsonObject = new JSONObject();
         bravoJsonObject.put("hp", GetHpArrayList(false));
-        bravoJsonObject.put("value", GetValueArrayList(false));
+        bravoJsonObject.put("values", GetValuesArrayList(false));
         bravoJsonObject.put("isAttack", GetIsAttackArrayList(false));
         bravoJsonObject.put("lastAttackPoint", Board.GetLastAttackPoint(false));
         bravoJsonObject.put("lastAttackResult", Board.GetLastAttackResult(false));
@@ -825,11 +833,11 @@ class Logger {
         return hpArrayList;
     }
 
-    public static ArrayList<Integer> GetValueArrayList(boolean alphaSide) {
-        ArrayList<Integer> valueArrayList = new ArrayList<Integer>();
+    public static ArrayList<ArrayList<Integer>> GetValuesArrayList(boolean alphaSide) {
+        ArrayList<ArrayList<Integer>> valueArrayList = new ArrayList<ArrayList<Integer>>();
         for (int x = 0; x < Board.GetBoardSize(); x++) {
             for (int y = 0; y < Board.GetBoardSize(); y++) {
-                valueArrayList.add(Board.GetCell(x, y).GetValue(alphaSide));
+                valueArrayList.add(Board.GetCell(x, y).GetValues(alphaSide));
             }
         }
         return valueArrayList;
