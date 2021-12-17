@@ -11,7 +11,7 @@ public class ReleasePlay {
         Board.Initialize(isVisibleLog, isAttackResultArray);
         Algorithm001 alphaAlgorithm = new Algorithm001(true, isEnemySecret);
 
-        System.out.print("f(First) s(Second): ");
+        System.out.print("f(First), s(Second): ");
         boolean alphaSide = true;
         switch (scanner.nextLine()) {
             case "f":
