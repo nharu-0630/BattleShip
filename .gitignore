@@ -49,3 +49,5 @@ hs_err_pid*
 
 desktop.ini
 log/*.json
+
+!lib/json-20210307.jar
