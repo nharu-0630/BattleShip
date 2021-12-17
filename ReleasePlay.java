@@ -44,7 +44,7 @@ public class ReleasePlay {
                 System.out.print("a(Attack), m(Move): ");
                 switch (scanner.nextLine()) {
                     case "a":
-                        System.out.print("x,y: ");
+                        System.out.print("x, y: ");
                         String[] tempArray = scanner.nextLine().split(",");
                         if (tempArray.length == 2) {
                             if (tempArray[0].chars().allMatch(Character::isDigit) && tempArray[1].chars()
@@ -60,7 +60,7 @@ public class ReleasePlay {
                         }
                         break;
                     case "m":
-                        System.out.print("x,y: ");
+                        System.out.print("x, y: ");
                         tempArray = scanner.nextLine().split(",");
                         if (tempArray.length == 2) {
                             if (tempArray[0].chars().allMatch(Character::isDigit) && tempArray[1].chars()
