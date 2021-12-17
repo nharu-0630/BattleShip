@@ -8,12 +8,25 @@ public class ReleasePlay {
     public static final boolean isEnemySecret = true;
 
     public static void main(String args[]) {
+        Logger.CreateLogger();
+
         Board.Initialize(isVisibleLog, isAttackResultArray);
-        Algorithm001 alphaAlgorithm = new Algorithm001(true, isEnemySecret);
+
+        Algorithm002 alphaAlgorithm = new Algorithm002(true, isEnemySecret);
+        Board.GetCell(0, 0).SetHp(true, 3);
+        Board.GetCell(3, 1).SetHp(true, 3);
+        Board.GetCell(1, 3).SetHp(true, 3);
+        Board.GetCell(4, 4).SetHp(true, 3);
 
         System.out.print("f(First), s(Second): ");
         boolean alphaSide = true;
-        switch (scanner.nextLine()) {
+        String tempLine = scanner.nextLine();
+        while (true) {
+            if (tempLine == "f" || tempLine == "s") {
+                break;
+            }
+        }
+        switch (tempLine) {
             case "f":
                 alphaSide = true;
                 break;
@@ -21,6 +34,7 @@ public class ReleasePlay {
                 alphaSide = false;
                 break;
         }
+
         while (true) {
             if (alphaSide) {
                 Board.WriteBoardHp(alphaSide);
@@ -29,7 +43,7 @@ public class ReleasePlay {
                 if (Board.IsLastAttack(alphaSide)) {
                     System.out.print("0(No Hit), 1(Near), 2(Hit), 3(Sink): ");
                     while (true) {
-                        String tempLine = scanner.nextLine();
+                        tempLine = scanner.nextLine();
                         if (tempLine.chars().allMatch(Character::isDigit)) {
                             int attackResult = Integer.parseInt(tempLine);
                             if (0 <= attackResult && attackResult <= 3) {
