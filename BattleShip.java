@@ -74,10 +74,12 @@ class Cell {
 
     public void SetIsAttak(boolean alphaSide, boolean isAttack) {
         if (isAttack) {
-            if (IsEmpty(alphaSide)) {
-                if (alphaSide) {
+            if (alphaSide) {
+                if (alphaHp == -1) {
                     alphaIsAttack = true;
-                } else {
+                }
+            } else {
+                if (bravoHp == -1) {
                     bravoIsAttack = true;
                 }
             }
