@@ -703,7 +703,9 @@ class Board {
                         if (isAttackResultArray) {
                             attackResult.add(1);
                         } else {
-                            attackResult = new ArrayList<Integer>(Arrays.asList(1));
+                            if (attackResult.containsAll(0)) {
+                                attackResult = new ArrayList<Integer>(Arrays.asList(1));
+                            }
                         }
                     }
                 }
