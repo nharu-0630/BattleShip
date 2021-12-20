@@ -381,19 +381,19 @@ class Board {
     }
 
     public static Cell GetCell(Point point) {
-        return cells[point.y][point.x];
+        return cells[point.x][point.y];
     }
 
     public static Cell GetCell(int x, int y) {
-        return cells[y][x];
+        return cells[x][y];
     }
 
     public static void SetCell(Point point, Cell cell) {
-        cells[point.y][point.x] = cell;
+        cells[point.x][point.y] = cell;
     }
 
     public static void SetCell(int x, int y, Cell cell) {
-        cells[y][x] = cell;
+        cells[x][y] = cell;
     }
 
     public static boolean IsLastAttack(boolean alphaSide) {
