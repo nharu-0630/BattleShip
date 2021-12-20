@@ -14,8 +14,8 @@ public class DebugPlay {
         // CpuVsHuman();
         // ParameterDeepTry();
         // DeepTry(new double[] { 1 });
-        Try(true, new double[] { 1 });
-        Try(false, new double[] { 1 });
+        Try(true, new double[] { 0.8 });
+        Try(false, new double[] { 0.8 });
     }
 
     public static void Try(boolean alphaSide, double[] parameters) {

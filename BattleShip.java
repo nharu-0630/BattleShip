@@ -794,7 +794,7 @@ class Board {
                 if (isAttackResultArray) {
                     attackResult.add(1);
                 } else {
-                    if (attackResult.size() == 0) {
+                    if (attackResult.contains(0)) {
                         attackResult = new ArrayList<Integer>(Arrays.asList(1));
                     }
                 }
