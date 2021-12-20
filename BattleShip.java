@@ -907,7 +907,7 @@ class Logger {
         ArrayList<Integer> hpArrayList = new ArrayList<Integer>();
         for (int x = 0; x < Board.GetBoardSize(); x++) {
             for (int y = 0; y < Board.GetBoardSize(); y++) {
-                hpArrayList.add(Board.GetCell(x, y).GetHp(alphaSide));
+                hpArrayList.add(Board.GetCell(y, x).GetHp(alphaSide));
             }
         }
         return hpArrayList;
@@ -917,7 +917,7 @@ class Logger {
         ArrayList<ArrayList<Integer>> valueArrayList = new ArrayList<ArrayList<Integer>>();
         for (int x = 0; x < Board.GetBoardSize(); x++) {
             for (int y = 0; y < Board.GetBoardSize(); y++) {
-                valueArrayList.add(Board.GetCell(x, y).GetValues(alphaSide));
+                valueArrayList.add(Board.GetCell(y, x).GetValues(alphaSide));
             }
         }
         return valueArrayList;
@@ -927,7 +927,7 @@ class Logger {
         ArrayList<Boolean> isAttackArrayList = new ArrayList<Boolean>();
         for (int x = 0; x < Board.GetBoardSize(); x++) {
             for (int y = 0; y < Board.GetBoardSize(); y++) {
-                isAttackArrayList.add(Board.GetCell(x, y).GetIsAttack(alphaSide));
+                isAttackArrayList.add(Board.GetCell(y, x).GetIsAttack(alphaSide));
             }
         }
         return isAttackArrayList;
