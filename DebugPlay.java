@@ -4,8 +4,8 @@ import java.util.*;
 
 public class DebugPlay {
     public static final int maxTurnCount = 60;
-    // public static final int deepTryCount = 1000;
-    public static final int deepTryCount = 100;
+    public static final int deepTryCount = 1000;
+    // public static final int deepTryCount = 100;
     public static final boolean isVisibleLog = false;
     public static final boolean isAttackResultArray = false;
     public static final boolean isEnemySecret = false;
@@ -13,9 +13,9 @@ public class DebugPlay {
     public static void main(String args[]) {
         // CpuVsHuman();
         // ParameterDeepTry();
-        // DeepTry(new double[] { 1 });
-        Try(true, new double[] { 0.8 });
-        Try(false, new double[] { 0.8 });
+        DeepTry(new double[] { 1 });
+        // Try(true, new double[] { 0.8 });
+        // Try(false, new double[] { 0.8 });
     }
 
     public static void Try(boolean alphaSide, double[] parameters) {
@@ -58,42 +58,43 @@ public class DebugPlay {
                         .getClass().getCanonicalName() + "-" + bravoAlgorithm.getClass().getCanonicalName() + ".json");
     }
 
-    public static void CpuVsHuman() {
-        Logger.CreateLogger();
+    // public static void CpuVsHuman() {
+    // Logger.CreateLogger();
 
-        Board.Initialize(true, isAttackResultArray, isEnemySecret);
-        Algorithm002 alphaAlgorithm = new Algorithm002(true, false);
-        AlgorithmHuman bravoAlgorithm = new AlgorithmHuman(false, false);
+    // Board.Initialize(true, isAttackResultArray, isEnemySecret);
+    // Algorithm002 alphaAlgorithm = new Algorithm002(true, false);
+    // AlgorithmHuman bravoAlgorithm = new AlgorithmHuman(false, false);
 
-        Board.GetCell(0, 0).SetHp(true, 3);
-        Board.GetCell(3, 1).SetHp(true, 3);
-        Board.GetCell(1, 3).SetHp(true, 3);
-        Board.GetCell(4, 4).SetHp(true, 3);
-        // Board.SetRandom4Points(true);
+    // Board.GetCell(0, 0).SetHp(true, 3);
+    // Board.GetCell(3, 1).SetHp(true, 3);
+    // Board.GetCell(1, 3).SetHp(true, 3);
+    // Board.GetCell(4, 4).SetHp(true, 3);
+    // // Board.SetRandom4Points(true);
 
-        Board.GetCell(4, 0).SetHp(false, 3);
-        Board.GetCell(1, 1).SetHp(false, 3);
-        Board.GetCell(3, 3).SetHp(false, 3);
-        Board.GetCell(0, 4).SetHp(false, 3);
-        // Board.SetRandom4Points(false);
+    // Board.GetCell(4, 0).SetHp(false, 3);
+    // Board.GetCell(1, 1).SetHp(false, 3);
+    // Board.GetCell(3, 3).SetHp(false, 3);
+    // Board.GetCell(0, 4).SetHp(false, 3);
+    // // Board.SetRandom4Points(false);
 
-        Random random = new Random();
-        boolean alphaSide = random.nextDouble() <= 0.5;
-        while (Board.IsContinue(false)) {
-            if (alphaSide) {
-                alphaAlgorithm.Think();
-            } else {
-                bravoAlgorithm.Think();
-            }
-            alphaSide = !alphaSide;
-            if (Board.GetTurnCount() >= maxTurnCount) {
-                Board.IsContinue(true);
-                break;
-            }
-        }
+    // Random random = new Random();
+    // boolean alphaSide = random.nextDouble() <= 0.5;
+    // while (Board.IsContinue(false)) {
+    // if (alphaSide) {
+    // alphaAlgorithm.Think();
+    // } else {
+    // bravoAlgorithm.Think();
+    // }
+    // alphaSide = !alphaSide;
+    // if (Board.GetTurnCount() >= maxTurnCount) {
+    // Board.IsContinue(true);
+    // break;
+    // }
+    // }
 
-        Logger.SaveLogger(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(LocalDateTime.now()) + ".json");
-    }
+    // Logger.SaveLogger(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(LocalDateTime.now())
+    // + ".json");
+    // }
 
     public static void ParameterDeepTry() {
         HashMap<Double[], Integer> parameterWinCounts = new HashMap<Double[], Integer>();

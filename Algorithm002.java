@@ -58,7 +58,9 @@ class Algorithm002 extends Interface {
                     }
                 }
                 // 移動できる範囲からランダムに移動
-                DoMove(Board.GetLastAttackPoint(!alphaSide), Board.GetRandomPoint(points));
+                if (points.size() != 0) {
+                    DoMove(Board.GetLastAttackPoint(!alphaSide), Board.GetRandomPoint(points));
+                }
                 return;
             }
             if (Board.GetLastAttackResult(!alphaSide).contains(1)) {
