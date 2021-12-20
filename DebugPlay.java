@@ -6,6 +6,9 @@ public class DebugPlay {
     public static final int maxTurnCount = 60;
     // public static final int deepTryCount = 1000;
     public static final int deepTryCount = 100;
+    public static final boolean isVisibleLog = false;
+    public static final boolean isAttackResultArray = false;
+    public static final boolean isEnemySecret = false;
 
     public static void main(String args[]) {
         // CpuVsHuman();
@@ -18,16 +21,16 @@ public class DebugPlay {
     public static void Try(boolean alphaSide, double[] parameters) {
         Logger.CreateLogger();
 
-        Board.Initialize(false);
+        Board.Initialize(isVisibleLog, isAttackResultArray);
 
-        Algorithm002 alphaAlgorithm = new Algorithm002(true, false);
+        Algorithm002 alphaAlgorithm = new Algorithm002(true, isEnemySecret);
         Board.GetCell(0, 0).SetHp(true, 3);
         Board.GetCell(3, 1).SetHp(true, 3);
         Board.GetCell(1, 3).SetHp(true, 3);
         Board.GetCell(4, 4).SetHp(true, 3);
         // Board.SetRandom4Points(true);
 
-        Algorithm002 bravoAlgorithm = new Algorithm002(false, false);
+        Algorithm002 bravoAlgorithm = new Algorithm002(false, isEnemySecret);
         Board.GetCell(4, 0).SetHp(false, 3);
         Board.GetCell(1, 1).SetHp(false, 3);
         Board.GetCell(3, 3).SetHp(false, 3);
@@ -58,7 +61,7 @@ public class DebugPlay {
     public static void CpuVsHuman() {
         Logger.CreateLogger();
 
-        Board.Initialize(true);
+        Board.Initialize(true, isAttackResultArray);
         Algorithm002 alphaAlgorithm = new Algorithm002(true, false);
         AlgorithmHuman bravoAlgorithm = new AlgorithmHuman(false, false);
 

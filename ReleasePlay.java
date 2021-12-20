@@ -3,13 +3,30 @@ import java.util.*;
 public class ReleasePlay {
     public static Scanner scanner = new Scanner(System.in);
 
-    public static void main(String args[]) {
-        Board.Initialize(true);
-        Algorithm001 alphaAlgorithm = new Algorithm001(true, true);
+    public static final boolean isVisibleLog = true;
+    public static final boolean isAttackResultArray = false;
+    public static final boolean isEnemySecret = true;
 
-        System.out.print("f(First) s(Second): ");
+    public static void main(String args[]) {
+        Logger.CreateLogger();
+
+        Board.Initialize(isVisibleLog, isAttackResultArray);
+
+        Algorithm002 alphaAlgorithm = new Algorithm002(true, isEnemySecret);
+        Board.GetCell(0, 0).SetHp(true, 3);
+        Board.GetCell(3, 1).SetHp(true, 3);
+        Board.GetCell(1, 3).SetHp(true, 3);
+        Board.GetCell(4, 4).SetHp(true, 3);
+
+        System.out.print("f(First), s(Second): ");
         boolean alphaSide = true;
-        switch (scanner.nextLine()) {
+        String tempLine = scanner.nextLine();
+        while (true) {
+            if (tempLine == "f" || tempLine == "s") {
+                break;
+            }
+        }
+        switch (tempLine) {
             case "f":
                 alphaSide = true;
                 break;
@@ -17,6 +34,7 @@ public class ReleasePlay {
                 alphaSide = false;
                 break;
         }
+
         while (true) {
             if (alphaSide) {
                 Board.WriteBoardHp(alphaSide);
@@ -24,23 +42,52 @@ public class ReleasePlay {
                 alphaAlgorithm.Think();
                 if (Board.IsLastAttack(alphaSide)) {
                     System.out.print("0(No Hit), 1(Near), 2(Hit), 3(Sink): ");
-                    int attackResult = Integer.parseInt(scanner.nextLine());
-                    Board.AttackResultTransfer(alphaSide, new ArrayList<Integer>(Arrays.asList(attackResult)));
+                    while (true) {
+                        tempLine = scanner.nextLine();
+                        if (tempLine.chars().allMatch(Character::isDigit)) {
+                            int attackResult = Integer.parseInt(tempLine);
+                            if (0 <= attackResult && attackResult <= 3) {
+                                Board.AttackResultTransfer(alphaSide,
+                                        new ArrayList<Integer>(Arrays.asList(attackResult)));
+                                break;
+                            }
+                        }
+                    }
                 }
             } else {
                 System.out.print("a(Attack), m(Move): ");
                 switch (scanner.nextLine()) {
                     case "a":
-                        System.out.print("x,y: ");
+                        System.out.print("x, y: ");
                         String[] tempArray = scanner.nextLine().split(",");
-                        Point point = new Point(Integer.parseInt(tempArray[0]), Integer.parseInt(tempArray[1]));
-                        Board.AttackPointForce(alphaSide, point);
+                        if (tempArray.length == 2) {
+                            if (tempArray[0].chars().allMatch(Character::isDigit) && tempArray[1].chars()
+                                    .allMatch(Character::isDigit)) {
+                                int x = Integer.parseInt(tempArray[0]);
+                                int y = Integer.parseInt(tempArray[1]);
+                                if (0 <= x && x <= 4 && 0 <= y && y <= 4) {
+                                    Point point = new Point(x, y);
+                                    Board.AttackPointForce(alphaSide, point);
+                                    break;
+                                }
+                            }
+                        }
                         break;
                     case "m":
-                        System.out.print("x,y: ");
+                        System.out.print("x, y: ");
                         tempArray = scanner.nextLine().split(",");
-                        Point vectorPoint = new Point(Integer.parseInt(tempArray[0]), Integer.parseInt(tempArray[1]));
-                        Board.MoveVectorForce(alphaSide, vectorPoint);
+                        if (tempArray.length == 2) {
+                            if (tempArray[0].chars().allMatch(Character::isDigit) && tempArray[1].chars()
+                                    .allMatch(Character::isDigit)) {
+                                int x = Integer.parseInt(tempArray[0]);
+                                int y = Integer.parseInt(tempArray[1]);
+                                if (0 <= x && x <= 4 && 0 <= y && y <= 4) {
+                                    Point vectorPoint = new Point(x, y);
+                                    Board.MoveVectorForce(alphaSide, vectorPoint);
+                                    break;
+                                }
+                            }
+                        }
                         break;
                 }
             }
