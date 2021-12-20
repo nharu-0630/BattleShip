@@ -511,9 +511,9 @@ class Board {
         return points;
     }
 
-    public static ArrayList<Point> GetCrossPoints(Point point, int length) {
+    public static ArrayList<Point> GetCrossPoints(Point point, int minLength, int maxLength) {
         ArrayList<Point> points = new ArrayList<Point>();
-        for (int i = 1; i <= length; i++) {
+        for (int i = minLength; i <= maxLength; i++) {
             if (point.x > i - 1) {
                 points.add(new Point(point.x - i, point.y));
             }

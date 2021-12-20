@@ -109,7 +109,7 @@ https://xyzyxjp.github.io/BattleShip/
 | GetMaxValuePoints*   | boolean*, int                  | ArrayList\<Point\>   | 評価値が最大であるポイントリストを取得     | 第2引数`layer`                                    |
 | GetShortPoints*      | boolean*, Point                | ArrayList\<Point\>   | ポイントに最も近い戦艦のポイントリストを取得  |                                                |
 | GetRoundPoints*      | Point                          | ArrayList\<Point\>   | ポイントの周囲8ポイントリストを取得      |                                                |
-| GetCrossPoints*      | Point, int                     | ArrayList\<Point\>   | ポイントの周囲4ポイントリストを取得      | 第2引数`距離`, 2の場合は移動可能な範囲                         |
+| GetCrossPoints*      | Point, int, int                | ArrayList\<Point\>   | ポイントから十字方向のポイントリストを取得      | 第1引数`最小距離`, 第2引数`最大距離`                         |
 | GetPointDistance*    | Point, Point                   | int                  | ポイント間の距離                | `X軸間の距離` + `Y軸間の距離`                            |
 | IsMoveEnablePoint*   | boolean*, Point, Point         | boolean              | 移動の可否                   | 第2, 3引数`ポイント`                                  |
 | IsMoveEnableVector*  | boolean*, Point, Point         | boolean              | 移動の可否                   | 第2引数`ポイント`, 第3引数`ベクトル`                         |

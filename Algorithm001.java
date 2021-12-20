@@ -47,7 +47,7 @@ class Algorithm001 extends Interface {
             if (Board.GetLastAttackResult(!alphaSide).contains(2)) {
                 // 敵に命中された
                 ArrayList<Point> points = new ArrayList<Point>();
-                for (Point point : Board.GetCrossPoints(Board.GetLastAttackPoint(!alphaSide), 2)) {
+                for (Point point : Board.GetCrossPoints(Board.GetLastAttackPoint(!alphaSide), 1, 2)) {
                     if (Board.IsMoveEnablePoint(alphaSide, Board.GetLastAttackPoint(!alphaSide),
                             point)) {
                         points.add(point);
@@ -120,7 +120,7 @@ class Algorithm001 extends Interface {
         } else {
             Point oldPoint = Board.GetRandomPoint(Board.GetShipPoints(alphaSide));
             ArrayList<Point> points = new ArrayList<Point>();
-            for (Point point : Board.GetCrossPoints(oldPoint, 2)) {
+            for (Point point : Board.GetCrossPoints(oldPoint, 1, 2)) {
                 if (Board.IsMoveEnablePoint(alphaSide, oldPoint, point)) {
                     points.add(point);
                 }
