@@ -13,10 +13,26 @@ public class ReleasePlay {
         Board.Initialize(isVisibleLog, isAttackResultArray);
 
         Algorithm002 alphaAlgorithm = new Algorithm002(true, isEnemySecret);
-        Board.GetCell(0, 0).SetHp(true, 3);
-        Board.GetCell(3, 1).SetHp(true, 3);
-        Board.GetCell(1, 3).SetHp(true, 3);
-        Board.GetCell(4, 4).SetHp(true, 3);
+        switch ((int) (Math.random() * 3)) {
+            case 0:
+                Board.GetCell(0, 0).SetHp(true, 3);
+                Board.GetCell(3, 1).SetHp(true, 3);
+                Board.GetCell(1, 3).SetHp(true, 3);
+                Board.GetCell(4, 4).SetHp(true, 3);
+                break;
+            case 1:
+                Board.GetCell(4, 0).SetHp(true, 3);
+                Board.GetCell(1, 1).SetHp(true, 3);
+                Board.GetCell(3, 3).SetHp(true, 3);
+                Board.GetCell(0, 4).SetHp(true, 3);
+                break;
+            case 2:
+                Board.GetCell(1, 1).SetHp(true, 3);
+                Board.GetCell(1, 3).SetHp(true, 3);
+                Board.GetCell(3, 1).SetHp(true, 3);
+                Board.GetCell(3, 3).SetHp(true, 3);
+                break;
+        }
 
         boolean alphaSide = true;
         String tempLine = "";
