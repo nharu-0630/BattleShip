@@ -159,12 +159,13 @@ class Board {
 
     private static boolean isVisibleLog = false;
     private static boolean isAttackResultArray = false;
+    private static boolean isEnemySecret = false;
 
-    Board(boolean isVisibleLog, boolean isAttackResultArray) {
-        Initialize(isVisibleLog, isAttackResultArray);
+    Board(boolean isVisibleLog, boolean isAttackResultArray, boolean isEnemySecret) {
+        Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
     }
 
-    public static void Initialize(boolean isVisibleLog, boolean isAttackResultArray) {
+    public static void Initialize(boolean isVisibleLog, boolean isAttackResultArray, boolean isEnemySecret) {
         cells = new Cell[GetBoardSize()][GetBoardSize()];
         for (int x = 0; x < GetBoardSize(); x++) {
             for (int y = 0; y < GetBoardSize(); y++) {
@@ -187,6 +188,7 @@ class Board {
 
         Board.isVisibleLog = isVisibleLog;
         Board.isAttackResultArray = isAttackResultArray;
+        Board.isEnemySecret = isEnemySecret;
     }
 
     public static void WriteBoardHp(boolean alphaSide) {
@@ -263,6 +265,9 @@ class Board {
     }
 
     public static boolean IsContinue(boolean interrupt) {
+        if (!(!alphaWin && !bravoWin)) {
+            return false;
+        }
         int alphaCount = GetShipPoints(true).size();
         int bravoCount = GetShipPoints(false).size();
         int alphaSumHp = 0;
@@ -278,16 +283,18 @@ class Board {
         }
         WriteLogLine("--------------------");
         WriteLogLine("【戦況】 " + Board.GetTurnCount() + "ターン目");
-        WriteLogLine("α残機 = " + alphaCount + " (総HP : " + alphaSumHp + ")");
-        WriteLogLine("β残機 = " + bravoCount + " (総HP : " + bravoSumHp + ")");
-        if (alphaCount == 0) {
+        if (!isEnemySecret) {
+            WriteLogLine("α残機 = " + alphaCount + " (総HP : " + alphaSumHp + ")");
+            WriteLogLine("β残機 = " + bravoCount + " (総HP : " + bravoSumHp + ")");
+        }
+        if (alphaCount == 0 && !isEnemySecret) {
             WriteLogLine("αが全滅しました");
             WriteLogLine("βの勝利です");
             alphaWin = false;
             bravoWin = true;
             return false;
         }
-        if (bravoCount == 0) {
+        if (bravoCount == 0 && !isEnemySecret) {
             WriteLogLine("βが全滅しました");
             WriteLogLine("αの勝利です");
             alphaWin = true;
@@ -311,6 +318,46 @@ class Board {
             return false;
         }
         return true;
+    }
+
+    public static void Interrupt() {
+        int alphaCount = GetShipPoints(true).size();
+        int bravoCount = GetShipPoints(false).size();
+        int alphaSumHp = 0;
+        for (Point point : GetShipPoints(true)) {
+            alphaSumHp += GetCell(point).GetHp(true);
+        }
+        int bravoSumHp = 0;
+        for (Point point : GetShipPoints(false)) {
+            bravoSumHp += GetCell(point).GetHp(false);
+        }
+        if (alphaCount == 0 && !isEnemySecret) {
+            WriteLogLine("αが全滅しました");
+            WriteLogLine("βの勝利です");
+            alphaWin = false;
+            bravoWin = true;
+        }
+        if (bravoCount == 0 && !isEnemySecret) {
+            WriteLogLine("βが全滅しました");
+            WriteLogLine("αの勝利です");
+            alphaWin = true;
+            bravoWin = false;
+        }
+        if (alphaWin == false && bravoWin == false) {
+            if (alphaSumHp > bravoSumHp) {
+                WriteLogLine("αの勝利です");
+                alphaWin = true;
+                bravoWin = false;
+            } else if (bravoSumHp > alphaSumHp) {
+                WriteLogLine("βの勝利です");
+                alphaWin = false;
+                bravoWin = true;
+            } else {
+                WriteLogLine("引き分けです");
+                alphaWin = false;
+                bravoWin = false;
+            }
+        }
     }
 
     public static boolean GetAlphaWin() {
@@ -747,7 +794,9 @@ class Board {
                 if (isAttackResultArray) {
                     attackResult.add(1);
                 } else {
-                    attackResult = new ArrayList<Integer>(Arrays.asList(1));
+                    if (attackResult.size() == 0) {
+                        attackResult = new ArrayList<Integer>(Arrays.asList(1));
+                    }
                 }
             }
         }

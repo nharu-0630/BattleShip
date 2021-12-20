@@ -1,3 +1,5 @@
+import java.time.*;
+import java.time.format.*;
 import java.util.*;
 
 public class ReleasePlay {
@@ -10,9 +12,10 @@ public class ReleasePlay {
     public static void main(String args[]) {
         Logger.CreateLogger();
 
-        Board.Initialize(isVisibleLog, isAttackResultArray);
+        Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
         Algorithm002 alphaAlgorithm = new Algorithm002(true, isEnemySecret);
+        alphaAlgorithm.SetParameter(new double[] { 0.9 });
         switch ((int) (Math.random() * 3)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(true, 3);
@@ -53,7 +56,7 @@ public class ReleasePlay {
             System.out.println("入力が正しくありません");
         }
 
-        while (true) {
+        while (Board.IsContinue(false)) {
             if (alphaSide) {
                 alphaAlgorithm.Think();
                 if (Board.IsLastAttack(alphaSide)) {
@@ -65,7 +68,7 @@ public class ReleasePlay {
                             if (0 <= attackResult && attackResult <= 3) {
                                 System.out.println("攻撃結果 = " + attackResult);
                                 System.out.print("確定(y), 取消(n): ");
-                                if (scanner.nextLine() == "y") {
+                                if (scanner.nextLine().equals("y")) {
                                     Board.AttackResultTransfer(alphaSide,
                                             new ArrayList<Integer>(Arrays.asList(attackResult)));
                                     break CONFIRM;
@@ -106,11 +109,11 @@ public class ReleasePlay {
                             System.out.print("x, y: ");
                             tempArray = scanner.nextLine().replaceAll(" ", "").split(",");
                             if (tempArray.length == 2) {
-                                if (tempArray[0].chars().allMatch(Character::isDigit) && tempArray[1].chars()
-                                        .allMatch(Character::isDigit)) {
+                                if (tempArray[0].matches("[+-]?\\d*(\\.\\d+)?") && tempArray[1]
+                                        .matches("[+-]?\\d*(\\.\\d+)?")) {
                                     int x = Integer.parseInt(tempArray[0]);
                                     int y = Integer.parseInt(tempArray[1]);
-                                    if (0 <= x && x <= 4 && 0 <= y && y <= 4) {
+                                    if ((x == 0 || y == 0) && (Math.abs(x + y) == 1 || Math.abs(x + y) == 2)) {
                                         Point vectorPoint = new Point(x, y);
                                         System.out.println("移動 = " + vectorPoint);
                                         System.out.print("確定(y), 取消(n): ");
@@ -131,5 +134,9 @@ public class ReleasePlay {
             }
             alphaSide = !alphaSide;
         }
+
+        Logger.SaveLogger(
+                DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(LocalDateTime.now()) + "-" + alphaAlgorithm
+                        .getClass().getCanonicalName() + "-" + "AlgorithmHuman" + ".json");
     }
 }

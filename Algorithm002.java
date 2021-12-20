@@ -17,6 +17,9 @@ class Algorithm002 extends Interface {
             if (Board.GetLastAttackResult(!alphaSide).contains(3)) {
                 allySumHp--;
                 allyCount--;
+                if (allyCount == 0) {
+                    Board.Interrupt();
+                }
             }
             if (Board.GetLastAttackResult(!alphaSide).contains(2)) {
                 allySumHp--;
@@ -26,6 +29,9 @@ class Algorithm002 extends Interface {
             if (Board.GetLastAttackResult(alphaSide).contains(3)) {
                 enemySumHp--;
                 enemyCount--;
+                if (enemyCount == 0) {
+                    Board.Interrupt();
+                }
             }
             if (Board.GetLastAttackResult(alphaSide).contains(2)) {
                 enemySumHp--;

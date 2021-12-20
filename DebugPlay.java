@@ -21,7 +21,7 @@ public class DebugPlay {
     public static void Try(boolean alphaSide, double[] parameters) {
         Logger.CreateLogger();
 
-        Board.Initialize(isVisibleLog, isAttackResultArray);
+        Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
         Algorithm002 alphaAlgorithm = new Algorithm002(true, isEnemySecret);
         Board.GetCell(0, 0).SetHp(true, 3);
@@ -61,7 +61,7 @@ public class DebugPlay {
     public static void CpuVsHuman() {
         Logger.CreateLogger();
 
-        Board.Initialize(true, isAttackResultArray);
+        Board.Initialize(true, isAttackResultArray, isEnemySecret);
         Algorithm002 alphaAlgorithm = new Algorithm002(true, false);
         AlgorithmHuman bravoAlgorithm = new AlgorithmHuman(false, false);
 
