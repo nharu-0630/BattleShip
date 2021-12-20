@@ -55,8 +55,6 @@ public class ReleasePlay {
 
         while (true) {
             if (alphaSide) {
-                Board.WriteBoardHp(alphaSide);
-                Board.WriteBoardIsAttack(alphaSide);
                 alphaAlgorithm.Think();
                 if (Board.IsLastAttack(alphaSide)) {
                     CONFIRM: while (true) {
@@ -90,7 +88,7 @@ public class ReleasePlay {
                                     int x = Integer.parseInt(tempArray[0]);
                                     int y = Integer.parseInt(tempArray[1]);
                                     if (0 <= x && x <= 4 && 0 <= y && y <= 4) {
-                                        Point point = new Point(y, x);
+                                        Point point = new Point(x, y);
                                         System.out.println("攻撃 = " + point);
                                         System.out.print("確定(y), 取消(n): ");
                                         if (scanner.nextLine().equals("y")) {
@@ -113,7 +111,7 @@ public class ReleasePlay {
                                     int x = Integer.parseInt(tempArray[0]);
                                     int y = Integer.parseInt(tempArray[1]);
                                     if (0 <= x && x <= 4 && 0 <= y && y <= 4) {
-                                        Point vectorPoint = new Point(y, x);
+                                        Point vectorPoint = new Point(x, y);
                                         System.out.println("移動 = " + vectorPoint);
                                         System.out.print("確定(y), 取消(n): ");
                                         if (scanner.nextLine().equals("y")) {
