@@ -60,8 +60,10 @@ class Algorithm001 extends Interface {
                     }
                 }
                 // 移動できる範囲からランダムに移動
-                DoMove(Board.GetLastAttackPoint(!alphaSide), Board.GetRandomPoint(points));
-                return;
+                if (points.size() != 0) {
+                    DoMove(Board.GetLastAttackPoint(!alphaSide), Board.GetRandomPoint(points));
+                    return;
+                }
             }
             if (Board.GetLastAttackResult(!alphaSide).contains(1)) {
                 // 敵に波高しされた
