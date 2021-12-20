@@ -642,16 +642,13 @@ class Board {
                     Board.GetCell(point).SetHp(!alphaSide, Board.GetCell(point).GetHp(!alphaSide) - 1);
                     // 命中！
                     attackResult = new ArrayList<Integer>(Arrays.asList(2));
-                    WriteLogLine("命中！");
                     if (Board.GetCell(point).GetHp(!alphaSide) == 0) {
                         // 撃沈！
                         attackResult = new ArrayList<Integer>(Arrays.asList(3));
-                        WriteLogLine("撃沈！");
                     }
                 } else {
                     // ハズレ！
                     attackResult = new ArrayList<Integer>(Arrays.asList(0));
-                    WriteLogLine("ハズレ！");
                 }
                 for (Point roundPoint : GetRoundPoints(point)) {
                     if (Board.GetCell(roundPoint).IsAlive(!alphaSide)) {
@@ -661,9 +658,20 @@ class Board {
                         } else {
                             attackResult = new ArrayList<Integer>(Arrays.asList(1));
                         }
-                        WriteLogLine("波高し！");
                     }
                 }
+            }
+            if (attackResult.contains(3)) {
+                WriteLogLine("撃沈！");
+            }
+            if (attackResult.contains(2)) {
+                WriteLogLine("命中！");
+            }
+            if (attackResult.contains(1)) {
+                WriteLogLine("波高し！");
+            }
+            if (attackResult.contains(0)) {
+                WriteLogLine("ハズレ！");
             }
             if (alphaSide) {
                 lastAlphaAttackPoint = point;
@@ -725,16 +733,13 @@ class Board {
             Board.GetCell(point).SetHp(!alphaSide, Board.GetCell(point).GetHp(!alphaSide) - 1);
             // 命中！
             attackResult = new ArrayList<Integer>(Arrays.asList(2));
-            WriteLogLine("命中！");
             if (Board.GetCell(point).GetHp(!alphaSide) == 0) {
                 // 撃沈！
                 attackResult = new ArrayList<Integer>(Arrays.asList(3));
-                WriteLogLine("撃沈！");
             }
         } else {
             // ハズレ！
             attackResult = new ArrayList<Integer>(Arrays.asList(0));
-            WriteLogLine("ハズレ！");
         }
         for (Point roundPoint : GetRoundPoints(point)) {
             if (Board.GetCell(roundPoint).IsAlive(!alphaSide)) {
@@ -744,8 +749,19 @@ class Board {
                 } else {
                     attackResult = new ArrayList<Integer>(Arrays.asList(1));
                 }
-                WriteLogLine("波高し！");
             }
+        }
+        if (attackResult.contains(3)) {
+            WriteLogLine("撃沈！");
+        }
+        if (attackResult.contains(2)) {
+            WriteLogLine("命中！");
+        }
+        if (attackResult.contains(1)) {
+            WriteLogLine("波高し！");
+        }
+        if (attackResult.contains(0)) {
+            WriteLogLine("ハズレ！");
         }
         if (alphaSide) {
             lastAlphaAttackPoint = point;
