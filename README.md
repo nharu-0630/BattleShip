@@ -156,13 +156,13 @@ https://xyzyxjp.github.io/BattleShip/
 | ---------- | ---------- | ------ | --- |
 | jsonObject | JSONObject |        |     |
 
-| メソッド名                | 引数型     | 戻り値型                 |               |
-| -------------------- | ------- | -------------------- | ------------- |
-| AddLogger            | boolean |                      | 現在の戦況をログに追加 |
-| GetHpArrayList       | boolean | ArrayList\<Integer\> |               |
-| GetValuesArrayList    | boolean | ArrayList\<ArrayList\<Integer\>\> |               |
-| GetIsAttackArrayList | boolean | ArrayList\<Boolean\> |               |
-| SaveLogger           | String  |                      | ログを保存       |
+| メソッド名                | 引数型     | 戻り値型                              |             |
+| -------------------- | ------- | --------------------------------- | ----------- |
+| AddLogger            | boolean | String, boolean                   | 現在の戦況をログに追加 |
+| GetHpArrayList       | boolean | ArrayList\<Integer\>              |             |
+| GetValuesArrayList   | boolean | ArrayList\<ArrayList\<Integer\>\> |             |
+| GetIsAttackArrayList | boolean | ArrayList\<Boolean\>              |             |
+| SaveLogger           |         |                                   | ログを保存       |
 
 ## AlgorithmXXX.java
 

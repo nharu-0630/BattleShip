@@ -19,7 +19,7 @@ public class DebugPlay {
     public static void Try(boolean alphaSide, double[] parameters) {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
-        Algorithm004 alphaAlgorithm = new Algorithm004(true, isEnemySecret);
+        Algorithm002 alphaAlgorithm = new Algorithm002(true, isEnemySecret);
         switch ((int) (Math.random() * 3)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(true, 3);
@@ -50,7 +50,7 @@ public class DebugPlay {
                 break;
         }
 
-        Algorithm005 bravoAlgorithm = new Algorithm005(false, isEnemySecret);
+        Algorithm004 bravoAlgorithm = new Algorithm004(false, isEnemySecret);
         switch ((int) (Math.random() * 3)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(false, 3);
@@ -86,7 +86,8 @@ public class DebugPlay {
 
         Logger.CreateLogger(
                 DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(LocalDateTime.now()) + "-" + alphaAlgorithm
-                        .getClass().getCanonicalName() + "-" + bravoAlgorithm.getClass().getCanonicalName());
+                        .getClass().getCanonicalName() + "-" + bravoAlgorithm.getClass().getCanonicalName(),
+                false);
 
         while (Board.IsContinue(false)) {
             if (alphaSide) {

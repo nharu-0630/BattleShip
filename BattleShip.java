@@ -134,7 +134,7 @@ class Point {
     }
 
     Point(String string) {
-        int number = Integer.valueOf(string.substring(1));
+        int number = Integer.valueOf(string.substring(1)) - 1;
         switch (string.substring(0, 1)) {
             case "A":
                 x = number;
@@ -994,10 +994,12 @@ class Interface {
 class Logger {
     private static JSONObject jsonObject;
     private static String fileName;
+    private static boolean autoSave;
 
-    public static void CreateLogger(String fileName) {
+    public static void CreateLogger(String fileName, boolean autoSave) {
         jsonObject = new JSONObject();
         Logger.fileName = fileName;
+        Logger.autoSave = autoSave;
     }
 
     public static void AddLogger(boolean alphaSide) {
@@ -1007,19 +1009,30 @@ class Logger {
         alphaJsonObject.put("hp", GetHpArrayList(true));
         alphaJsonObject.put("values", GetValuesArrayList(true));
         alphaJsonObject.put("isAttack", GetIsAttackArrayList(true));
-        alphaJsonObject.put("lastAttackPoint", Board.GetLastAttackPoint(true));
-        alphaJsonObject.put("lastAttackResult", Board.GetLastAttackResult(true));
-        alphaJsonObject.put("lastMoveVector", Board.GetLastMoveVector(true));
+        if (Board.GetLastAttackPoint(true) != null) {
+            alphaJsonObject.put("lastAttackPoint", Board.GetLastAttackPoint(true).toPointFormatString());
+            alphaJsonObject.put("lastAttackResult", Board.GetLastAttackResult(true));
+        }
+        if (Board.GetLastMoveVector(true) != null) {
+            alphaJsonObject.put("lastMoveVector", Board.GetLastMoveVector(true).toVectorFormaString());
+        }
         childJsonObject.put("true", alphaJsonObject);
         JSONObject bravoJsonObject = new JSONObject();
         bravoJsonObject.put("hp", GetHpArrayList(false));
         bravoJsonObject.put("values", GetValuesArrayList(false));
         bravoJsonObject.put("isAttack", GetIsAttackArrayList(false));
-        bravoJsonObject.put("lastAttackPoint", Board.GetLastAttackPoint(false));
-        bravoJsonObject.put("lastAttackResult", Board.GetLastAttackResult(false));
-        bravoJsonObject.put("lastMoveVector", Board.GetLastMoveVector(false));
+        if (Board.GetLastAttackPoint(false) != null) {
+            bravoJsonObject.put("lastAttackPoint", Board.GetLastAttackPoint(false).toPointFormatString());
+            bravoJsonObject.put("lastAttackResult", Board.GetLastAttackResult(false));
+        }
+        if (Board.GetLastMoveVector(false) != null) {
+            bravoJsonObject.put("lastMoveVector", Board.GetLastMoveVector(false).toVectorFormaString());
+        }
         childJsonObject.put("false", bravoJsonObject);
         jsonObject.put(String.valueOf(Board.GetTurnCount()), childJsonObject);
+        if (autoSave) {
+            SaveLogger();
+        }
     }
 
     public static ArrayList<Integer> GetHpArrayList(boolean alphaSide) {
@@ -1053,15 +1066,16 @@ class Logger {
     }
 
     public static void SaveLogger() {
-        File file = new File("log");
-        if (!file.exists() || !file.isDirectory()) {
-            file.mkdir();
+        File folder = new File("log");
+        if (!folder.exists() || !folder.isDirectory()) {
+            folder.mkdir();
         }
         try {
-            FileWriter fileWriter = new FileWriter("log/" + fileName + ".json", false);
-            fileWriter.write(jsonObject.toString());
-            fileWriter.flush();
-            fileWriter.close();
+            File file = new File("log/" + fileName + ".json");
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
+            BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
+            bufferedWriter.write(jsonObject.toString());
+            bufferedWriter.close();
         } catch (IOException exception) {
             System.err.println(exception);
         }

@@ -61,7 +61,7 @@ public class ReleasePlay {
         }
 
         Logger.CreateLogger(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(LocalDateTime.now()) + "-"
-                + alphaAlgorithm.getClass().getCanonicalName() + "-" + "AlgorithmHuman" + ".json");
+                + alphaAlgorithm.getClass().getCanonicalName() + "-" + "AlgorithmHuman" + ".json", true);
 
         while (Board.IsContinue(false)) {
             if (alphaSide) {
