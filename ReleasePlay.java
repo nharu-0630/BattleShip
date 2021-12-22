@@ -10,13 +10,11 @@ public class ReleasePlay {
     public static final boolean isEnemySecret = true;
 
     public static void main(String args[]) {
-        Logger.CreateLogger();
-
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
         Algorithm004 alphaAlgorithm = new Algorithm004(true, isEnemySecret);
         alphaAlgorithm.SetParameter(null);
-        switch ((int) (Math.random() * 3)) {
+        switch ((int) (Math.random() * 4)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(true, 3);
                 Board.GetCell(3, 1).SetHp(true, 3);
@@ -34,6 +32,12 @@ public class ReleasePlay {
                 Board.GetCell(1, 3).SetHp(true, 3);
                 Board.GetCell(3, 1).SetHp(true, 3);
                 Board.GetCell(3, 3).SetHp(true, 3);
+                break;
+            case 3:
+                Board.GetCell(2, 1).SetHp(true, 3);
+                Board.GetCell(2, 3).SetHp(true, 3);
+                Board.GetCell(1, 2).SetHp(true, 3);
+                Board.GetCell(3, 2).SetHp(true, 3);
                 break;
         }
 
@@ -55,6 +59,9 @@ public class ReleasePlay {
             }
             System.out.println("入力が正しくありません");
         }
+
+        Logger.CreateLogger(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(LocalDateTime.now()) + "-"
+                + alphaAlgorithm.getClass().getCanonicalName() + "-" + "AlgorithmHuman" + ".json");
 
         while (Board.IsContinue(false)) {
             if (alphaSide) {
@@ -84,47 +91,33 @@ public class ReleasePlay {
                     switch (scanner.nextLine()) {
                         case "a":
                             System.out.print("x, y: ");
-                            String[] tempArray = scanner.nextLine().replaceAll(" ", "").split(",");
-                            if (tempArray.length == 2) {
-                                if (tempArray[0].chars().allMatch(Character::isDigit) && tempArray[1].chars()
-                                        .allMatch(Character::isDigit)) {
-                                    int x = Integer.parseInt(tempArray[0]);
-                                    int y = Integer.parseInt(tempArray[1]);
-                                    if (0 <= x && x <= 4 && 0 <= y && y <= 4) {
-                                        Point point = new Point(x, y);
-                                        System.out.println("攻撃 = " + point);
-                                        System.out.print("確定(y), 取消(n): ");
-                                        if (scanner.nextLine().equals("y")) {
-                                            Board.AttackPointForce(alphaSide, point);
-                                            break CONFIRM;
-                                        } else {
-                                            System.out.println("取消されました");
-                                            continue CONFIRM;
-                                        }
-                                    }
+                            Point point = new Point(scanner.nextLine());
+                            if (!point.empty && 0 <= point.x && point.x <= 4 && 0 <= point.y && point.y <= 4) {
+                                System.out.println("攻撃 = " + point);
+                                System.out.print("確定(y), 取消(n): ");
+                                if (scanner.nextLine().equals("y")) {
+                                    Board.AttackPointForce(alphaSide, point);
+                                    break CONFIRM;
+                                } else {
+                                    System.out.println("取消されました");
+                                    continue CONFIRM;
                                 }
                             }
                             break;
                         case "m":
                             System.out.print("x, y: ");
-                            tempArray = scanner.nextLine().replaceAll(" ", "").split(",");
-                            if (tempArray.length == 2) {
-                                if (tempArray[0].matches("[+-]?\\d*(\\.\\d+)?") && tempArray[1]
-                                        .matches("[+-]?\\d*(\\.\\d+)?")) {
-                                    int x = Integer.parseInt(tempArray[0]);
-                                    int y = Integer.parseInt(tempArray[1]);
-                                    if ((x == 0 || y == 0) && (Math.abs(x + y) == 1 || Math.abs(x + y) == 2)) {
-                                        Point vectorPoint = new Point(x, y);
-                                        System.out.println("移動 = " + vectorPoint);
-                                        System.out.print("確定(y), 取消(n): ");
-                                        if (scanner.nextLine().equals("y")) {
-                                            Board.MoveVectorForce(alphaSide, vectorPoint);
-                                            break CONFIRM;
-                                        } else {
-                                            System.out.println("取消されました");
-                                            continue CONFIRM;
-                                        }
-                                    }
+                            point = new Point(scanner.nextLine());
+                            if (!point.empty
+                                    && (point.x == 0 || point.y == 0) && (Math.abs(point.x + point.y) == 1 || Math.abs(
+                                            point.x + point.y) == 2)) {
+                                System.out.println("移動 = " + point);
+                                System.out.print("確定(y), 取消(n): ");
+                                if (scanner.nextLine().equals("y")) {
+                                    Board.MoveVectorForce(alphaSide, point);
+                                    break CONFIRM;
+                                } else {
+                                    System.out.println("取消されました");
+                                    continue CONFIRM;
                                 }
                             }
                             break;
@@ -134,9 +127,5 @@ public class ReleasePlay {
             }
             alphaSide = !alphaSide;
         }
-
-        Logger.SaveLogger(
-                DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(LocalDateTime.now()) + "-" + alphaAlgorithm
-                        .getClass().getCanonicalName() + "-" + "AlgorithmHuman" + ".json");
     }
 }

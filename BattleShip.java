@@ -122,12 +122,58 @@ class Cell {
 }
 
 class Point {
+    public boolean empty = true;
+
     public int x;
     public int y;
 
     Point(int x, int y) {
         this.x = x;
         this.y = y;
+        empty = false;
+    }
+
+    Point(String string) {
+        int number = Integer.valueOf(string.substring(1));
+        switch (string.substring(0, 1)) {
+            case "A":
+                x = number;
+                y = 0;
+                empty = false;
+                break;
+            case "B":
+                x = number;
+                y = 1;
+                empty = false;
+                break;
+            case "C":
+                x = number;
+                y = 2;
+                empty = false;
+                break;
+            case "D":
+                x = number;
+                y = 3;
+                empty = false;
+                break;
+            case "E":
+                x = number;
+                y = 4;
+                empty = false;
+                break;
+            case "東":
+            case "西":
+                x = number;
+                y = 0;
+                empty = false;
+                break;
+            case "南":
+            case "北":
+                x = 0;
+                y = number;
+                empty = false;
+                break;
+        }
     }
 
     public Point Plus(Point point) {
@@ -140,25 +186,28 @@ class Point {
 
     @Override
     public String toString() {
-        String temp = "";
-        switch (y) {
-            case 0:
-                temp = "A";
-                break;
-            case 1:
-                temp = "B";
-                break;
-            case 2:
-                temp = "C";
-                break;
-            case 3:
-                temp = "D";
-                break;
-            case 4:
-                temp = "E";
-                break;
+        return "(" + x + ", " + y + ")";
+    }
+
+    public String toPointFormatString() {
+        String[] yStrings = new String[] { "A", "B", "C", "D", "E" };
+        return yStrings[y] + (x + 1);
+    }
+
+    public String toVectorFormaString() {
+        if (x > 0) {
+            return "東" + x;
         }
-        return "(" + x + ", " + y + ") (" + temp + (x + 1) + ")";
+        if (x < 0) {
+            return "西" + Math.abs(x);
+        }
+        if (y > 0) {
+            return "南" + y;
+        }
+        if (y < 0) {
+            return "北" + Math.abs(y);
+        }
+        return toPointFormatString();
     }
 }
 
@@ -221,11 +270,12 @@ class Board {
             if (i != 0) {
                 WriteLog("|");
             }
-            WriteLog(Integer.valueOf(i).toString());
+            WriteLog(Integer.valueOf(i + 1).toString());
         }
         WriteLogLine("");
+        String[] yStrings = new String[] { "A", "B", "C", "D", "E" };
         for (int y = 0; y < Board.GetBoardSize(); y++) {
-            WriteLog(y + "|");
+            WriteLog(yStrings[y] + "|");
             for (int x = 0; x < Board.GetBoardSize(); x++) {
                 if (Board.GetCell(x, y).GetHp(alphaSide) != -1) {
                     WriteLog(Integer.valueOf(Board.GetCell(x, y).GetHp(alphaSide)).toString());
@@ -247,11 +297,12 @@ class Board {
             if (i != 0) {
                 WriteLog("|");
             }
-            WriteLog(Integer.valueOf(i).toString());
+            WriteLog(Integer.valueOf(i + 1).toString());
         }
         WriteLogLine("");
+        String[] yStrings = new String[] { "A", "B", "C", "D", "E" };
         for (int y = 0; y < Board.GetBoardSize(); y++) {
-            WriteLog(Integer.valueOf(y).toString() + "|");
+            WriteLog(yStrings[y] + "|");
             for (int x = 0; x < Board.GetBoardSize(); x++) {
                 if (Board.GetCell(x, y).GetIsAttack(alphaSide)) {
                     WriteLog("*");
@@ -653,7 +704,7 @@ class Board {
     public static boolean MovePoint(boolean alphaSide, Point oldPoint, Point newPoint) {
         WriteLogSide(alphaSide);
         if (IsMoveEnablePoint(alphaSide, oldPoint, newPoint)) {
-            WriteLogLine("移動】 " + oldPoint + " → " + newPoint);
+            WriteLogLine("移動】 " + oldPoint.toPointFormatString() + " → " + newPoint.toPointFormatString());
             Board.GetCell(newPoint).SetHp(alphaSide, Board.GetCell(oldPoint).GetHp(alphaSide));
             Board.GetCell(oldPoint).SetHp(alphaSide, -1);
             if (alphaSide) {
@@ -680,7 +731,7 @@ class Board {
 
     public static void MoveVectorForce(boolean alphaSide, Point vectorPoint) {
         WriteLogSide(alphaSide);
-        WriteLogLine("移動】 " + vectorPoint);
+        WriteLogLine("移動】 " + vectorPoint.toVectorFormaString());
         if (alphaSide) {
             lastAlphaAttackPoint = null;
             lastAlphaAttackResult = new ArrayList<Integer>(Arrays.asList(-1));
@@ -732,7 +783,7 @@ class Board {
         WriteLogSide(alphaSide);
         if (IsAttackPoint(alphaSide, point)) {
             ArrayList<Integer> attackResult = new ArrayList<Integer>();
-            WriteLogLine("攻撃】" + point);
+            WriteLogLine("攻撃】" + point.toPointFormatString());
             if (judgeResult) {
                 if (Board.GetCell(point).IsAlive(!alphaSide)) {
                     Board.GetCell(point).SetHp(!alphaSide, Board.GetCell(point).GetHp(!alphaSide) - 1);
@@ -826,7 +877,7 @@ class Board {
     public static void AttackPointForce(boolean alphaSide, Point point) {
         WriteLogSide(alphaSide);
         ArrayList<Integer> attackResult = new ArrayList<Integer>();
-        WriteLogLine("攻撃】" + point);
+        WriteLogLine("攻撃】" + point.toPointFormatString());
         if (Board.GetCell(point).IsAlive(!alphaSide)) {
             Board.GetCell(point).SetHp(!alphaSide, Board.GetCell(point).GetHp(!alphaSide) - 1);
             // 命中！
@@ -897,37 +948,39 @@ class Interface {
     public void DoMove(Point oldPoint, Point newPoint) {
         Board.WriteBoardHp(alphaSide);
         Board.WriteBoardIsAttack(alphaSide);
-        Board.WriteLogLine(newPoint.Minus(oldPoint) + " に移動！");
+        Board.WriteLogLine(newPoint.Minus(oldPoint).toVectorFormaString() + " に移動！");
         Board.MovePoint(alphaSide, oldPoint, newPoint);
     }
 
     public void DoAttack(Point point) {
         Board.WriteBoardHp(alphaSide);
         Board.WriteBoardIsAttack(alphaSide);
-        Board.WriteLogLine(point + " に魚雷発射！");
+        Board.WriteLogLine(point.toPointFormatString() + " に魚雷発射！");
         Board.AttackPoint(alphaSide, point, !isEnemySecret);
     }
 
     public void DoMoveForce(Point vectorPoint) {
         Board.WriteBoardHp(alphaSide);
         Board.WriteBoardIsAttack(alphaSide);
-        Board.WriteLogLine(vectorPoint + " に移動！");
+        Board.WriteLogLine(vectorPoint.toVectorFormaString() + " に移動！");
         Board.MoveVectorForce(alphaSide, vectorPoint);
     }
 
     public void DoAttackForce(Point point) {
         Board.WriteBoardHp(alphaSide);
         Board.WriteBoardIsAttack(alphaSide);
-        Board.WriteLogLine(point + " に魚雷発射！");
+        Board.WriteLogLine(point.toPointFormatString() + " に魚雷発射！");
         Board.AttackPointForce(alphaSide, point);
     }
 }
 
 class Logger {
     private static JSONObject jsonObject;
+    private static String fileName;
 
-    public static void CreateLogger() {
+    public static void CreateLogger(String fileName) {
         jsonObject = new JSONObject();
+        Logger.fileName = fileName;
     }
 
     public static void AddLogger(boolean alphaSide) {
@@ -982,13 +1035,13 @@ class Logger {
         return isAttackArrayList;
     }
 
-    public static void SaveLogger(String fileName) {
+    public static void SaveLogger() {
         File file = new File("log");
         if (!file.exists() || !file.isDirectory()) {
             file.mkdir();
         }
         try {
-            FileWriter fileWriter = new FileWriter("log/" + fileName);
+            FileWriter fileWriter = new FileWriter("log/" + fileName + ".json", false);
             fileWriter.write(jsonObject.toString());
             fileWriter.flush();
             fileWriter.close();

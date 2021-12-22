@@ -17,12 +17,10 @@ public class DebugPlay {
     }
 
     public static void Try(boolean alphaSide, double[] parameters) {
-        Logger.CreateLogger();
-
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
         Algorithm002 alphaAlgorithm = new Algorithm002(true, isEnemySecret);
-        switch ((int) (Math.random() * 4)) {
+        switch ((int) (Math.random() * 5)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(true, 3);
                 Board.GetCell(3, 1).SetHp(true, 3);
@@ -42,12 +40,18 @@ public class DebugPlay {
                 Board.GetCell(3, 3).SetHp(true, 3);
                 break;
             case 3:
+                Board.GetCell(2, 1).SetHp(true, 3);
+                Board.GetCell(2, 3).SetHp(true, 3);
+                Board.GetCell(1, 2).SetHp(true, 3);
+                Board.GetCell(3, 2).SetHp(true, 3);
+                break;
+            case 4:
                 Board.SetRandom4Points(true);
                 break;
         }
 
         Algorithm004 bravoAlgorithm = new Algorithm004(false, isEnemySecret);
-        switch ((int) (Math.random() * 4)) {
+        switch ((int) (Math.random() * 5)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(false, 3);
                 Board.GetCell(3, 1).SetHp(false, 3);
@@ -67,12 +71,22 @@ public class DebugPlay {
                 Board.GetCell(3, 3).SetHp(false, 3);
                 break;
             case 3:
+                Board.GetCell(2, 1).SetHp(false, 3);
+                Board.GetCell(2, 3).SetHp(false, 3);
+                Board.GetCell(1, 2).SetHp(false, 3);
+                Board.GetCell(3, 2).SetHp(false, 3);
+                break;
+            case 4:
                 Board.SetRandom4Points(false);
                 break;
         }
 
         alphaAlgorithm.SetParameter(parameters);
         bravoAlgorithm.SetParameter(new double[] { 1 });
+
+        Logger.CreateLogger(
+                DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(LocalDateTime.now()) + "-" + alphaAlgorithm
+                        .getClass().getCanonicalName() + "-" + bravoAlgorithm.getClass().getCanonicalName());
 
         while (Board.IsContinue(false)) {
             if (alphaSide) {
@@ -87,9 +101,7 @@ public class DebugPlay {
             }
         }
 
-        Logger.SaveLogger(
-                DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(LocalDateTime.now()) + "-" + alphaAlgorithm
-                        .getClass().getCanonicalName() + "-" + bravoAlgorithm.getClass().getCanonicalName() + ".json");
+        Logger.SaveLogger();
     }
 
     public static void ParameterDeepTry() {
