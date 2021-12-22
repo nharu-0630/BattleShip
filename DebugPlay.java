@@ -12,8 +12,8 @@ public class DebugPlay {
 
     public static void main(String args[]) {
         DeepTry(null);
-        // Try(true, new double[] { 1 });
-        // Try(false, new double[] { 1 });
+        // Try(true, null);
+        // Try(false, null);
     }
 
     public static void Try(boolean alphaSide, double[] parameters) {
