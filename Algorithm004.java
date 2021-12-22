@@ -73,24 +73,33 @@ class Algorithm004 extends Interface {
             // 敵を攻撃した
             if (Board.GetLastAttackResult(alphaSide).contains(3)) {
                 // 敵を撃沈した
-                Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, 0);
+                Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, -1);
             }
             if (Board.GetLastAttackResult(alphaSide).contains(2)) {
                 // 敵を命中した
                 Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, 10);
                 if (Board.IsLastMove(!alphaSide)) {
                     // 敵が移動した
-                    Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, 0);
-                    Board.GetCell(Board.GetLastAttackPoint(alphaSide)
-                            .Plus(Board.GetLastMoveVector(!alphaSide))).SetValue(alphaSide, 0, 10);
-                    if (Board.IsAttackPoint(alphaSide, Board.GetLastAttackPoint(alphaSide)
-                            .Plus(Board.GetLastMoveVector(!alphaSide)))) {
-                        // 攻撃が可能なら攻撃する
-                        estimatedAttacked = true;
-                        estimatedBeforePoint = Board.GetLastAttackPoint(alphaSide);
-                        DoAttack(Board.GetLastAttackPoint(alphaSide)
-                                .Plus(Board.GetLastMoveVector(!alphaSide)));
-                        return;
+                    if (0 <= Board.GetLastAttackPoint(alphaSide)
+                            .Plus(Board.GetLastMoveVector(!alphaSide)).x
+                            && Board.GetLastAttackPoint(alphaSide)
+                                    .Plus(Board.GetLastMoveVector(!alphaSide)).x <= 4
+                            && 0 <= Board.GetLastAttackPoint(alphaSide)
+                                    .Plus(Board.GetLastMoveVector(!alphaSide)).y
+                            && Board.GetLastAttackPoint(alphaSide)
+                                    .Plus(Board.GetLastMoveVector(!alphaSide)).y <= 4) {
+                        Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, 0);
+                        Board.GetCell(Board.GetLastAttackPoint(alphaSide)
+                                .Plus(Board.GetLastMoveVector(!alphaSide))).SetValue(alphaSide, 0, 10);
+                        if (Board.IsAttackPoint(alphaSide, Board.GetLastAttackPoint(alphaSide)
+                                .Plus(Board.GetLastMoveVector(!alphaSide)))) {
+                            // 攻撃が可能なら攻撃する
+                            estimatedAttacked = true;
+                            estimatedBeforePoint = Board.GetLastAttackPoint(alphaSide);
+                            DoAttack(Board.GetLastAttackPoint(alphaSide)
+                                    .Plus(Board.GetLastMoveVector(!alphaSide)));
+                            return;
+                        }
                     }
                 } else {
                     // 敵が移動しなかった
@@ -163,6 +172,7 @@ class Algorithm004 extends Interface {
                         }
                     }
                     if (vectorPoint != null) {
+                        System.out.println(Board.GetTurnCount());
                         DoMove(movePoint, movePoint.Plus(vectorPoint));
                         return;
                     }

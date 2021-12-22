@@ -68,7 +68,7 @@ class Algorithm002 extends Interface {
             // 敵を攻撃した
             if (Board.GetLastAttackResult(alphaSide).contains(3)) {
                 // 敵を撃沈した
-                Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, 0);
+                Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, -1);
             }
             if (Board.GetLastAttackResult(alphaSide).contains(2)) {
                 // 敵を命中した
@@ -77,15 +77,24 @@ class Algorithm002 extends Interface {
                     // 敵が移動した
                     // if (enemyCount == 1) {
                     // 敵が1機のみ
-                    Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, 0);
-                    Board.GetCell(Board.GetLastAttackPoint(alphaSide)
-                            .Plus(Board.GetLastMoveVector(!alphaSide))).SetValue(alphaSide, 0, 10);
-                    if (Board.IsAttackPoint(alphaSide, Board.GetLastAttackPoint(alphaSide)
-                            .Plus(Board.GetLastMoveVector(!alphaSide)))) {
-                        // 攻撃が可能なら攻撃する
-                        DoAttack(Board.GetLastAttackPoint(alphaSide)
-                                .Plus(Board.GetLastMoveVector(!alphaSide)));
-                        return;
+                    if (0 <= Board.GetLastAttackPoint(alphaSide)
+                            .Plus(Board.GetLastMoveVector(!alphaSide)).x
+                            && Board.GetLastAttackPoint(alphaSide)
+                                    .Plus(Board.GetLastMoveVector(!alphaSide)).x <= 4
+                            && 0 <= Board.GetLastAttackPoint(alphaSide)
+                                    .Plus(Board.GetLastMoveVector(!alphaSide)).y
+                            && Board.GetLastAttackPoint(alphaSide)
+                                    .Plus(Board.GetLastMoveVector(!alphaSide)).y <= 4) {
+                        Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, 0);
+                        Board.GetCell(Board.GetLastAttackPoint(alphaSide)
+                                .Plus(Board.GetLastMoveVector(!alphaSide))).SetValue(alphaSide, 0, 10);
+                        if (Board.IsAttackPoint(alphaSide, Board.GetLastAttackPoint(alphaSide)
+                                .Plus(Board.GetLastMoveVector(!alphaSide)))) {
+                            // 攻撃が可能なら攻撃する
+                            DoAttack(Board.GetLastAttackPoint(alphaSide)
+                                    .Plus(Board.GetLastMoveVector(!alphaSide)));
+                            return;
+                        }
                     }
                     // } else {
                     // // 敵が2機以上
