@@ -108,8 +108,8 @@ public class ReleasePlay {
                             System.out.print("x, y: ");
                             point = new Point(scanner.nextLine());
                             if (!point.empty
-                                    && (point.x == 0 || point.y == 0) && (Math.abs(point.x + point.y) == 1 || Math.abs(
-                                            point.x + point.y) == 2)) {
+                                    && (point.x == 0 || point.y == 0) && ((Math.abs(point.x) + Math.abs(point.y)) == 1
+                                            || (Math.abs(point.x) + Math.abs(point.y)) == 2)) {
                                 System.out.println("移動 = " + point);
                                 System.out.print("確定(y), 取消(n): ");
                                 if (scanner.nextLine().equals("y")) {

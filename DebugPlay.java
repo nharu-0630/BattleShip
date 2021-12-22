@@ -11,9 +11,9 @@ public class DebugPlay {
     public static final boolean isEnemySecret = false;
 
     public static void main(String args[]) {
-        DeepTry(null);
-        // Try(true, null);
-        // Try(false, null);
+        // DeepTry(null);
+        Try(true, null);
+        Try(false, null);
     }
 
     public static void Try(boolean alphaSide, double[] parameters) {

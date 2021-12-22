@@ -156,8 +156,11 @@ class Algorithm005 extends Interface {
             if (Board.GetCell(Board.GetMaxValuePoints(alphaSide, false, 0).get(0)).GetValue(alphaSide, 0) != Board
                     .GetCell(Board.GetMaxValuePoints(alphaSide, true, 0).get(0)).GetValue(alphaSide, 0)) {
                 preparePoint = Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, false, 0));
-                if (Board.GetCell(preparePoint).IsAlive(alphaSide)) {
-                    DoMove(preparePoint, Board.GetRandomPoint(Board.GetCrossPoints(preparePoint, 1, 1)));
+                Point tempPoint = Board.GetRandomPoint(Board.GetCrossPoints(preparePoint, 1, 1));
+                if (Board.GetCell(preparePoint).IsAlive(alphaSide) && Board.IsMoveEnablePoint(alphaSide,
+                        preparePoint,
+                        tempPoint)) {
+                    DoMove(preparePoint, tempPoint);
                     return;
                 } else {
                     Point movePoint = Board.GetRandomPoint(Board.GetShortPoints(alphaSide, preparePoint));
@@ -183,8 +186,8 @@ class Algorithm005 extends Interface {
                             }
                         }
                     }
-                    if (vectorPoint != null) {
-                        // System.out.println(Board.GetTurnCount());
+                    if (vectorPoint != null && Board.IsMoveEnablePoint(alphaSide, movePoint,
+                            movePoint.Plus(vectorPoint))) {
                         DoMove(movePoint, movePoint.Plus(vectorPoint));
                         return;
                     }

@@ -134,43 +134,51 @@ class Point {
     }
 
     Point(String string) {
-        int number = Integer.valueOf(string.substring(1)) - 1;
+        int number = Integer.valueOf(string.substring(1));
         switch (string.substring(0, 1)) {
             case "A":
-                x = number;
+                x = number - 1;
                 y = 0;
                 empty = false;
                 break;
             case "B":
-                x = number;
+                x = number - 1;
                 y = 1;
                 empty = false;
                 break;
             case "C":
-                x = number;
+                x = number - 1;
                 y = 2;
                 empty = false;
                 break;
             case "D":
-                x = number;
+                x = number - 1;
                 y = 3;
                 empty = false;
                 break;
             case "E":
-                x = number;
+                x = number - 1;
                 y = 4;
                 empty = false;
                 break;
             case "東":
-            case "西":
                 x = number;
                 y = 0;
                 empty = false;
                 break;
+            case "西":
+                x = number * -1;
+                y = 0;
+                empty = false;
+                break;
             case "南":
-            case "北":
                 x = 0;
                 y = number;
+                empty = false;
+                break;
+            case "北":
+                x = 0;
+                y = number * -1;
                 empty = false;
                 break;
         }
