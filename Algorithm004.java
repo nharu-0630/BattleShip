@@ -7,6 +7,8 @@ class Algorithm004 extends Interface {
 
     private boolean estimatedAttacked = false;
     private Point estimatedBeforePoint = null;
+    private boolean prepareTurned = false;
+    private Point preparePoint = null;
 
     public void SetParameter(double[] parameters) {
 
@@ -123,6 +125,51 @@ class Algorithm004 extends Interface {
                 }
             }
         }
+        if (prepareTurned && Board.IsAttackPoint(alphaSide, preparePoint)) {
+            prepareTurned = false;
+            DoAttack(preparePoint);
+            preparePoint = null;
+            return;
+        }
+        if (Board.GetCell(Board.GetMaxValuePoints(alphaSide, false, 0).get(0)).GetValue(alphaSide, 0) > 10) {
+            if (Board.GetCell(Board.GetMaxValuePoints(alphaSide, false, 0).get(0)).GetValue(alphaSide, 0) != Board
+                    .GetCell(Board.GetMaxValuePoints(alphaSide, true, 0).get(0)).GetValue(alphaSide, 0)) {
+                preparePoint = Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, false, 0));
+                if (Board.GetCell(preparePoint).IsAlive(alphaSide)) {
+                    DoMove(preparePoint, Board.GetRandomPoint(Board.GetCrossPoints(preparePoint, 1, 1)));
+                    return;
+                } else {
+                    Point movePoint = Board.GetRandomPoint(Board.GetShortPoints(alphaSide, preparePoint));
+                    Point minusPoint = preparePoint.Minus(movePoint);
+                    Point vectorPoint = null;
+                    if (minusPoint.x > 1) {
+                        vectorPoint = new Point(2, 0);
+                    }
+                    if (minusPoint.x < -1) {
+                        vectorPoint = new Point(-2, 0);
+                    }
+                    if (minusPoint.y > 1) {
+                        vectorPoint = new Point(0, 2);
+                    }
+                    if (minusPoint.y < -1) {
+                        vectorPoint = new Point(0, -2);
+                    }
+                    if (vectorPoint != null) {
+                        if (!Board.IsMoveEnableVector(alphaSide, movePoint, vectorPoint)) {
+                            vectorPoint = new Point(vectorPoint.x / 2, vectorPoint.y / 2);
+                            if (!Board.IsMoveEnableVector(alphaSide, movePoint, vectorPoint)) {
+                                vectorPoint = null;
+                            }
+                        }
+                    }
+                    if (vectorPoint != null) {
+                        DoMove(movePoint, movePoint.Plus(vectorPoint));
+                        return;
+                    }
+                }
+            }
+        }
+
         DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true, 0)));
         return;
     }
