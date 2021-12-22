@@ -20,7 +20,7 @@ public class DebugPlay {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
         Algorithm002 alphaAlgorithm = new Algorithm002(true, isEnemySecret);
-        switch ((int) (Math.random() * 5)) {
+        switch ((int) (Math.random() * 3)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(true, 3);
                 Board.GetCell(3, 1).SetHp(true, 3);
@@ -51,7 +51,7 @@ public class DebugPlay {
         }
 
         Algorithm004 bravoAlgorithm = new Algorithm004(false, isEnemySecret);
-        switch ((int) (Math.random() * 5)) {
+        switch ((int) (Math.random() * 3)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(false, 3);
                 Board.GetCell(3, 1).SetHp(false, 3);

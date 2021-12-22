@@ -63,14 +63,14 @@ class Cell {
             for (int i = 0; i < layer - alphaValues.size(); i++) {
                 alphaValues.set(alphaValues.size() + i, 0);
             }
-            if (alphaValues.get(layer) != -1) {
+            if (alphaValues.get(layer) >= 0) {
                 alphaValues.set(layer, value);
             }
         } else {
             for (int i = 0; i < layer - bravoValues.size(); i++) {
                 bravoValues.set(bravoValues.size() + i, 0);
             }
-            if (bravoValues.get(layer) != -1) {
+            if (bravoValues.get(layer) >= 0) {
                 bravoValues.set(layer, value);
             }
         }

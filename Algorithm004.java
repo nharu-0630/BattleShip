@@ -49,6 +49,7 @@ class Algorithm004 extends Interface {
             }
             if (Board.GetLastAttackResult(!alphaSide).contains(3)) {
                 // 敵に撃沈された
+                Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValue(alphaSide, 0, -1);
             }
             if (Board.GetLastAttackResult(!alphaSide).contains(2)) {
                 // 敵に命中された
