@@ -15,8 +15,8 @@ class Cell {
     Cell() {
         alphaHp = -1;
         bravoHp = -1;
-        alphaValues = new ArrayList<Integer>(Arrays.asList(0));
-        bravoValues = new ArrayList<Integer>(Arrays.asList(0));
+        alphaValues = new ArrayList<Integer>(Arrays.asList(0, 0));
+        bravoValues = new ArrayList<Integer>(Arrays.asList(0, 0));
         alphaIsAttack = false;
         bravoIsAttack = false;
     }
