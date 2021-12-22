@@ -6,10 +6,10 @@ class Algorithm002 extends Interface {
     }
 
     private Random random = new Random();
-    private double attackProbability;
+    // private double attackProbability;
 
     public void SetParameter(double[] parameters) {
-        attackProbability = parameters[0];
+        // attackProbability = parameters[0];
     }
 
     public void Think() {
@@ -78,21 +78,21 @@ class Algorithm002 extends Interface {
                 Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, 10);
                 if (Board.IsLastMove(!alphaSide)) {
                     // 敵が移動した
-                    if (enemyCount == 1) {
-                        // 敵が1機のみ
-                        Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, 0);
-                        Board.GetCell(Board.GetLastAttackPoint(alphaSide)
-                                .Plus(Board.GetLastMoveVector(!alphaSide))).SetValue(alphaSide, 0, 10);
-                        if (Board.IsAttackPoint(alphaSide, Board.GetLastAttackPoint(alphaSide)
-                                .Plus(Board.GetLastMoveVector(!alphaSide)))) {
-                            // 攻撃が可能なら攻撃する
-                            DoAttack(Board.GetLastAttackPoint(alphaSide)
-                                    .Plus(Board.GetLastMoveVector(!alphaSide)));
-                            return;
-                        }
-                    } else {
-                        // 敵が2機以上
+                    // if (enemyCount == 1) {
+                    // 敵が1機のみ
+                    Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, 0);
+                    Board.GetCell(Board.GetLastAttackPoint(alphaSide)
+                            .Plus(Board.GetLastMoveVector(!alphaSide))).SetValue(alphaSide, 0, 10);
+                    if (Board.IsAttackPoint(alphaSide, Board.GetLastAttackPoint(alphaSide)
+                            .Plus(Board.GetLastMoveVector(!alphaSide)))) {
+                        // 攻撃が可能なら攻撃する
+                        DoAttack(Board.GetLastAttackPoint(alphaSide)
+                                .Plus(Board.GetLastMoveVector(!alphaSide)));
+                        return;
                     }
+                    // } else {
+                    // // 敵が2機以上
+                    // }
                 } else {
                     // 敵が移動しなかった
                     DoAttack(Board.GetLastAttackPoint(alphaSide));
@@ -119,7 +119,7 @@ class Algorithm002 extends Interface {
                 }
             }
         }
-        if (random.nextDouble() <= attackProbability) {
+        if (Board.GetCell(Board.GetMaxValuePoints(alphaSide, true, 0).get(0)).GetValue(alphaSide, 0) > 10) {
             DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true, 0)));
             return;
         } else {
