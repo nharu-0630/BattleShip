@@ -5,10 +5,10 @@ class Algorithm001 extends Interface {
         super(alphaSide, isEnemySecret);
     }
 
-    private double attackProbability;
+    // private double attackProbability;
 
     public void SetParameter(double[] parameters) {
-        attackProbability = parameters[0];
+        // attackProbability = parameters[0];
     }
 
     public void Think() {
@@ -85,7 +85,7 @@ class Algorithm001 extends Interface {
                         Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, 0);
                         Board.GetCell(Board.GetLastAttackPoint(alphaSide)
                                 .Plus(Board.GetLastMoveVector(!alphaSide))).SetValue(alphaSide, 0, 10);
-                        if (Board.IsAttackPoint(alphaSide, Board.GetLastAttackPoint(alphaSide)
+                        if (Board.IsAttackEnablePoint(alphaSide, Board.GetLastAttackPoint(alphaSide)
                                 .Plus(Board.GetLastMoveVector(!alphaSide)))) {
                             // 攻撃が可能なら攻撃する
                             DoAttack(Board.GetLastAttackPoint(alphaSide)
@@ -121,20 +121,7 @@ class Algorithm001 extends Interface {
                 }
             }
         }
-        Random random = new Random();
-        if (random.nextDouble() <= attackProbability) {
-            DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true, 0)));
-            return;
-        } else {
-            Point oldPoint = Board.GetRandomPoint(Board.GetShipPoints(alphaSide));
-            ArrayList<Point> points = new ArrayList<Point>();
-            for (Point point : Board.GetCrossPoints(oldPoint, 1, 2)) {
-                if (Board.IsMoveEnablePoint(alphaSide, oldPoint, point)) {
-                    points.add(point);
-                }
-            }
-            DoMove(oldPoint, Board.GetRandomPoint(points));
-            return;
-        }
+        DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true, 0)));
+        return;
     }
 }

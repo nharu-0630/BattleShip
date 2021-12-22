@@ -580,7 +580,7 @@ class Board {
         HashMap<Point, Integer> pointsValue = new HashMap<Point, Integer>();
         for (int x = 0; x < Board.GetBoardSize(); x++) {
             for (int y = 0; y < Board.GetBoardSize(); y++) {
-                if ((isAttackEnable && Board.IsAttackPoint(alphaSide, new Point(x, y))) || !isAttackEnable) {
+                if ((isAttackEnable && Board.IsAttackEnablePoint(alphaSide, new Point(x, y))) || !isAttackEnable) {
                     pointsValue.put(new Point(x, y), Board.GetCell(x, y).GetValue(alphaSide, layer));
                 }
             }
@@ -599,7 +599,7 @@ class Board {
         HashMap<Point, Integer> pointsValue = new HashMap<Point, Integer>();
         for (int x = 0; x < Board.GetBoardSize(); x++) {
             for (int y = 0; y < Board.GetBoardSize(); y++) {
-                if ((isAttackEnable && Board.IsAttackPoint(alphaSide, new Point(x, y))) || !isAttackEnable) {
+                if ((isAttackEnable && Board.IsAttackEnablePoint(alphaSide, new Point(x, y))) || !isAttackEnable) {
                     pointsValue.put(new Point(x, y), Board.GetCell(x, y).GetValue(alphaSide, layer));
                 }
             }
@@ -726,6 +726,28 @@ class Board {
         return IsMoveEnablePoint(alphaSide, oldPoint, oldPoint.Plus(vectorPoint));
     }
 
+    public static ArrayList<Point> GetFilterMoveEnablePoints(boolean alphaSide, Point oldPoint,
+            ArrayList<Point> newPoints) {
+        ArrayList<Point> tempPoints = new ArrayList<Point>();
+        for (Point point : newPoints) {
+            if (Board.IsMoveEnablePoint(alphaSide, oldPoint, point)) {
+                tempPoints.add(point);
+            }
+        }
+        return tempPoints;
+    }
+
+    public static ArrayList<Point> GetFilterMoveEnableVectors(boolean alphaSide, Point oldPoint,
+            ArrayList<Point> newVectors) {
+        ArrayList<Point> tempVectors = new ArrayList<Point>();
+        for (Point vector : newVectors) {
+            if (Board.IsMoveEnableVector(alphaSide, oldPoint, vector)) {
+                tempVectors.add(vector);
+            }
+        }
+        return tempVectors;
+    }
+
     public static boolean MovePoint(boolean alphaSide, Point oldPoint, Point newPoint) {
         WriteLogSide(alphaSide);
         if (IsMoveEnablePoint(alphaSide, oldPoint, newPoint)) {
@@ -744,6 +766,8 @@ class Board {
             Logger.AddLogger(alphaSide);
             return true;
         } else {
+            System.out.println("移動拒否");
+            System.out.println(Logger.GetFileName() + " : " + Board.GetTurnCount());
             WriteLogLine("移動】拒否されました");
             Logger.AddLogger(alphaSide);
             return false;
@@ -799,14 +823,24 @@ class Board {
         return points;
     }
 
-    public static boolean IsAttackPoint(boolean alphaSide, Point point) {
+    public static boolean IsAttackEnablePoint(boolean alphaSide, Point point) {
         SearchAttackPoints(alphaSide);
         return Board.GetCell(point).GetIsAttack(alphaSide);
     }
 
+    public static ArrayList<Point> GetFilterAttackEnablePoints(boolean alphaSide, ArrayList<Point> points) {
+        ArrayList<Point> tempPoints = new ArrayList<Point>();
+        for (Point point : points) {
+            if (Board.IsAttackEnablePoint(alphaSide, point)) {
+                tempPoints.add(point);
+            }
+        }
+        return tempPoints;
+    }
+
     public static boolean AttackPoint(boolean alphaSide, Point point, boolean judgeResult) {
         WriteLogSide(alphaSide);
-        if (IsAttackPoint(alphaSide, point)) {
+        if (IsAttackEnablePoint(alphaSide, point)) {
             ArrayList<Integer> attackResult = new ArrayList<Integer>();
             WriteLogLine("攻撃】" + point.toPointFormatString());
             if (judgeResult) {
@@ -859,6 +893,8 @@ class Board {
             Logger.AddLogger(alphaSide);
             return true;
         } else {
+            System.out.println("攻撃拒否");
+            System.out.println(Logger.GetFileName() + " : " + Board.GetTurnCount());
             WriteLogLine("攻撃】 拒否されました");
             if (alphaSide) {
                 lastAlphaAttackPoint = null;
@@ -1008,6 +1044,10 @@ class Logger {
         jsonObject = new JSONObject();
         Logger.fileName = fileName;
         Logger.autoSave = autoSave;
+    }
+
+    public static String GetFileName() {
+        return fileName;
     }
 
     public static void AddLogger(boolean alphaSide) {

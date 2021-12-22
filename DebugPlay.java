@@ -11,15 +11,15 @@ public class DebugPlay {
     public static final boolean isEnemySecret = false;
 
     public static void main(String args[]) {
-        // DeepTry(null);
-        Try(true, null);
-        Try(false, null);
+        DeepTry(null);
+        // Try(true, null);
+        // Try(false, null);
     }
 
     public static void Try(boolean alphaSide, double[] parameters) {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
-        Algorithm002 alphaAlgorithm = new Algorithm002(true, isEnemySecret);
+        Algorithm005 alphaAlgorithm = new Algorithm005(true, isEnemySecret);
         switch ((int) (Math.random() * 3)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(true, 3);

@@ -88,7 +88,7 @@ class Algorithm002 extends Interface {
                         Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, 0);
                         Board.GetCell(Board.GetLastAttackPoint(alphaSide)
                                 .Plus(Board.GetLastMoveVector(!alphaSide))).SetValue(alphaSide, 0, 10);
-                        if (Board.IsAttackPoint(alphaSide, Board.GetLastAttackPoint(alphaSide)
+                        if (Board.IsAttackEnablePoint(alphaSide, Board.GetLastAttackPoint(alphaSide)
                                 .Plus(Board.GetLastMoveVector(!alphaSide)))) {
                             // 攻撃が可能なら攻撃する
                             DoAttack(Board.GetLastAttackPoint(alphaSide)

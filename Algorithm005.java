@@ -106,7 +106,7 @@ class Algorithm005 extends Interface {
                             && estimatedPoint.y <= 4) {
                         Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, 0);
                         Board.GetCell(estimatedPoint).SetValue(alphaSide, 0, 10);
-                        if (Board.IsAttackPoint(alphaSide, estimatedPoint)) {
+                        if (Board.IsAttackEnablePoint(alphaSide, estimatedPoint)) {
                             estimatedAttacked = true;
                             estimatedBeforePoint = Board.GetLastAttackPoint(alphaSide);
                             DoAttack(estimatedPoint);
@@ -120,7 +120,9 @@ class Algorithm005 extends Interface {
             } else {
                 if (estimatedAttacked) {
                     estimatedAttacked = false;
-                    DoAttack(estimatedBeforePoint);
+                    if (Board.IsAttackEnablePoint(alphaSide, estimatedBeforePoint)) {
+                        DoAttack(estimatedBeforePoint);
+                    }
                     estimatedBeforePoint = null;
                     return;
                 }
@@ -146,7 +148,7 @@ class Algorithm005 extends Interface {
             }
         }
 
-        if (prepareTurned && Board.IsAttackPoint(alphaSide, preparePoint)) {
+        if (prepareTurned && Board.IsAttackEnablePoint(alphaSide, preparePoint)) {
             prepareTurned = false;
             DoAttack(preparePoint);
             preparePoint = null;
@@ -156,12 +158,15 @@ class Algorithm005 extends Interface {
             if (Board.GetCell(Board.GetMaxValuePoints(alphaSide, false, 0).get(0)).GetValue(alphaSide, 0) != Board
                     .GetCell(Board.GetMaxValuePoints(alphaSide, true, 0).get(0)).GetValue(alphaSide, 0)) {
                 preparePoint = Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, false, 0));
-                Point tempPoint = Board.GetRandomPoint(Board.GetCrossPoints(preparePoint, 1, 1));
-                if (Board.GetCell(preparePoint).IsAlive(alphaSide) && Board.IsMoveEnablePoint(alphaSide,
-                        preparePoint,
-                        tempPoint)) {
-                    DoMove(preparePoint, tempPoint);
-                    return;
+                if (Board.GetCell(preparePoint).IsAlive(alphaSide)) {
+                    if (Board.GetFilterMoveEnablePoints(alphaSide,
+                            preparePoint,
+                            Board.GetCrossPoints(preparePoint, 1, 2)).size() != 0) {
+                        DoMove(preparePoint, Board.GetRandomPoint(Board.GetFilterMoveEnablePoints(alphaSide,
+                                preparePoint,
+                                Board.GetCrossPoints(preparePoint, 1, 2))));
+                        return;
+                    }
                 } else {
                     Point movePoint = Board.GetRandomPoint(Board.GetShortPoints(alphaSide, preparePoint));
                     Point minusPoint = preparePoint.Minus(movePoint);
@@ -186,8 +191,7 @@ class Algorithm005 extends Interface {
                             }
                         }
                     }
-                    if (vectorPoint != null && Board.IsMoveEnablePoint(alphaSide, movePoint,
-                            movePoint.Plus(vectorPoint))) {
+                    if (vectorPoint != null) {
                         DoMove(movePoint, movePoint.Plus(vectorPoint));
                         return;
                     }
