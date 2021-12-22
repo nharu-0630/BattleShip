@@ -673,12 +673,29 @@ class Board {
         return (Math.abs(aPoint.x - bPoint.x) + Math.abs(aPoint.y - bPoint.y));
     }
 
-    public static HashMap<Point, Integer> GetPointValues(boolean alphaSide, ArrayList<Point> points, int layer) {
-        HashMap<Point, Integer> pointsValue = new HashMap<Point, Integer>();
+    public static HashMap<Point, Integer> GetPointValues(boolean alphaSide, ArrayList<Point> points, int layer,
+            int filter) {
+        HashMap<Point, Integer> tempPointsValue = new HashMap<Point, Integer>();
         for (Point point : points) {
-            pointsValue.put(point, Board.GetCell(point).GetValue(alphaSide, layer));
+            tempPointsValue.put(point, Board.GetCell(point).GetValue(alphaSide, layer));
         }
-        return pointsValue;
+        if (filter == 0) {
+            return tempPointsValue;
+        } else {
+            int value = 0;
+            if (filter == 1) {
+                value = Collections.max(tempPointsValue.values());
+            } else if (filter == -1) {
+                value = Collections.min(tempPointsValue.values());
+            }
+            HashMap<Point, Integer> pointsValue = new HashMap<Point, Integer>();
+            for (Map.Entry<Point, Integer> pointValue : tempPointsValue.entrySet()) {
+                if (pointValue.getValue() == value) {
+                    pointsValue.put(pointValue.getKey(), pointValue.getValue());
+                }
+            }
+            return pointsValue;
+        }
     }
 
     public static boolean IsMoveEnablePoint(boolean alphaSide, Point oldPoint, Point newPoint) {
