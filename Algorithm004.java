@@ -140,7 +140,7 @@ class Algorithm004 extends Interface {
             preparePoint = null;
             return;
         }
-        if (Board.GetCell(Board.GetMaxValuePoints(alphaSide, false, 0).get(0)).GetValue(alphaSide, 0) > 10) {
+        if (Board.GetCell(Board.GetMaxValuePoints(alphaSide, false, 0).get(0)).GetValue(alphaSide, 0) > 5) {
             if (Board.GetCell(Board.GetMaxValuePoints(alphaSide, false, 0).get(0)).GetValue(alphaSide, 0) != Board
                     .GetCell(Board.GetMaxValuePoints(alphaSide, true, 0).get(0)).GetValue(alphaSide, 0)) {
                 preparePoint = Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, false, 0));
@@ -172,7 +172,7 @@ class Algorithm004 extends Interface {
                         }
                     }
                     if (vectorPoint != null) {
-                        System.out.println(Board.GetTurnCount());
+                        // System.out.println(Board.GetTurnCount());
                         DoMove(movePoint, movePoint.Plus(vectorPoint));
                         return;
                     }
