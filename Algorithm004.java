@@ -1,9 +1,12 @@
 import java.util.*;
 
-class Algorithm002 extends Interface {
-    Algorithm002(boolean alphaSide, boolean isEnemySecret) {
+class Algorithm004 extends Interface {
+    Algorithm004(boolean alphaSide, boolean isEnemySecret) {
         super(alphaSide, isEnemySecret);
     }
+
+    private boolean estimatedAttacked = false;
+    private Point estimatedBeforePoint = null;
 
     public void SetParameter(double[] parameters) {
 
@@ -48,7 +51,7 @@ class Algorithm002 extends Interface {
             if (Board.GetLastAttackResult(!alphaSide).contains(2)) {
                 // 敵に命中された
                 ArrayList<Point> points = new ArrayList<Point>();
-                for (Point point : Board.GetCrossPoints(Board.GetLastAttackPoint(!alphaSide), 1, 2)) {
+                for (Point point : Board.GetCrossPoints(Board.GetLastAttackPoint(!alphaSide), 2, 2)) {
                     if (Board.IsMoveEnablePoint(alphaSide, Board.GetLastAttackPoint(!alphaSide),
                             point)) {
                         points.add(point);
@@ -75,24 +78,28 @@ class Algorithm002 extends Interface {
                 Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, 10);
                 if (Board.IsLastMove(!alphaSide)) {
                     // 敵が移動した
-                    // if (enemyCount == 1) {
-                    // 敵が1機のみ
                     Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, 0);
                     Board.GetCell(Board.GetLastAttackPoint(alphaSide)
                             .Plus(Board.GetLastMoveVector(!alphaSide))).SetValue(alphaSide, 0, 10);
                     if (Board.IsAttackPoint(alphaSide, Board.GetLastAttackPoint(alphaSide)
                             .Plus(Board.GetLastMoveVector(!alphaSide)))) {
                         // 攻撃が可能なら攻撃する
+                        estimatedAttacked = true;
+                        estimatedBeforePoint = Board.GetLastAttackPoint(alphaSide);
                         DoAttack(Board.GetLastAttackPoint(alphaSide)
                                 .Plus(Board.GetLastMoveVector(!alphaSide)));
                         return;
                     }
-                    // } else {
-                    // // 敵が2機以上
-                    // }
                 } else {
                     // 敵が移動しなかった
                     DoAttack(Board.GetLastAttackPoint(alphaSide));
+                    return;
+                }
+            } else {
+                if (estimatedAttacked) {
+                    estimatedAttacked = false;
+                    DoAttack(estimatedBeforePoint);
+                    estimatedBeforePoint = null;
                     return;
                 }
             }

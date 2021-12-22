@@ -30,7 +30,7 @@ public class DebugPlay {
         Board.GetCell(4, 4).SetHp(true, 3);
         // Board.SetRandom4Points(true);
 
-        Algorithm002 bravoAlgorithm = new Algorithm002(false, isEnemySecret);
+        Algorithm004 bravoAlgorithm = new Algorithm004(false, isEnemySecret);
         Board.GetCell(4, 0).SetHp(false, 3);
         Board.GetCell(1, 1).SetHp(false, 3);
         Board.GetCell(3, 3).SetHp(false, 3);
