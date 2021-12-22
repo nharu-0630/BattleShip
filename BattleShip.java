@@ -140,7 +140,25 @@ class Point {
 
     @Override
     public String toString() {
-        return "(" + x + ", " + y + ")";
+        String temp = "";
+        switch (y) {
+            case 0:
+                temp = "A";
+                break;
+            case 1:
+                temp = "B";
+                break;
+            case 2:
+                temp = "C";
+                break;
+            case 3:
+                temp = "D";
+                break;
+            case 4:
+                temp = "E";
+                break;
+        }
+        return "(" + x + ", " + y + ") (" + temp + (x + 1) + ")";
     }
 }
 
@@ -518,6 +536,25 @@ class Board {
         return points;
     }
 
+    public static ArrayList<Point> GetMinValuePoints(boolean alphaSide, boolean isAttackEnable, int layer) {
+        HashMap<Point, Integer> pointsValue = new HashMap<Point, Integer>();
+        for (int x = 0; x < Board.GetBoardSize(); x++) {
+            for (int y = 0; y < Board.GetBoardSize(); y++) {
+                if ((isAttackEnable && Board.IsAttackPoint(alphaSide, new Point(x, y))) || !isAttackEnable) {
+                    pointsValue.put(new Point(x, y), Board.GetCell(x, y).GetValue(alphaSide, layer));
+                }
+            }
+        }
+        int minValue = Collections.min(pointsValue.values());
+        ArrayList<Point> points = new ArrayList<Point>();
+        for (Map.Entry<Point, Integer> pointValue : pointsValue.entrySet()) {
+            if (pointValue.getValue() == minValue) {
+                points.add(pointValue.getKey());
+            }
+        }
+        return points;
+    }
+
     public static ArrayList<Point> GetShortPoints(boolean alphaSide, Point point) {
         HashMap<Point, Integer> pointsDistance = new HashMap<Point, Integer>();
         for (Point shipPoint : GetShipPoints(alphaSide)) {
@@ -583,6 +620,14 @@ class Board {
 
     public static int GetPointDistance(Point aPoint, Point bPoint) {
         return (Math.abs(aPoint.x - bPoint.x) + Math.abs(aPoint.y - bPoint.y));
+    }
+
+    public static HashMap<Point, Integer> GetPointValues(boolean alphaSide, ArrayList<Point> points, int layer) {
+        HashMap<Point, Integer> pointsValue = new HashMap<Point, Integer>();
+        for (Point point : points) {
+            pointsValue.put(point, Board.GetCell(point).GetValue(alphaSide, layer));
+        }
+        return pointsValue;
     }
 
     public static boolean IsMoveEnablePoint(boolean alphaSide, Point oldPoint, Point newPoint) {

@@ -22,16 +22,54 @@ public class DebugPlay {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
         Algorithm002 alphaAlgorithm = new Algorithm002(true, isEnemySecret);
-        Board.GetCell(0, 0).SetHp(true, 3);
-        Board.GetCell(3, 1).SetHp(true, 3);
-        Board.GetCell(1, 3).SetHp(true, 3);
-        Board.GetCell(4, 4).SetHp(true, 3);
+        switch ((int) (Math.random() * 4)) {
+            case 0:
+                Board.GetCell(0, 0).SetHp(true, 3);
+                Board.GetCell(3, 1).SetHp(true, 3);
+                Board.GetCell(1, 3).SetHp(true, 3);
+                Board.GetCell(4, 4).SetHp(true, 3);
+                break;
+            case 1:
+                Board.GetCell(4, 0).SetHp(true, 3);
+                Board.GetCell(1, 1).SetHp(true, 3);
+                Board.GetCell(3, 3).SetHp(true, 3);
+                Board.GetCell(0, 4).SetHp(true, 3);
+                break;
+            case 2:
+                Board.GetCell(1, 1).SetHp(true, 3);
+                Board.GetCell(1, 3).SetHp(true, 3);
+                Board.GetCell(3, 1).SetHp(true, 3);
+                Board.GetCell(3, 3).SetHp(true, 3);
+                break;
+            case 3:
+                Board.SetRandom4Points(true);
+                break;
+        }
 
         Algorithm004 bravoAlgorithm = new Algorithm004(false, isEnemySecret);
-        Board.GetCell(4, 0).SetHp(false, 3);
-        Board.GetCell(1, 1).SetHp(false, 3);
-        Board.GetCell(3, 3).SetHp(false, 3);
-        Board.GetCell(0, 4).SetHp(false, 3);
+        switch ((int) (Math.random() * 4)) {
+            case 0:
+                Board.GetCell(0, 0).SetHp(false, 3);
+                Board.GetCell(3, 1).SetHp(false, 3);
+                Board.GetCell(1, 3).SetHp(false, 3);
+                Board.GetCell(4, 4).SetHp(false, 3);
+                break;
+            case 1:
+                Board.GetCell(4, 0).SetHp(false, 3);
+                Board.GetCell(1, 1).SetHp(false, 3);
+                Board.GetCell(3, 3).SetHp(false, 3);
+                Board.GetCell(0, 4).SetHp(false, 3);
+                break;
+            case 2:
+                Board.GetCell(1, 1).SetHp(false, 3);
+                Board.GetCell(1, 3).SetHp(false, 3);
+                Board.GetCell(3, 1).SetHp(false, 3);
+                Board.GetCell(3, 3).SetHp(false, 3);
+                break;
+            case 3:
+                Board.SetRandom4Points(false);
+                break;
+        }
 
         alphaAlgorithm.SetParameter(parameters);
         bravoAlgorithm.SetParameter(new double[] { 1 });

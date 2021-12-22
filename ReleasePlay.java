@@ -14,8 +14,8 @@ public class ReleasePlay {
 
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
-        Algorithm002 alphaAlgorithm = new Algorithm002(true, isEnemySecret);
-        alphaAlgorithm.SetParameter(new double[] { 0.9 });
+        Algorithm004 alphaAlgorithm = new Algorithm004(true, isEnemySecret);
+        alphaAlgorithm.SetParameter(null);
         switch ((int) (Math.random() * 3)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(true, 3);

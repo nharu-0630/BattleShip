@@ -61,7 +61,8 @@ class Algorithm004 extends Interface {
                 }
                 // 移動できる範囲からランダムに移動
                 if (points.size() != 0) {
-                    DoMove(Board.GetLastAttackPoint(!alphaSide), Board.GetRandomPoint(points));
+                    DoMove(Board.GetLastAttackPoint(!alphaSide), Board.GetRandomPoint(
+                            new ArrayList<Point>(Board.GetPointValues(alphaSide, points, 0).keySet())));
                     return;
                 }
             }
@@ -134,6 +135,7 @@ class Algorithm004 extends Interface {
                 }
             }
         }
+
         if (prepareTurned && Board.IsAttackPoint(alphaSide, preparePoint)) {
             prepareTurned = false;
             DoAttack(preparePoint);
