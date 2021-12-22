@@ -5,11 +5,8 @@ class Algorithm002 extends Interface {
         super(alphaSide, isEnemySecret);
     }
 
-    private Random random = new Random();
-    // private double attackProbability;
-
     public void SetParameter(double[] parameters) {
-        // attackProbability = parameters[0];
+
     }
 
     public void Think() {
