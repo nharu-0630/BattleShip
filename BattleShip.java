@@ -140,7 +140,13 @@ class Point {
     }
 
     Point(String string) {
-        int number = Integer.valueOf(string.substring(1));
+        if (string.length() != 2) {
+            return;
+        }
+        if (!Character.isDigit(string.charAt(1))) {
+            return;
+        }
+        int number = Integer.valueOf(string.substring(1, 2));
         switch (string.substring(0, 1)) {
             case "A":
                 x = number - 1;
@@ -282,42 +288,46 @@ class Board {
         WriteLog("  ");
         for (int i = 0; i < Board.GetBoardSize(); i++) {
             if (i != 0) {
-                WriteLog("|");
+                WriteLog("│");
             }
-            WriteLog(Integer.valueOf(i + 1).toString());
+            WriteLog(String.valueOf(i + 1));
         }
         WriteLog("     ");
         for (int i = 0; i < Board.GetBoardSize(); i++) {
             if (i != 0) {
-                WriteLog("|");
+                WriteLog("│");
             }
-            WriteLog(Integer.valueOf(i + 1).toString());
+            WriteLog(String.valueOf(i + 1));
         }
         WriteLog("     ");
         for (int i = 0; i < Board.GetBoardSize(); i++) {
             if (i != 0) {
-                WriteLog("|");
+                WriteLog("│");
             }
-            WriteLog(Integer.valueOf(i + 1).toString());
+            WriteLog(String.valueOf(i + 1));
         }
         WriteLogLine("");
         String[] yStrings = new String[] { "A", "B", "C", "D", "E" };
         for (int y = 0; y < Board.GetBoardSize(); y++) {
-            WriteLog(yStrings[y] + "|");
+            WriteLog(yStrings[y] + "│");
             for (int x = 0; x < Board.GetBoardSize(); x++) {
                 if (Board.GetCell(x, y).GetHp(alphaSide) != -1) {
-                    WriteLog(Integer.valueOf(Board.GetCell(x, y).GetHp(alphaSide)).toString());
+                    WriteLog(String.valueOf(Board.GetCell(x, y).GetHp(alphaSide)));
                 } else {
                     WriteLog(" ");
                 }
                 WriteLog(" ");
             }
-            WriteLog("  " + yStrings[y] + "|");
+            WriteLog("  " + yStrings[y] + "│");
             for (int x = 0; x < Board.GetBoardSize(); x++) {
-                WriteLog(Integer.valueOf(Board.GetCell(x, y).GetValue(alphaSide, 0)).toString());
+                if (Board.GetCell(x, y).GetValue(alphaSide, 0) == -1) {
+                    WriteLog("X");
+                } else {
+                    WriteLog(String.valueOf(Board.GetCell(x, y).GetValue(alphaSide, 0)));
+                }
                 WriteLog(" ");
             }
-            WriteLog("  " + yStrings[y] + "|");
+            WriteLog("  " + yStrings[y] + "│");
             for (int x = 0; x < Board.GetBoardSize(); x++) {
                 if (Board.GetCell(x, y).GetEnableAttack(alphaSide)) {
                     WriteLog("*");
@@ -328,6 +338,7 @@ class Board {
             }
             WriteLogLine("");
         }
+
     }
 
     public static void WriteLogSide(boolean alphaSide) {
@@ -369,12 +380,21 @@ class Board {
         if (!interrupt) {
             SetTurnCount();
         }
-        WriteLogLine("--------------------");
-        WriteLogLine("【戦況】 " + Board.GetTurnCount() + "ターン目");
-        if (!isEnemySecret) {
-            WriteLogLine("α残機 = " + alphaCount + " (総HP : " + alphaSumHp + ")");
-            WriteLogLine("β残機 = " + bravoCount + " (総HP : " + bravoSumHp + ")");
-        }
+
+        WriteLog(ConsoleColors.RED);
+        WriteLogLine("┌" + "─".repeat(2 + String.valueOf(Board.GetTurnCount()).length()) + "┬"
+                + "─".repeat(5 + (String.valueOf(alphaCount) + String.valueOf(alphaSumHp)).length()) + "┬"
+                + "─".repeat(5 + (String.valueOf(bravoCount) + String.valueOf(bravoSumHp)).length()) + "┐");
+        WriteLogLine("│ " + Board.GetTurnCount() + " │ " + alphaCount + " (" + alphaSumHp + ") │ " + bravoCount
+                + " (" + bravoSumHp + ") │");
+        WriteLogLine("└" + "─".repeat(2 + String.valueOf(Board.GetTurnCount()).length()) + "┴"
+                + "─".repeat(5 + (String.valueOf(alphaCount) + String.valueOf(alphaSumHp)).length()) + "┴"
+                + "─".repeat(5 + (String.valueOf(bravoCount) + String.valueOf(bravoSumHp)).length()) + "┘");
+        System.out.print(ConsoleColors.RESET);
+        // if (!isEnemySecret) {
+        // WriteLogLine("α残機 = " + alphaCount + " (総HP : " + alphaSumHp + ")");
+        // WriteLogLine("β残機 = " + bravoCount + " (総HP : " + bravoSumHp + ")");
+        // }
         if (alphaCount == 0 && !isEnemySecret) {
             WriteLogLine("αが全滅しました");
             WriteLogLine("βの勝利です");
@@ -400,8 +420,8 @@ class Board {
                 bravoWin = true;
             } else {
                 WriteLogLine("引き分けです");
-                alphaWin = false;
-                bravoWin = false;
+                alphaWin = true;
+                bravoWin = true;
             }
             return false;
         }
@@ -442,8 +462,8 @@ class Board {
                 bravoWin = true;
             } else {
                 WriteLogLine("引き分けです");
-                alphaWin = false;
-                bravoWin = false;
+                alphaWin = true;
+                bravoWin = true;
             }
         }
     }
@@ -1020,25 +1040,33 @@ class Interface {
 
     public void DoMove(Point oldPoint, Point newPoint) {
         Board.WriteBoard(alphaSide);
+        Board.WriteLog(ConsoleColors.BLUE_BOLD);
         Board.WriteLogLine("<" + newPoint.Minus(oldPoint).toVectorFormaString() + " に移動！>");
+        Board.WriteLog(ConsoleColors.RESET);
         Board.MovePoint(alphaSide, oldPoint, newPoint);
     }
 
     public void DoAttack(Point point) {
         Board.WriteBoard(alphaSide);
+        Board.WriteLog(ConsoleColors.BLUE_BOLD);
         Board.WriteLogLine("<" + point.toPointFormatString() + " に魚雷発射！>");
+        Board.WriteLog(ConsoleColors.RESET);
         Board.AttackPoint(alphaSide, point, !isEnemySecret);
     }
 
     public void DoMoveForce(Point vectorPoint) {
         Board.WriteBoard(alphaSide);
+        Board.WriteLog(ConsoleColors.BLUE_BOLD);
         Board.WriteLogLine("<" + vectorPoint.toVectorFormaString() + " に移動！>");
+        Board.WriteLog(ConsoleColors.RESET);
         Board.MoveVectorForce(alphaSide, vectorPoint);
     }
 
     public void DoAttackForce(Point point) {
         Board.WriteBoard(alphaSide);
+        Board.WriteLog(ConsoleColors.BLUE_BOLD);
         Board.WriteLogLine("<" + point.toPointFormatString() + " に魚雷発射！>");
+        Board.WriteLog(ConsoleColors.RESET);
         Board.AttackPointForce(alphaSide, point);
     }
 }

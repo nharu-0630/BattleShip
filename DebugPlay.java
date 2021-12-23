@@ -6,6 +6,7 @@ public class DebugPlay {
     public static final int maxTurnCount = 60;
     public static final int deepTryCount = 1000;
     // public static final int deepTryCount = 100;
+    // public static final boolean isVisibleLog = true;
     public static final boolean isVisibleLog = false;
     public static final boolean isAttackResultArray = false;
     public static final boolean isEnemySecret = false;
@@ -117,9 +118,9 @@ public class DebugPlay {
         int bravoWinCount = 0;
         for (int i = 0; i < deepTryCount; i++) {
             Try(i % 2 == 0, parameters);
-            if (Board.GetAlphaWin()) {
+            if (Board.GetAlphaWin() && !Board.GetBravoWin()) {
                 alphaWinCount++;
-            } else if (Board.GetBravoWin()) {
+            } else if (Board.GetBravoWin() && !Board.GetAlphaWin()) {
                 bravoWinCount++;
             }
         }
