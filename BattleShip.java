@@ -1132,6 +1132,7 @@ class Logger {
             BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
             bufferedWriter.write(jsonObject.toString());
             bufferedWriter.close();
+            outputStreamWriter.close();
         } catch (IOException exception) {
             System.err.println(exception);
         }
