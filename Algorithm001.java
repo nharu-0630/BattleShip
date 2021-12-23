@@ -97,7 +97,10 @@ class Algorithm001 extends Interface {
                     }
                 } else {
                     // 敵が移動しなかった
-                    DoAttack(Board.GetLastAttackPoint(alphaSide));
+                    if (Board.IsAttackEnablePoint(alphaSide, Board.GetLastAttackPoint(alphaSide))) {
+                        DoAttack(Board.GetLastAttackPoint(alphaSide));
+                        return;
+                    }
                     return;
                 }
             }
