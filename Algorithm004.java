@@ -114,8 +114,10 @@ class Algorithm004 extends Interface {
                         }
                     }
                 } else {
-                    DoAttack(Board.GetLastAttackPoint(alphaSide));
-                    return;
+                    if (Board.IsAttackEnablePoint(alphaSide, Board.GetLastAttackPoint(alphaSide))) {
+                        DoAttack(Board.GetLastAttackPoint(alphaSide));
+                        return;
+                    }
                 }
             } else {
                 if (estimatedAttacked) {
