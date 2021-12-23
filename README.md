@@ -22,8 +22,8 @@ https://xyzyxjp.github.io/BattleShip/
 | bravoHp       | int                  | -1     | βの戦艦HP(存在しない場合は-1) |
 | alphaValues   | ArrayList\<Integer\> | 0      | αのアルゴリズム用の評価値配列      |
 | bravoValues   | ArrayList\<Integer\> | 0      | βのアルゴリズム用の評価値配列      |
-| alphaIsAttack | boolean              | false  | αの攻撃の可否            |
-| bravoIsAttack | boolean              | false  | βの攻撃の可否            |
+| alphaEnableAttack | boolean              | false  | αの攻撃の可否            |
+| bravoEnableAttack | boolean              | false  | βの攻撃の可否            |
 
 | メソッド名       | 引数型               | 戻り値型                              |           |                          |
 | ----------- | ----------------- | --------------------------------- | --------- | ------------------------ |
@@ -32,8 +32,8 @@ https://xyzyxjp.github.io/BattleShip/
 | GetValue    | boolean, int      | ArrayList\<Integer\>              | 評価値を取得    | 第2引数`layer`              |
 | GetValues   | boolean           | ArrayList\<ArrayList\<Integer\>\> | 評価値リストを取得 |                          |
 | SetValue    | boolean, int, int |                                   | 評価値を設定    | 第2引数`layer`, 第3引数`value` |
-| SetIsAttack | boolean, boolean  |                                   | 攻撃の可否を設定  |                          |
-| GetIsAttack | boolean, boolean  | boolean                           | 攻撃の可否を取得  |                          |
+| SetEnableAttack | boolean, boolean  |                                   | 攻撃の可否を設定  |                          |
+| GetEnableAttack | boolean, boolean  | boolean                           | 攻撃の可否を取得  |                          |
 | IsAlive     | boolean           | boolean                           | 戦艦の生死を取得  |                          |
 | IsEmpty     | boolean           | boolean                           | 戦艦の有無を取得  |                          |
 
@@ -81,8 +81,7 @@ https://xyzyxjp.github.io/BattleShip/
 | メソッド名                        | 引数型                                    | 戻り値型                      |                         |                                                |
 | ---------------------------- | -------------------------------------- | ------------------------- | ----------------------- | ---------------------------------------------- |
 | Initialize                   | boolean, boolean                       |                           | 初期化                     | 第2引数は`isVisibleLog`, 第3引数`isAttackResultArray` |
-| WriteBoardHp                 | boolean*                               |                           | 戦艦HPを表示                 |                                                |
-| WriteBoardIsAttack           | boolean*                               |                           | 攻撃の可否を表示                |                                                |
+| WriteBoard                 | boolean*                               |                           | 戦況を表示                 |                                                |
 | WriteLogSide                 | boolean                                |                           | ログの表示                   |                                                |
 | WriteLogLine                 | String                                 |                           | ログの表示                   |                                                |
 | WriteLog                     | String                                 |                           | ログの表示                   |                                                |
@@ -122,10 +121,10 @@ https://xyzyxjp.github.io/BattleShip/
 | MovePoint                    | boolean*, Point, Point                 | boolean                   | 戦艦の移動                   | 第2, 3引数`ポイント`                                  |
 | MoveVector                   | boolean*, Point, Point                 | boolean                   | 戦艦の移動                   | 第2引数`ポイント`, 第3引数`ベクトル`                         |
 | MoveVectorForce              | boolean*, Point                        |                           | 戦艦の強制移動                 | 第2引数`ベクトル`                                     |
-| SearchAttackPoints*          | boolean*                               |                           | 攻撃の可否を検索                |                                                |
-| GetAttackPoints*             | boolean*                               | ArrayList\<Point\>        | 攻撃が可能なポイントリストを取得        |                                                |
-| IsAttackEnablePoint*         | boolean*, Point                        | boolean                   | ポイントの攻撃の可否を取得           |                                                |
-| GetFilterAttackEnablePoints* | boolean*, ArrayList\<Point\>           | ArrayList\<Point\>        | ポイントリストから攻撃可能なポイントのみ取得  |                                                |
+| SearchEnableAttackPoints*          | boolean*                               |                           | 攻撃の可否を検索                |                                                |
+| GetEnableAttackPoints*             | boolean*                               | ArrayList\<Point\>        | 攻撃が可能なポイントリストを取得        |                                                |
+| IsEnableAttackPoint*         | boolean*, Point                        | boolean                   | ポイントの攻撃の可否を取得           |                                                |
+| GetFilterEnableAttackPoints* | boolean*, ArrayList\<Point\>           | ArrayList\<Point\>        | ポイントリストから攻撃可能なポイントのみ取得  |                                                |
 | AttackPoint                  | boolean*, Point, boolean               | boolean                   | ポイントへの攻撃                | 第3引数は攻撃結果をあとから設定する場合のみ`false`                  |
 | AttackResultTransfer         | boolean*, ArrayList\<Integer\>         |                           | ポイントへの攻撃結果を設定           | `AttackPoint`の第3引数を`false`にした場合のみ              |
 | AttackPointForce             | boolean*, Point                        |                           | ポイントへの強制攻撃              |                                                |

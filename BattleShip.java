@@ -9,16 +9,16 @@ class Cell {
     private ArrayList<Integer> alphaValues;
     private ArrayList<Integer> bravoValues;
 
-    private boolean alphaIsAttack;
-    private boolean bravoIsAttack;
+    private boolean alphaEnableAttack;
+    private boolean bravoEnableAttack;
 
     Cell() {
         alphaHp = -1;
         bravoHp = -1;
-        alphaValues = new ArrayList<Integer>(Arrays.asList(0, 0));
-        bravoValues = new ArrayList<Integer>(Arrays.asList(0, 0));
-        alphaIsAttack = false;
-        bravoIsAttack = false;
+        alphaValues = new ArrayList<Integer>(Arrays.asList(0));
+        bravoValues = new ArrayList<Integer>(Arrays.asList(0));
+        alphaEnableAttack = false;
+        bravoEnableAttack = false;
     }
 
     public int GetHp(boolean alphaSide) {
@@ -76,31 +76,31 @@ class Cell {
         }
     }
 
-    public void SetIsAttak(boolean alphaSide, boolean isAttack) {
-        if (isAttack) {
+    public void SetEnableAttak(boolean alphaSide, boolean enableAttack) {
+        if (enableAttack) {
             if (alphaSide) {
                 if (alphaHp == -1) {
-                    alphaIsAttack = true;
+                    alphaEnableAttack = true;
                 }
             } else {
                 if (bravoHp == -1) {
-                    bravoIsAttack = true;
+                    bravoEnableAttack = true;
                 }
             }
         } else {
             if (alphaSide) {
-                alphaIsAttack = false;
+                alphaEnableAttack = false;
             } else {
-                bravoIsAttack = false;
+                bravoEnableAttack = false;
             }
         }
     }
 
-    public boolean GetIsAttack(boolean alphaSide) {
+    public boolean GetEnableAttack(boolean alphaSide) {
         if (alphaSide) {
-            return alphaIsAttack;
+            return alphaEnableAttack;
         } else {
-            return bravoIsAttack;
+            return bravoEnableAttack;
         }
     }
 
@@ -270,10 +270,24 @@ class Board {
         Board.isEnemySecret = isEnemySecret;
     }
 
-    public static void WriteBoardHp(boolean alphaSide) {
+    public static void WriteBoard(boolean alphaSide) {
         WriteLogSide(alphaSide);
-        WriteLogLine("盤面】HP");
+        WriteLogLine("盤面】");
         WriteLog("  ");
+        for (int i = 0; i < Board.GetBoardSize(); i++) {
+            if (i != 0) {
+                WriteLog("|");
+            }
+            WriteLog(Integer.valueOf(i + 1).toString());
+        }
+        WriteLog("     ");
+        for (int i = 0; i < Board.GetBoardSize(); i++) {
+            if (i != 0) {
+                WriteLog("|");
+            }
+            WriteLog(Integer.valueOf(i + 1).toString());
+        }
+        WriteLog("     ");
         for (int i = 0; i < Board.GetBoardSize(); i++) {
             if (i != 0) {
                 WriteLog("|");
@@ -292,27 +306,14 @@ class Board {
                 }
                 WriteLog(" ");
             }
-            WriteLogLine("");
-        }
-    }
-
-    public static void WriteBoardIsAttack(boolean alphaSide) {
-        WriteLogSide(alphaSide);
-        SearchAttackPoints(alphaSide);
-        WriteLogLine("盤面】攻撃可能範囲");
-        WriteLog("  ");
-        for (int i = 0; i < Board.GetBoardSize(); i++) {
-            if (i != 0) {
-                WriteLog("|");
-            }
-            WriteLog(Integer.valueOf(i + 1).toString());
-        }
-        WriteLogLine("");
-        String[] yStrings = new String[] { "A", "B", "C", "D", "E" };
-        for (int y = 0; y < Board.GetBoardSize(); y++) {
-            WriteLog(yStrings[y] + "|");
+            WriteLog("  " + yStrings[y] + "|");
             for (int x = 0; x < Board.GetBoardSize(); x++) {
-                if (Board.GetCell(x, y).GetIsAttack(alphaSide)) {
+                WriteLog(Integer.valueOf(Board.GetCell(x, y).GetValue(alphaSide, 0)).toString());
+                WriteLog(" ");
+            }
+            WriteLog("  " + yStrings[y] + "|");
+            for (int x = 0; x < Board.GetBoardSize(); x++) {
+                if (Board.GetCell(x, y).GetEnableAttack(alphaSide)) {
                     WriteLog("*");
                 } else {
                     WriteLog(" ");
@@ -557,58 +558,63 @@ class Board {
         return points.get(random.nextInt(points.size()));
     }
 
-    public static ArrayList<Point> GetRandomPoints(int count) {
-        ArrayList<Point> points = new ArrayList<Point>();
-        Random random = new Random();
-        HashMap<Integer, Integer> randomPoints = new HashMap<Integer, Integer>();
-        while (randomPoints.size() != count) {
-            randomPoints.put(random.nextInt(Board.GetBoardSize()), random.nextInt(Board.GetBoardSize()));
-        }
-        for (Map.Entry<Integer, Integer> randomPoint : randomPoints.entrySet()) {
-            points.add(new Point(randomPoint.getKey(), randomPoint.getValue()));
-        }
-        return points;
-    }
+    // public static ArrayList<Point> GetRandomPoints(int count) {
+    // ArrayList<Point> points = new ArrayList<Point>();
+    // Random random = new Random();
+    // HashMap<Integer, Integer> randomPoints = new HashMap<Integer, Integer>();
+    // while (randomPoints.size() != count) {
+    // randomPoints.put(random.nextInt(Board.GetBoardSize()),
+    // random.nextInt(Board.GetBoardSize()));
+    // }
+    // for (Map.Entry<Integer, Integer> randomPoint : randomPoints.entrySet()) {
+    // points.add(new Point(randomPoint.getKey(), randomPoint.getValue()));
+    // }
+    // return points;
+    // }
 
-    public static void SetRandom4Points(boolean alphaSide) {
-        for (Point point : GetRandomPoints(4)) {
-            GetCell(point).SetHp(alphaSide, 3);
-        }
-    }
+    // public static void SetRandom4Points(boolean alphaSide) {
+    // for (Point point : GetRandomPoints(4)) {
+    // GetCell(point).SetHp(alphaSide, 3);
+    // }
+    // }
 
-    public static ArrayList<Point> GetMaxValuePoints(boolean alphaSide, boolean isAttackEnable, int layer) {
+    public static ArrayList<Point> GetMaxValuePoints(boolean alphaSide, boolean isEnableAttack, int layer) {
         HashMap<Point, Integer> pointsValue = new HashMap<Point, Integer>();
         for (int x = 0; x < Board.GetBoardSize(); x++) {
             for (int y = 0; y < Board.GetBoardSize(); y++) {
-                if ((isAttackEnable && Board.IsAttackEnablePoint(alphaSide, new Point(x, y))) || !isAttackEnable) {
+                if ((isEnableAttack && Board.IsEnableAttackPoint(alphaSide, new Point(x, y))) || !isEnableAttack) {
                     pointsValue.put(new Point(x, y), Board.GetCell(x, y).GetValue(alphaSide, layer));
                 }
             }
         }
-        int maxValue = Collections.max(pointsValue.values());
         ArrayList<Point> points = new ArrayList<Point>();
-        for (Map.Entry<Point, Integer> pointValue : pointsValue.entrySet()) {
-            if (pointValue.getValue() == maxValue) {
-                points.add(pointValue.getKey());
+        if (pointsValue.keySet().size() != 0) {
+            int maxValue = Collections.max(pointsValue.values());
+            for (Map.Entry<Point, Integer> pointValue : pointsValue.entrySet()) {
+                if (pointValue.getValue() == maxValue) {
+                    points.add(pointValue.getKey());
+                }
             }
         }
         return points;
     }
 
-    public static ArrayList<Point> GetMinValuePoints(boolean alphaSide, boolean isAttackEnable, int layer) {
+    public static ArrayList<Point> GetMinValuePoints(boolean alphaSide, boolean isEnableAttack, int layer) {
         HashMap<Point, Integer> pointsValue = new HashMap<Point, Integer>();
         for (int x = 0; x < Board.GetBoardSize(); x++) {
             for (int y = 0; y < Board.GetBoardSize(); y++) {
-                if ((isAttackEnable && Board.IsAttackEnablePoint(alphaSide, new Point(x, y))) || !isAttackEnable) {
+                if ((isEnableAttack && Board.IsEnableAttackPoint(alphaSide, new Point(x, y))) || !isEnableAttack) {
                     pointsValue.put(new Point(x, y), Board.GetCell(x, y).GetValue(alphaSide, layer));
                 }
             }
         }
-        int minValue = Collections.min(pointsValue.values());
         ArrayList<Point> points = new ArrayList<Point>();
-        for (Map.Entry<Point, Integer> pointValue : pointsValue.entrySet()) {
-            if (pointValue.getValue() == minValue) {
-                points.add(pointValue.getKey());
+        if (pointsValue.keySet().size() != 0) {
+            int minValue = Collections.min(pointsValue.values());
+            for (Map.Entry<Point, Integer> pointValue : pointsValue.entrySet()) {
+                if (pointValue.getValue() == minValue) {
+                    points.add(pointValue.getKey());
+                }
             }
         }
         return points;
@@ -766,7 +772,7 @@ class Board {
             Logger.AddLogger(alphaSide);
             return true;
         } else {
-            System.out.println("移動拒否");
+            System.out.println("【警告】移動拒否");
             System.out.println(Logger.GetFileName() + " : " + Board.GetTurnCount());
             WriteLogLine("移動】拒否されました");
             Logger.AddLogger(alphaSide);
@@ -793,29 +799,29 @@ class Board {
         Logger.AddLogger(alphaSide);
     }
 
-    public static void SearchAttackPoints(boolean alphaSide) {
+    public static void SearchEnableAttackPoints(boolean alphaSide) {
         for (int x = 0; x < Board.GetBoardSize(); x++) {
             for (int y = 0; y < Board.GetBoardSize(); y++) {
-                Board.GetCell(x, y).SetIsAttak(alphaSide, false);
+                Board.GetCell(x, y).SetEnableAttak(alphaSide, false);
             }
         }
         for (Point shipPoint : Board.GetShipPoints(alphaSide)) {
             for (Point point : GetRoundPoints(shipPoint)) {
-                Board.GetCell(point).SetIsAttak(alphaSide, true);
+                Board.GetCell(point).SetEnableAttak(alphaSide, true);
             }
         }
         for (Point shipPoint : Board.GetShipPoints(!alphaSide)) {
             if (Board.GetCell(shipPoint).GetHp(!alphaSide) == 0) {
-                Board.GetCell(shipPoint).SetIsAttak(alphaSide, false);
+                Board.GetCell(shipPoint).SetEnableAttak(alphaSide, false);
             }
         }
     }
 
-    public static ArrayList<Point> GetAttackPoints(boolean alphaSide) {
+    public static ArrayList<Point> GetEnableAttackPoints(boolean alphaSide) {
         ArrayList<Point> points = new ArrayList<Point>();
         for (int x = 0; x < Board.GetBoardSize(); x++) {
             for (int y = 0; y < Board.GetBoardSize(); y++) {
-                if (Board.GetCell(x, y).GetIsAttack(alphaSide)) {
+                if (Board.GetCell(x, y).GetEnableAttack(alphaSide)) {
                     points.add(new Point(x, y));
                 }
             }
@@ -823,15 +829,15 @@ class Board {
         return points;
     }
 
-    public static boolean IsAttackEnablePoint(boolean alphaSide, Point point) {
-        SearchAttackPoints(alphaSide);
-        return Board.GetCell(point).GetIsAttack(alphaSide);
+    public static boolean IsEnableAttackPoint(boolean alphaSide, Point point) {
+        SearchEnableAttackPoints(alphaSide);
+        return Board.GetCell(point).GetEnableAttack(alphaSide);
     }
 
-    public static ArrayList<Point> GetFilterAttackEnablePoints(boolean alphaSide, ArrayList<Point> points) {
+    public static ArrayList<Point> GetFilterEnableAttackPoints(boolean alphaSide, ArrayList<Point> points) {
         ArrayList<Point> tempPoints = new ArrayList<Point>();
         for (Point point : points) {
-            if (Board.IsAttackEnablePoint(alphaSide, point)) {
+            if (Board.IsEnableAttackPoint(alphaSide, point)) {
                 tempPoints.add(point);
             }
         }
@@ -840,7 +846,7 @@ class Board {
 
     public static boolean AttackPoint(boolean alphaSide, Point point, boolean judgeResult) {
         WriteLogSide(alphaSide);
-        if (IsAttackEnablePoint(alphaSide, point)) {
+        if (IsEnableAttackPoint(alphaSide, point)) {
             ArrayList<Integer> attackResult = new ArrayList<Integer>();
             WriteLogLine("攻撃】" + point.toPointFormatString());
             if (judgeResult) {
@@ -893,7 +899,7 @@ class Board {
             Logger.AddLogger(alphaSide);
             return true;
         } else {
-            System.out.println("攻撃拒否");
+            System.out.println("【警告】攻撃拒否");
             System.out.println(Logger.GetFileName() + " : " + Board.GetTurnCount());
             WriteLogLine("攻撃】 拒否されました");
             if (alphaSide) {
@@ -1007,30 +1013,26 @@ class Interface {
     }
 
     public void DoMove(Point oldPoint, Point newPoint) {
-        Board.WriteBoardHp(alphaSide);
-        Board.WriteBoardIsAttack(alphaSide);
-        Board.WriteLogLine(newPoint.Minus(oldPoint).toVectorFormaString() + " に移動！");
+        Board.WriteBoard(alphaSide);
+        Board.WriteLogLine("<" + newPoint.Minus(oldPoint).toVectorFormaString() + " に移動！>");
         Board.MovePoint(alphaSide, oldPoint, newPoint);
     }
 
     public void DoAttack(Point point) {
-        Board.WriteBoardHp(alphaSide);
-        Board.WriteBoardIsAttack(alphaSide);
-        Board.WriteLogLine(point.toPointFormatString() + " に魚雷発射！");
+        Board.WriteBoard(alphaSide);
+        Board.WriteLogLine("<" + point.toPointFormatString() + " に魚雷発射！>");
         Board.AttackPoint(alphaSide, point, !isEnemySecret);
     }
 
     public void DoMoveForce(Point vectorPoint) {
-        Board.WriteBoardHp(alphaSide);
-        Board.WriteBoardIsAttack(alphaSide);
-        Board.WriteLogLine(vectorPoint.toVectorFormaString() + " に移動！");
+        Board.WriteBoard(alphaSide);
+        Board.WriteLogLine("<" + vectorPoint.toVectorFormaString() + " に移動！>");
         Board.MoveVectorForce(alphaSide, vectorPoint);
     }
 
     public void DoAttackForce(Point point) {
-        Board.WriteBoardHp(alphaSide);
-        Board.WriteBoardIsAttack(alphaSide);
-        Board.WriteLogLine(point.toPointFormatString() + " に魚雷発射！");
+        Board.WriteBoard(alphaSide);
+        Board.WriteLogLine("<" + point.toPointFormatString() + " に魚雷発射！>");
         Board.AttackPointForce(alphaSide, point);
     }
 }
@@ -1054,9 +1056,9 @@ class Logger {
         JSONObject childJsonObject = new JSONObject();
         childJsonObject.put("alphaSide", alphaSide);
         JSONObject alphaJsonObject = new JSONObject();
-        alphaJsonObject.put("hp", GetHpArrayList(true));
-        alphaJsonObject.put("values", GetValuesArrayList(true));
-        alphaJsonObject.put("isAttack", GetIsAttackArrayList(true));
+        alphaJsonObject.put("hp", GetHps(true));
+        alphaJsonObject.put("values", GetValues(true));
+        alphaJsonObject.put("enableAttack", GetEnableAttacks(true));
         if (Board.GetLastAttackPoint(true) != null) {
             alphaJsonObject.put("lastAttackPoint", Board.GetLastAttackPoint(true).toPointFormatString());
             alphaJsonObject.put("lastAttackResult", Board.GetLastAttackResult(true));
@@ -1066,9 +1068,9 @@ class Logger {
         }
         childJsonObject.put("true", alphaJsonObject);
         JSONObject bravoJsonObject = new JSONObject();
-        bravoJsonObject.put("hp", GetHpArrayList(false));
-        bravoJsonObject.put("values", GetValuesArrayList(false));
-        bravoJsonObject.put("isAttack", GetIsAttackArrayList(false));
+        bravoJsonObject.put("hp", GetHps(false));
+        bravoJsonObject.put("values", GetValues(false));
+        bravoJsonObject.put("enableAttack", GetEnableAttacks(false));
         if (Board.GetLastAttackPoint(false) != null) {
             bravoJsonObject.put("lastAttackPoint", Board.GetLastAttackPoint(false).toPointFormatString());
             bravoJsonObject.put("lastAttackResult", Board.GetLastAttackResult(false));
@@ -1083,34 +1085,34 @@ class Logger {
         }
     }
 
-    public static ArrayList<Integer> GetHpArrayList(boolean alphaSide) {
-        ArrayList<Integer> hpArrayList = new ArrayList<Integer>();
+    public static ArrayList<Integer> GetHps(boolean alphaSide) {
+        ArrayList<Integer> hps = new ArrayList<Integer>();
         for (int x = 0; x < Board.GetBoardSize(); x++) {
             for (int y = 0; y < Board.GetBoardSize(); y++) {
-                hpArrayList.add(Board.GetCell(y, x).GetHp(alphaSide));
+                hps.add(Board.GetCell(y, x).GetHp(alphaSide));
             }
         }
-        return hpArrayList;
+        return hps;
     }
 
-    public static ArrayList<ArrayList<Integer>> GetValuesArrayList(boolean alphaSide) {
-        ArrayList<ArrayList<Integer>> valueArrayList = new ArrayList<ArrayList<Integer>>();
+    public static ArrayList<ArrayList<Integer>> GetValues(boolean alphaSide) {
+        ArrayList<ArrayList<Integer>> values = new ArrayList<ArrayList<Integer>>();
         for (int x = 0; x < Board.GetBoardSize(); x++) {
             for (int y = 0; y < Board.GetBoardSize(); y++) {
-                valueArrayList.add(Board.GetCell(y, x).GetValues(alphaSide));
+                values.add(Board.GetCell(y, x).GetValues(alphaSide));
             }
         }
-        return valueArrayList;
+        return values;
     }
 
-    public static ArrayList<Boolean> GetIsAttackArrayList(boolean alphaSide) {
-        ArrayList<Boolean> isAttackArrayList = new ArrayList<Boolean>();
+    public static ArrayList<Boolean> GetEnableAttacks(boolean alphaSide) {
+        ArrayList<Boolean> enableAttacks = new ArrayList<Boolean>();
         for (int x = 0; x < Board.GetBoardSize(); x++) {
             for (int y = 0; y < Board.GetBoardSize(); y++) {
-                isAttackArrayList.add(Board.GetCell(y, x).GetIsAttack(alphaSide));
+                enableAttacks.add(Board.GetCell(y, x).GetEnableAttack(alphaSide));
             }
         }
-        return isAttackArrayList;
+        return enableAttacks;
     }
 
     public static void SaveLogger() {

@@ -40,7 +40,7 @@ class Algorithm005 extends Interface {
                 enemySumHp--;
             }
         }
-        Board.SearchAttackPoints(alphaSide);
+        Board.SearchEnableAttackPoints(alphaSide);
 
         if (Board.IsLastAttack(alphaSide)) {
             // 攻撃
@@ -61,7 +61,7 @@ class Algorithm005 extends Interface {
                             && estimatedPoint.y <= 4) {
                         Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, 0);
                         Board.GetCell(estimatedPoint).SetValue(alphaSide, 0, 10);
-                        if (Board.IsAttackEnablePoint(alphaSide, estimatedPoint)) {
+                        if (Board.IsEnableAttackPoint(alphaSide, estimatedPoint)) {
                             estimatedAttacked = true;
                             estimatedBeforePoint = Board.GetLastAttackPoint(alphaSide);
                             DoAttack(estimatedPoint);
@@ -69,7 +69,7 @@ class Algorithm005 extends Interface {
                         }
                     }
                 } else {
-                    if (Board.IsAttackEnablePoint(alphaSide, Board.GetLastAttackPoint(alphaSide))) {
+                    if (Board.IsEnableAttackPoint(alphaSide, Board.GetLastAttackPoint(alphaSide))) {
                         DoAttack(Board.GetLastAttackPoint(alphaSide));
                         return;
                     }
@@ -77,7 +77,7 @@ class Algorithm005 extends Interface {
             } else {
                 if (estimatedAttacked) {
                     estimatedAttacked = false;
-                    if (Board.IsAttackEnablePoint(alphaSide, estimatedBeforePoint)) {
+                    if (Board.IsEnableAttackPoint(alphaSide, estimatedBeforePoint)) {
                         DoAttack(estimatedBeforePoint);
                     }
                     estimatedBeforePoint = null;
@@ -151,7 +151,7 @@ class Algorithm005 extends Interface {
             }
         }
 
-        if (prepareTurned && Board.IsAttackEnablePoint(alphaSide, preparePoint)) {
+        if (prepareTurned && Board.IsEnableAttackPoint(alphaSide, preparePoint)) {
             prepareTurned = false;
             DoAttack(preparePoint);
             preparePoint = null;

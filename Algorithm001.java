@@ -36,7 +36,7 @@ class Algorithm001 extends Interface {
                 enemySumHp--;
             }
         }
-        Board.SearchAttackPoints(alphaSide);
+        Board.SearchEnableAttackPoints(alphaSide);
 
         if (Board.IsLastMove(!alphaSide)) {
             Board.NormalizeValues(alphaSide, 0);
@@ -85,7 +85,7 @@ class Algorithm001 extends Interface {
                         Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, 0);
                         Board.GetCell(Board.GetLastAttackPoint(alphaSide)
                                 .Plus(Board.GetLastMoveVector(!alphaSide))).SetValue(alphaSide, 0, 10);
-                        if (Board.IsAttackEnablePoint(alphaSide, Board.GetLastAttackPoint(alphaSide)
+                        if (Board.IsEnableAttackPoint(alphaSide, Board.GetLastAttackPoint(alphaSide)
                                 .Plus(Board.GetLastMoveVector(!alphaSide)))) {
                             // 攻撃が可能なら攻撃する
                             DoAttack(Board.GetLastAttackPoint(alphaSide)
@@ -97,7 +97,7 @@ class Algorithm001 extends Interface {
                     }
                 } else {
                     // 敵が移動しなかった
-                    if (Board.IsAttackEnablePoint(alphaSide, Board.GetLastAttackPoint(alphaSide))) {
+                    if (Board.IsEnableAttackPoint(alphaSide, Board.GetLastAttackPoint(alphaSide))) {
                         DoAttack(Board.GetLastAttackPoint(alphaSide));
                         return;
                     }
