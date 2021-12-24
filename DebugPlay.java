@@ -48,7 +48,7 @@ public class DebugPlay {
                 break;
         }
 
-        Algorithm005 bravoAlgorithm = new Algorithm005(false, isEnemySecret);
+        Algorithm006 bravoAlgorithm = new Algorithm006(false, isEnemySecret);
         switch ((int) (Math.random() * 2)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(false, 3);
