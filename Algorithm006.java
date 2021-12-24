@@ -113,9 +113,6 @@ class Algorithm006 extends Interface {
                         return;
                     }
                 }
-                if (attackedPoints.contains(Board.GetLastAttackPoint(alphaSide))) {
-                    attackedPoints.remove(Board.GetLastAttackPoint(alphaSide));
-                }
             } else {
                 if (estimatedAttacked) {
                     estimatedAttacked = false;
