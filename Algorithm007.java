@@ -42,6 +42,7 @@ class Algorithm007 extends Interface {
         }
         Board.SearchEnableAttackPoints(alphaSide);
 
+        // 敵軍が移動した = 移動先の可能性があるポイントの評価値に1を追加する
         if (Board.GetLastMoveVector(!alphaSide) != null) {
             switch (Board.GetLastMoveVector(!alphaSide).x) {
                 case 2:
@@ -97,17 +98,18 @@ class Algorithm007 extends Interface {
             }
         }
 
+        // 自軍が攻撃した
         if (Board.IsLastAttack(alphaSide)) {
-            // 攻撃
+            // 敵軍が撃沈した = 命中したポイントの評価値, 逆評価値を-2に固定する
             if (Board.GetLastAttackResult(alphaSide).contains(3)) {
-                // 撃沈
                 Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValueForce(alphaSide, 0, -2);
                 Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValueForce(alphaSide, 1, -2);
             }
+            // 敵軍が命中した = 命中したポイントの評価値を10に設定する
             if (Board.GetLastAttackResult(alphaSide).contains(2)) {
-                // 命中
-                // 被移動
                 Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValueForce(alphaSide, 0, 10);
+                // 敵軍が移動した = 命中したポイントに移動ベクトルを足したポイントが範囲内ならそのポイントに移動したと判断し、攻撃可能範囲内なら攻撃する (A)
+                // 敵軍が移動しなかった = 命中したポイントにもう一度攻撃する
                 if (Board.IsLastMove(!alphaSide)) {
                     Point estimatedPoint = Board.GetLastAttackPoint(alphaSide)
                             .Plus(Board.GetLastMoveVector(!alphaSide));
@@ -129,6 +131,7 @@ class Algorithm007 extends Interface {
                         return;
                     }
                 }
+                // 敵軍が命中しなかった = (A) の攻撃結果の場合は移動する前のポイントが攻撃可能範囲内なら攻撃する
             } else {
                 if (estimatedAttacked) {
                     estimatedAttacked = false;
@@ -139,15 +142,15 @@ class Algorithm007 extends Interface {
                     return;
                 }
             }
+            // 敵軍が波高しした = 攻撃したポイントの評価値を-1に固定する, 周囲のポイントの評価値に1を追加する
             if (Board.GetLastAttackResult(alphaSide).contains(1)) {
-                // 波高し
                 Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValueForce(alphaSide, 0, -1);
                 for (Point point : Board.GetRoundPoints(Board.GetLastAttackPoint(alphaSide))) {
                     Board.GetCell(point).SetValue(alphaSide, 0, Board.GetCell(point).GetValue(alphaSide, 0) + 1);
                 }
             }
+            // 敵軍が外れした = 攻撃したポイント, 周囲のポイントの評価値を-1に固定する
             if (Board.GetLastAttackResult(alphaSide).contains(0)) {
-                // 外れ
                 Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValueForce(alphaSide, 0, -1);
                 for (Point point : Board.GetRoundPoints(Board.GetLastAttackPoint(alphaSide))) {
                     Board.GetCell(point).SetValueForce(alphaSide, 0, -1);
@@ -155,28 +158,21 @@ class Algorithm007 extends Interface {
             }
         }
 
+        // 敵軍が攻撃した = 攻撃したポイントの評価値を-1に固定する, 周囲のポイントの評価値に1を追加する, 攻撃したポイントの逆評価値を0に設定する
         if (Board.IsLastAttack(!alphaSide)) {
-            // 被攻撃
-            // 自軍評価
             Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValueForce(alphaSide, 0, -1);
             for (Point point : Board.GetRoundPoints(Board.GetLastAttackPoint(!alphaSide))) {
                 Board.GetCell(point).SetValue(alphaSide, 0, Board.GetCell(point).GetValue(alphaSide, 0) + 1);
             }
-            // 敵軍評価
             Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValue(alphaSide, 1, 0);
-
+            // 自軍が撃沈した = 命中したポイントの評価値, 逆評価値を-2に固定する
             if (Board.GetLastAttackResult(!alphaSide).contains(3)) {
-                // 被撃沈
-                // 自軍評価
                 Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValueForce(alphaSide, 0, -2);
-                // 敵軍評価
                 Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValueForce(alphaSide, 1, -2);
             }
+            // 自軍が命中した = 命中したポイントの逆評価値を10に設定する
             if (Board.GetLastAttackResult(!alphaSide).contains(2)) {
-                // 被命中
-                // 敵軍評価
                 Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValue(alphaSide, 1, 10);
-
                 ArrayList<Point> points = new ArrayList<Point>();
                 for (Point point : Board.GetCrossPoints(Board.GetLastAttackPoint(!alphaSide), 2, 2)) {
                     if (Board.IsMoveEnablePoint(alphaSide, Board.GetLastAttackPoint(!alphaSide),
@@ -190,14 +186,13 @@ class Algorithm007 extends Interface {
                     return;
                 }
             }
+            // 自軍が波高しした = 攻撃したポイントの逆評価値を0に設定する, 周囲のポイントに1を追加する
             if (Board.GetLastAttackResult(!alphaSide).contains(1)) {
-                // 被波高し
-                // 敵軍評価
+                Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValue(alphaSide, 1, 0);
                 for (Point point : Board.GetRoundPoints(Board.GetLastAttackPoint(!alphaSide))) {
                     Board.GetCell(point).SetValue(alphaSide, 1,
                             Board.GetCell(point).GetValue(alphaSide, 1) + 1);
                 }
-
             }
         }
 
