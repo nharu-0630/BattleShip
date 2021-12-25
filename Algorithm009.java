@@ -107,7 +107,7 @@ class Algorithm009 extends Interface {
             }
             // 敵軍が命中した = 命中したポイントの評価値を10に設定する
             if (Board.GetLastAttackResult(alphaSide).contains(2)) {
-                Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValueForce(alphaSide, 0, 10);
+                Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValueForce(alphaSide, 0, 20);
                 // 敵軍が移動した = 命中したポイントに移動ベクトルを足したポイントが範囲内ならそのポイントに移動したと判断し、攻撃可能範囲内なら攻撃する (A)
                 // 敵軍が移動しなかった = 命中したポイントにもう一度攻撃する
                 if (Board.IsLastMove(!alphaSide)) {
@@ -117,7 +117,7 @@ class Algorithm009 extends Interface {
                     if (0 <= estimatedPoint.x && estimatedPoint.x <= 4 && 0 <= estimatedPoint.y
                             && estimatedPoint.y <= 4) {
                         Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValueForce(alphaSide, 0, 0);
-                        Board.GetCell(estimatedPoint).SetValueForce(alphaSide, 0, 10);
+                        Board.GetCell(estimatedPoint).SetValueForce(alphaSide, 0, 20);
                         if (Board.IsEnableAttackPoint(alphaSide, estimatedPoint)) {
                             estimatedAttackedFlag = true;
                             estimatedBeforePoint = Board.GetLastAttackPoint(alphaSide);
