@@ -334,16 +334,18 @@ class Board {
             for (int x = 0; x < Board.GetBoardSize(); x++) {
                 switch (Board.GetCell(x, y).GetValue(alphaSide, 0)) {
                     case -1:
-                        WriteLog("-");
+                        WriteLog("- ");
                         break;
                     case -2:
-                        WriteLog("X");
+                        WriteLog("X ");
                         break;
                     default:
                         WriteLog(String.valueOf(Board.GetCell(x, y).GetValue(alphaSide, 0)));
+                        if (String.valueOf(Board.GetCell(x, y).GetValue(alphaSide, 0)).length() == 1) {
+                            WriteLog(" ");
+                        }
                         break;
                 }
-                WriteLog(" ");
             }
             WriteLog("  " + yStrings[y] + "│");
             for (int x = 0; x < Board.GetBoardSize(); x++) {

@@ -12,7 +12,7 @@ public class ReleasePlay {
     public static void main(String args[]) {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
-        Algorithm005 alphaAlgorithm = new Algorithm005(true, isEnemySecret);
+        Algorithm007 alphaAlgorithm = new Algorithm007(true, isEnemySecret);
         alphaAlgorithm.SetParameter(null);
         switch ((int) (Math.random() * 3)) {
             case 0:
