@@ -12,7 +12,7 @@ public class ReleasePlay {
     public static void main(String args[]) {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
-        Algorithm007 alphaAlgorithm = new Algorithm007(true, isEnemySecret);
+        Algorithm009 alphaAlgorithm = new Algorithm009(true, isEnemySecret);
         alphaAlgorithm.SetParameter(null);
         switch ((int) (Math.random() * 3)) {
             case 0:
@@ -108,6 +108,7 @@ public class ReleasePlay {
                 CONFIRM: while (true) {
                     System.out.print(ConsoleColors.YELLOW);
                     System.out.print("攻撃(a), 移動(m): ");
+                    System.out.print(ConsoleColors.RESET);
                     switch (scanner.nextLine()) {
                         case "a":
                             System.out.print("ポイント: ");

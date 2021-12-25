@@ -362,7 +362,6 @@ class Board {
             }
             WriteLogLine("");
         }
-
     }
 
     public static void WriteLogSide(boolean alphaSide) {
