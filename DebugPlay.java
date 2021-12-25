@@ -16,8 +16,8 @@ public class DebugPlay {
     public static final boolean isStepWait = false;
 
     public static void main(String args[]) {
-        ParameterDeepTry();
-        // DeepTry(null);
+        // ParameterDeepTry();
+        DeepTry(null);
         // Try(true, null);
         // Try(false, null);
     }
@@ -25,7 +25,7 @@ public class DebugPlay {
     public static void Try(boolean alphaSide, int[] parameters) {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
-        Algorithm010 alphaAlgorithm = new Algorithm010(true, isEnemySecret);
+        Algorithm009 alphaAlgorithm = new Algorithm009(true, isEnemySecret);
         switch ((int) (Math.random() * 4)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(true, 3);
