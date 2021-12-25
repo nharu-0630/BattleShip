@@ -3,6 +3,8 @@ import java.time.format.*;
 import java.util.*;
 
 public class DebugPlay {
+    public static Scanner scanner = new Scanner(System.in);
+
     public static final int maxTurnCount = 60;
     public static final int deepTryCount = 1000;
     // public static final int deepTryCount = 100;
@@ -10,6 +12,8 @@ public class DebugPlay {
     public static final boolean isVisibleLog = false;
     public static final boolean isAttackResultArray = false;
     public static final boolean isEnemySecret = false;
+    // public static final boolean isStepWait = true;
+    public static final boolean isStepWait = false;
 
     public static void main(String args[]) {
         DeepTry(null);
@@ -20,7 +24,7 @@ public class DebugPlay {
     public static void Try(boolean alphaSide, double[] parameters) {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
-        Algorithm005 alphaAlgorithm = new Algorithm005(true, isEnemySecret);
+        Algorithm002 alphaAlgorithm = new Algorithm002(true, isEnemySecret);
         switch ((int) (Math.random() * 2)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(true, 3);
@@ -48,7 +52,7 @@ public class DebugPlay {
                 break;
         }
 
-        Algorithm006 bravoAlgorithm = new Algorithm006(false, isEnemySecret);
+        Algorithm007 bravoAlgorithm = new Algorithm007(false, isEnemySecret);
         switch ((int) (Math.random() * 2)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(false, 3);
@@ -94,6 +98,9 @@ public class DebugPlay {
             if (Board.GetTurnCount() >= maxTurnCount) {
                 Board.IsContinue(true);
                 break;
+            }
+            if (isStepWait) {
+                scanner.nextLine();
             }
         }
 

@@ -63,9 +63,6 @@ class Cell {
             while (layer >= alphaValues.size()) {
                 alphaValues.add(0);
             }
-            // for (int i = 0; i <= layer - alphaValues.size(); i++) {
-            // alphaValues.set(alphaValues.size(), 0);
-            // }
             if (alphaValues.get(layer) >= 0) {
                 alphaValues.set(layer, value);
             }
@@ -73,10 +70,25 @@ class Cell {
             while (layer >= bravoValues.size()) {
                 bravoValues.add(0);
             }
-            // for (int i = 0; i <= layer - bravoValues.size(); i++) {
-            // bravoValues.set(bravoValues.size(), 0);
-            // }
             if (bravoValues.get(layer) >= 0) {
+                bravoValues.set(layer, value);
+            }
+        }
+    }
+
+    public void SetValueForce(boolean alphaSide, int layer, int value) {
+        if (alphaSide) {
+            while (layer >= alphaValues.size()) {
+                alphaValues.add(0);
+            }
+            if (alphaValues.get(layer) >= -1) {
+                alphaValues.set(layer, value);
+            }
+        } else {
+            while (layer >= bravoValues.size()) {
+                bravoValues.add(0);
+            }
+            if (bravoValues.get(layer) >= -1) {
                 bravoValues.set(layer, value);
             }
         }
@@ -320,10 +332,16 @@ class Board {
             }
             WriteLog("  " + yStrings[y] + "│");
             for (int x = 0; x < Board.GetBoardSize(); x++) {
-                if (Board.GetCell(x, y).GetValue(alphaSide, 0) == -1) {
-                    WriteLog("X");
-                } else {
-                    WriteLog(String.valueOf(Board.GetCell(x, y).GetValue(alphaSide, 0)));
+                switch (Board.GetCell(x, y).GetValue(alphaSide, 0)) {
+                    case -1:
+                        WriteLog("-");
+                        break;
+                    case -2:
+                        WriteLog("X");
+                        break;
+                    default:
+                        WriteLog(String.valueOf(Board.GetCell(x, y).GetValue(alphaSide, 0)));
+                        break;
                 }
                 WriteLog(" ");
             }
