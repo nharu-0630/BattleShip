@@ -6,7 +6,7 @@ class Algorithm008 extends Interface {
         Board.InitializeValues(alphaSide, 1);
     }
 
-    private boolean estimatedAttacked = false;
+    private boolean estimatedAttackedFlag = false;
     private Point estimatedBeforePoint = null;
     private boolean prepareTurned = false;
     private Point preparePoint = null;
@@ -119,7 +119,7 @@ class Algorithm008 extends Interface {
                         Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValueForce(alphaSide, 0, 0);
                         Board.GetCell(estimatedPoint).SetValueForce(alphaSide, 0, 10);
                         if (Board.IsEnableAttackPoint(alphaSide, estimatedPoint)) {
-                            estimatedAttacked = true;
+                            estimatedAttackedFlag = true;
                             estimatedBeforePoint = Board.GetLastAttackPoint(alphaSide);
                             DoAttack(estimatedPoint);
                             return;
@@ -133,8 +133,8 @@ class Algorithm008 extends Interface {
                 }
                 // 敵軍が命中しなかった = (A) の攻撃結果の場合は移動する前のポイントが攻撃可能範囲内なら攻撃する
             } else {
-                if (estimatedAttacked) {
-                    estimatedAttacked = false;
+                if (estimatedAttackedFlag) {
+                    estimatedAttackedFlag = false;
                     if (Board.IsEnableAttackPoint(alphaSide, estimatedBeforePoint)) {
                         DoAttack(estimatedBeforePoint);
                     }
@@ -224,9 +224,6 @@ class Algorithm008 extends Interface {
                     }
                 } else {
                     for (Point movePoint : Board.GetShortPoints(alphaSide, point)) {
-                        // if (Board.GetCell(movePoint).GetHp(alphaSide) == 1) {
-                        // continue;
-                        // }
                         Point minusVector = point.Minus(movePoint);
                         Point moveVector = null;
                         if (minusVector.x > 1) {
@@ -238,24 +235,6 @@ class Algorithm008 extends Interface {
                         } else if (minusVector.y < -1) {
                             moveVector = new Point(0, -2);
                         }
-                        // if (minusVector.x > 1) {
-                        // moveVector = new Point(1, 0);
-                        // } else if (minusVector.x > 2) {
-                        // moveVector = new Point(2, 0);
-                        // } else if (minusVector.x < -1) {
-                        // moveVector = new Point(-1, 0);
-                        // } else if (minusVector.x < -2) {
-                        // moveVector = new Point(-2, 0);
-                        // }
-                        // if (minusVector.y > 1) {
-                        // moveVector = new Point(0, 1);
-                        // } else if (minusVector.y > 2) {
-                        // moveVector = new Point(0, 2);
-                        // } else if (minusVector.y < -1) {
-                        // moveVector = new Point(0, -1);
-                        // } else if (minusVector.y < -2) {
-                        // moveVector = new Point(0, -2);
-                        // }
                         if (moveVector != null) {
                             if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)
                                     || point.Equal(movePoint.Plus(moveVector))) {
