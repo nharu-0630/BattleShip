@@ -11,7 +11,7 @@ class Algorithm005 extends Interface {
     private boolean prepareTurned = false;
     private Point preparePoint = null;
 
-    public void SetParameter(double[] parameters) {
+    public void SetParameter(int[] parameters) {
 
     }
 

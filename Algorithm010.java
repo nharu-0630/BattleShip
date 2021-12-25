@@ -1,18 +1,22 @@
 import java.util.*;
 
-class Algorithm007 extends Interface {
-    Algorithm007(boolean alphaSide, boolean isEnemySecret) {
+class Algorithm010 extends Interface {
+    Algorithm010(boolean alphaSide, boolean isEnemySecret) {
         super(alphaSide, isEnemySecret);
         Board.InitializeValues(alphaSide, 1);
     }
 
-    private boolean estimatedAttacked = false;
+    private boolean estimatedAttackedFlag = false;
     private Point estimatedBeforePoint = null;
     private boolean prepareTurned = false;
     private Point preparePoint = null;
 
-    public void SetParameter(int[] parameters) {
+    private int parameter1;
+    private int parameter2;
 
+    public void SetParameter(int[] parameters) {
+        parameter1 = parameters[0];
+        parameter2 = parameters[1];
     }
 
     public void Think() {
@@ -119,7 +123,7 @@ class Algorithm007 extends Interface {
                         Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValueForce(alphaSide, 0, 0);
                         Board.GetCell(estimatedPoint).SetValueForce(alphaSide, 0, 10);
                         if (Board.IsEnableAttackPoint(alphaSide, estimatedPoint)) {
-                            estimatedAttacked = true;
+                            estimatedAttackedFlag = true;
                             estimatedBeforePoint = Board.GetLastAttackPoint(alphaSide);
                             DoAttack(estimatedPoint);
                             return;
@@ -133,8 +137,8 @@ class Algorithm007 extends Interface {
                 }
                 // 敵軍が命中しなかった = (A) の攻撃結果の場合は移動する前のポイントが攻撃可能範囲内なら攻撃する
             } else {
-                if (estimatedAttacked) {
-                    estimatedAttacked = false;
+                if (estimatedAttackedFlag) {
+                    estimatedAttackedFlag = false;
                     if (Board.IsEnableAttackPoint(alphaSide, estimatedBeforePoint)) {
                         DoAttack(estimatedBeforePoint);
                     }
@@ -180,7 +184,7 @@ class Algorithm007 extends Interface {
                         points.add(point);
                     }
                 }
-                if (points.size() != 0) {
+                if (points.size() != 0 && Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).GetHp(alphaSide) == 3) {
                     DoMove(Board.GetLastAttackPoint(!alphaSide), Board.GetRandomPoint(
                             new ArrayList<Point>(Board.GetPointValues(alphaSide, points, 1, -1).keySet())));
                     return;
@@ -202,51 +206,71 @@ class Algorithm007 extends Interface {
             preparePoint = null;
             return;
         }
-        if (Board.GetCell(Board.GetMaxValuePoints(alphaSide, false, 0).get(0)).GetValue(alphaSide, 0) > 5) {
-            if (Board.GetCell(Board.GetMaxValuePoints(alphaSide, false, 0).get(0)).GetValue(alphaSide, 0) != Board
-                    .GetCell(Board.GetMaxValuePoints(alphaSide, true, 0).get(0)).GetValue(alphaSide, 0)) {
-                preparePoint = Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, false, 0));
-                if (Board.GetCell(preparePoint).IsAlive(alphaSide)) {
-                    if (Board.GetFilterMoveEnablePoints(alphaSide, preparePoint,
-                            Board.GetCrossPoints(preparePoint, 1, 1)).size() != 0) {
-                        DoMove(preparePoint, Board.GetRandomPoint(Board.GetFilterMoveEnablePoints(alphaSide,
-                                preparePoint,
-                                Board.GetCrossPoints(preparePoint, 1, 1))));
-                        return;
+
+        for (Point point : Board.GetMaxValuePoints(alphaSide, true, 0)) {
+            if (Board.GetCell(point).GetValue(alphaSide, 0) > parameter2) {
+                if (Board.IsEnableAttackPoint(alphaSide, point)) {
+                    DoAttack(point);
+                    return;
+                }
+            }
+        }
+        ArrayList<Point> maxValuePoints = new ArrayList<Point>(Board.GetPointValues(alphaSide, null, 0, 1).keySet());
+        if (Board.GetCell(maxValuePoints.get(0)).GetValue(alphaSide, 0) > parameter1) {
+            for (Point point : maxValuePoints) {
+                if (Board.GetCell(point).IsAlive(alphaSide)) {
+                    HashMap<Point, Integer> crossPointValues = new HashMap<Point, Integer>();
+                    for (Point crossPoint : Board.GetFilterMoveEnablePoints(alphaSide, point,
+                            Board.GetCrossPoints(point, 1, 1))) {
+                        crossPointValues.put(crossPoint,
+                                Board.GetCell(crossPoint).GetValue(alphaSide, 1));
                     }
-                } else {
-                    Point movePoint = Board.GetRandomPoint(Board.GetShortPoints(alphaSide, preparePoint));
-                    Point minusPoint = preparePoint.Minus(movePoint);
-                    Point vectorPoint = null;
-                    if (minusPoint.x > 1) {
-                        vectorPoint = new Point(2, 0);
-                    }
-                    if (minusPoint.x < -1) {
-                        vectorPoint = new Point(-2, 0);
-                    }
-                    if (minusPoint.y > 1) {
-                        vectorPoint = new Point(0, 2);
-                    }
-                    if (minusPoint.y < -1) {
-                        vectorPoint = new Point(0, -2);
-                    }
-                    if (vectorPoint != null) {
-                        if (!Board.IsMoveEnableVector(alphaSide, movePoint, vectorPoint)
-                                || minusPoint.x + minusPoint.y < 2) {
-                            vectorPoint = new Point(vectorPoint.x / 2, vectorPoint.y / 2);
-                            if (!Board.IsMoveEnableVector(alphaSide, movePoint, vectorPoint)) {
-                                vectorPoint = null;
+                    if (crossPointValues.size() != 0) {
+                        int value = Collections.max(crossPointValues.values());
+                        for (Map.Entry<Point, Integer> crossPointValue : crossPointValues.entrySet()) {
+                            if (crossPointValue.getValue() == value) {
+                                DoMove(point, crossPointValue.getKey());
+                                return;
                             }
                         }
                     }
-                    if (vectorPoint != null) {
-                        DoMove(movePoint, movePoint.Plus(vectorPoint));
-                        return;
+                } else {
+                    for (Point movePoint : Board.GetShortPoints(alphaSide, point)) {
+                        Point minusVector = point.Minus(movePoint);
+                        Point moveVector = null;
+                        if (minusVector.x > 1) {
+                            moveVector = new Point(2, 0);
+                        } else if (minusVector.x < -1) {
+                            moveVector = new Point(-2, 0);
+                        } else if (minusVector.y > 1) {
+                            moveVector = new Point(0, 2);
+                        } else if (minusVector.y < -1) {
+                            moveVector = new Point(0, -2);
+                        }
+                        if (moveVector != null) {
+                            if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)
+                                    || point.Equal(movePoint.Plus(moveVector))) {
+                                moveVector = new Point(moveVector.x / 2, moveVector.y / 2);
+                                if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
+                                    moveVector = null;
+                                }
+                            }
+                            if (moveVector != null) {
+                                DoMove(movePoint, movePoint.Plus(moveVector));
+                                return;
+                            }
+                        }
                     }
                 }
             }
         }
 
+        // if (Board.GetMaxValuePoints(alphaSide, true, 0).size() != 0) {
         DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true, 0)));
+        // return;
+        // } else {
+
+        // }
+        return;
     }
 }

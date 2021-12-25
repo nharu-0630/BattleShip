@@ -16,15 +16,16 @@ public class DebugPlay {
     public static final boolean isStepWait = false;
 
     public static void main(String args[]) {
-        DeepTry(null);
+        ParameterDeepTry();
+        // DeepTry(null);
         // Try(true, null);
         // Try(false, null);
     }
 
-    public static void Try(boolean alphaSide, double[] parameters) {
+    public static void Try(boolean alphaSide, int[] parameters) {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
-        Algorithm002 alphaAlgorithm = new Algorithm002(true, isEnemySecret);
+        Algorithm010 alphaAlgorithm = new Algorithm010(true, isEnemySecret);
         switch ((int) (Math.random() * 4)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(true, 3);
@@ -108,11 +109,14 @@ public class DebugPlay {
     }
 
     public static void ParameterDeepTry() {
-        HashMap<Double[], Integer> parameterWinCounts = new HashMap<Double[], Integer>();
-        for (double parameter = 0; parameter <= 1; parameter += 0.05) {
-            parameterWinCounts.put(new Double[] { parameter }, DeepTry(new double[] { parameter }));
+        HashMap<int[], Integer> parameterWinCounts = new HashMap<int[], Integer>();
+        for (int parameter1 = 0; parameter1 <= 15; parameter1 += 1) {
+            for (int parameter2 = 0; parameter2 <= 15; parameter2 += 1) {
+                parameterWinCounts.put(new int[] { parameter1, parameter2 },
+                        DeepTry(new int[] { parameter1, parameter2 }));
+            }
         }
-        java.util.stream.Stream<Map.Entry<Double[], Integer>> sortedParameterWinCounts = parameterWinCounts.entrySet()
+        java.util.stream.Stream<Map.Entry<int[], Integer>> sortedParameterWinCounts = parameterWinCounts.entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue());
         sortedParameterWinCounts
@@ -120,7 +124,7 @@ public class DebugPlay {
                         .println(Arrays.toString(entry.getKey()) + " = " + entry.getValue()));
     }
 
-    public static int DeepTry(double[] parameters) {
+    public static int DeepTry(int[] parameters) {
         int alphaWinCount = 0;
         int bravoWinCount = 0;
         for (int i = 0; i < deepTryCount; i++) {

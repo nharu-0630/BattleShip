@@ -5,10 +5,8 @@ class Algorithm001 extends Interface {
         super(alphaSide, isEnemySecret);
     }
 
-    // private double attackProbability;
-
-    public void SetParameter(double[] parameters) {
-        // attackProbability = parameters[0];
+    public void SetParameter(int[] parameters) {
+        
     }
 
     public void Think() {
