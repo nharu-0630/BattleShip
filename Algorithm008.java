@@ -1,7 +1,7 @@
 import java.util.*;
 
-class Algorithm007 extends Interface {
-    Algorithm007(boolean alphaSide, boolean isEnemySecret) {
+class Algorithm008 extends Interface {
+    Algorithm008(boolean alphaSide, boolean isEnemySecret) {
         super(alphaSide, isEnemySecret);
         Board.InitializeValues(alphaSide, 1);
     }
@@ -202,51 +202,84 @@ class Algorithm007 extends Interface {
             preparePoint = null;
             return;
         }
-        if (Board.GetCell(Board.GetMaxValuePoints(alphaSide, false, 0).get(0)).GetValue(alphaSide, 0) > 5) {
-            if (Board.GetCell(Board.GetMaxValuePoints(alphaSide, false, 0).get(0)).GetValue(alphaSide, 0) != Board
-                    .GetCell(Board.GetMaxValuePoints(alphaSide, true, 0).get(0)).GetValue(alphaSide, 0)) {
-                preparePoint = Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, false, 0));
-                if (Board.GetCell(preparePoint).IsAlive(alphaSide)) {
-                    if (Board.GetFilterMoveEnablePoints(alphaSide, preparePoint,
-                            Board.GetCrossPoints(preparePoint, 1, 1)).size() != 0) {
-                        DoMove(preparePoint, Board.GetRandomPoint(Board.GetFilterMoveEnablePoints(alphaSide,
-                                preparePoint,
-                                Board.GetCrossPoints(preparePoint, 1, 1))));
-                        return;
+
+        ArrayList<Point> maxValuePoints = new ArrayList<Point>(Board.GetPointValues(alphaSide, null, 0, 1).keySet());
+        if (Board.GetCell(maxValuePoints.get(0)).GetValue(alphaSide, 0) > 5) {
+            for (Point point : maxValuePoints) {
+                if (Board.GetCell(point).IsAlive(alphaSide)) {
+                    HashMap<Point, Integer> crossPointValues = new HashMap<Point, Integer>();
+                    for (Point crossPoint : Board.GetFilterMoveEnablePoints(alphaSide, point,
+                            Board.GetCrossPoints(point, 1, 1))) {
+                        crossPointValues.put(crossPoint,
+                                Board.GetCell(crossPoint).GetValue(alphaSide, 1));
                     }
-                } else {
-                    Point movePoint = Board.GetRandomPoint(Board.GetShortPoints(alphaSide, preparePoint));
-                    Point minusPoint = preparePoint.Minus(movePoint);
-                    Point vectorPoint = null;
-                    if (minusPoint.x > 1) {
-                        vectorPoint = new Point(2, 0);
-                    }
-                    if (minusPoint.x < -1) {
-                        vectorPoint = new Point(-2, 0);
-                    }
-                    if (minusPoint.y > 1) {
-                        vectorPoint = new Point(0, 2);
-                    }
-                    if (minusPoint.y < -1) {
-                        vectorPoint = new Point(0, -2);
-                    }
-                    if (vectorPoint != null) {
-                        if (!Board.IsMoveEnableVector(alphaSide, movePoint, vectorPoint)
-                                || minusPoint.x + minusPoint.y < 2) {
-                            vectorPoint = new Point(vectorPoint.x / 2, vectorPoint.y / 2);
-                            if (!Board.IsMoveEnableVector(alphaSide, movePoint, vectorPoint)) {
-                                vectorPoint = null;
+                    if (crossPointValues.size() != 0) {
+                        int value = Collections.max(crossPointValues.values());
+                        for (Map.Entry<Point, Integer> crossPointValue : crossPointValues.entrySet()) {
+                            if (crossPointValue.getValue() == value) {
+                                DoMove(point, crossPointValue.getKey());
+                                return;
                             }
                         }
                     }
-                    if (vectorPoint != null) {
-                        DoMove(movePoint, movePoint.Plus(vectorPoint));
-                        return;
+                } else {
+                    for (Point movePoint : Board.GetShortPoints(alphaSide, point)) {
+                        // if (Board.GetCell(movePoint).GetHp(alphaSide) == 1) {
+                        // continue;
+                        // }
+                        Point minusVector = point.Minus(movePoint);
+                        Point moveVector = null;
+                        if (minusVector.x > 1) {
+                            moveVector = new Point(2, 0);
+                        } else if (minusVector.x < -1) {
+                            moveVector = new Point(-2, 0);
+                        } else if (minusVector.y > 1) {
+                            moveVector = new Point(0, 2);
+                        } else if (minusVector.y < -1) {
+                            moveVector = new Point(0, -2);
+                        }
+                        // if (minusVector.x > 1) {
+                        // moveVector = new Point(1, 0);
+                        // } else if (minusVector.x > 2) {
+                        // moveVector = new Point(2, 0);
+                        // } else if (minusVector.x < -1) {
+                        // moveVector = new Point(-1, 0);
+                        // } else if (minusVector.x < -2) {
+                        // moveVector = new Point(-2, 0);
+                        // }
+                        // if (minusVector.y > 1) {
+                        // moveVector = new Point(0, 1);
+                        // } else if (minusVector.y > 2) {
+                        // moveVector = new Point(0, 2);
+                        // } else if (minusVector.y < -1) {
+                        // moveVector = new Point(0, -1);
+                        // } else if (minusVector.y < -2) {
+                        // moveVector = new Point(0, -2);
+                        // }
+                        if (moveVector != null) {
+                            if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)
+                                    || point.Equal(movePoint.Plus(moveVector))) {
+                                moveVector = new Point(moveVector.x / 2, moveVector.y / 2);
+                                if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
+                                    moveVector = null;
+                                }
+                            }
+                            if (moveVector != null) {
+                                DoMove(movePoint, movePoint.Plus(moveVector));
+                                return;
+                            }
+                        }
                     }
                 }
             }
         }
 
+        // if (Board.GetMaxValuePoints(alphaSide, true, 0).size() != 0) {
         DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true, 0)));
+        // return;
+        // } else {
+
+        // }
+        return;
     }
 }

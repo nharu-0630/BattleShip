@@ -24,7 +24,7 @@ public class DebugPlay {
     public static void Try(boolean alphaSide, double[] parameters) {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
-        Algorithm006 alphaAlgorithm = new Algorithm006(true, isEnemySecret);
+        Algorithm002 alphaAlgorithm = new Algorithm002(true, isEnemySecret);
         switch ((int) (Math.random() * 2)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(true, 3);

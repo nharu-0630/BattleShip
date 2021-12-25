@@ -46,11 +46,12 @@ https://xyzyxjp.github.io/BattleShip/
 | x   | int | 0      | 座標のX値 |
 | y   | int | 0      | 座標のY値 |
 
-| メソッド名    | 引数型   | 戻り値型    |            |
-| -------- | ----- | ------ | ---------- |
-| Plus     | Point | Point  | 引数のポイントを加算 |
-| Minus    | Point | Point  | 引数のポイントを減算 |
-| toString |       | String | (x, y)     |
+| メソッド名    | 引数型     | 戻り値型   |            |
+| -------- | ------- | ------ | ---------- |
+| Plus     | Point   | Point  | 引数のポイントを加算 |
+| Minus    | Point   | Point  | 引数のポイントを減算 |
+| Equal    | boolean | Point  | 引数のポイントと比較 |
+| toString |         | String | (x, y)     |
 
 ### ボード(Board)
 

@@ -216,6 +216,10 @@ class Point {
         return new Point(this.x - point.x, this.y - point.y);
     }
 
+    public boolean Equal(Point point) {
+        return (x == point.x && y == point.y);
+    }
+
     @Override
     public String toString() {
         return "(" + x + ", " + y + ")";
@@ -735,6 +739,14 @@ class Board {
 
     public static HashMap<Point, Integer> GetPointValues(boolean alphaSide, ArrayList<Point> points, int layer,
             int filter) {
+        if (points == null) {
+            points = new ArrayList<Point>();
+            for (int x = 0; x < Board.GetBoardSize(); x++) {
+                for (int y = 0; y < Board.GetBoardSize(); y++) {
+                    points.add(new Point(x, y));
+                }
+            }
+        }
         HashMap<Point, Integer> tempPointsValue = new HashMap<Point, Integer>();
         for (Point point : points) {
             tempPointsValue.put(point, Board.GetCell(point).GetValue(alphaSide, layer));
