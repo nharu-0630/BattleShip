@@ -661,6 +661,9 @@ class Board {
         ArrayList<Point> points = new ArrayList<Point>();
         if (pointsValue.keySet().size() != 0) {
             int minValue = Collections.min(pointsValue.values());
+            if (minValue < -1) {
+                minValue = 0;
+            }
             for (Map.Entry<Point, Integer> pointValue : pointsValue.entrySet()) {
                 if (pointValue.getValue() == minValue) {
                     points.add(pointValue.getKey());
@@ -759,6 +762,9 @@ class Board {
                 value = Collections.max(tempPointsValue.values());
             } else if (filter == -1) {
                 value = Collections.min(tempPointsValue.values());
+                if (value < -1) {
+                    value = 0;
+                }
             }
             HashMap<Point, Integer> pointsValue = new HashMap<Point, Integer>();
             for (Map.Entry<Point, Integer> pointValue : tempPointsValue.entrySet()) {
