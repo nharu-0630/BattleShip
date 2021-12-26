@@ -25,7 +25,7 @@ public class DebugPlay {
     public static void Try(boolean alphaSide, int[] parameters) {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
-        Algorithm010 alphaAlgorithm = new Algorithm010(true, isEnemySecret);
+        Algorithm011 alphaAlgorithm = new Algorithm011(true, isEnemySecret);
         switch ((int) (Math.random() * 4)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(true, 3);
@@ -53,7 +53,7 @@ public class DebugPlay {
                 break;
         }
 
-        Algorithm002 bravoAlgorithm = new Algorithm002(false, isEnemySecret);
+        Algorithm010 bravoAlgorithm = new Algorithm010(false, isEnemySecret);
         switch ((int) (Math.random() * 4)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(false, 3);
