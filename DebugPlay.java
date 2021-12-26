@@ -25,7 +25,7 @@ public class DebugPlay {
     public static void Try(boolean alphaSide, int[] parameters) {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
-        Algorithm009 alphaAlgorithm = new Algorithm009(true, isEnemySecret);
+        Algorithm010 alphaAlgorithm = new Algorithm010(true, isEnemySecret);
         switch ((int) (Math.random() * 4)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(true, 3);
@@ -53,7 +53,7 @@ public class DebugPlay {
                 break;
         }
 
-        Algorithm010 bravoAlgorithm = new Algorithm010(false, isEnemySecret);
+        Algorithm002 bravoAlgorithm = new Algorithm002(false, isEnemySecret);
         switch ((int) (Math.random() * 4)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(false, 3);
@@ -111,10 +111,8 @@ public class DebugPlay {
     public static void ParameterDeepTry() {
         HashMap<int[], Integer> parameterWinCounts = new HashMap<int[], Integer>();
         for (int parameter1 = 0; parameter1 <= 15; parameter1 += 1) {
-            for (int parameter2 = 0; parameter2 <= 15; parameter2 += 1) {
-                parameterWinCounts.put(new int[] { parameter1, parameter2 },
-                        DeepTry(new int[] { parameter1, parameter2 }));
-            }
+            parameterWinCounts.put(new int[] { parameter1 },
+                    DeepTry(new int[] { parameter1 }));
         }
         java.util.stream.Stream<Map.Entry<int[], Integer>> sortedParameterWinCounts = parameterWinCounts.entrySet()
                 .stream()
