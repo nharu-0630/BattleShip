@@ -180,11 +180,6 @@ class Algorithm009 extends Interface {
                         points.add(point);
                     }
                 }
-                if (points.size() != 0 && Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).GetHp(alphaSide) == 3) {
-                    DoMove(Board.GetLastAttackPoint(!alphaSide), Board.GetRandomPoint(
-                            new ArrayList<Point>(Board.GetPointValues(alphaSide, points, 1, -1).keySet())));
-                    return;
-                }
             }
             // 自軍が波高しした = 攻撃したポイントの逆評価値を0に設定する, 周囲のポイントに1を追加する
             if (Board.GetLastAttackResult(!alphaSide).contains(1)) {
