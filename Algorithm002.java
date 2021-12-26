@@ -5,7 +5,7 @@ class Algorithm002 extends Interface {
         super(alphaSide, isEnemySecret);
     }
 
-    public void SetParameter(double[] parameters) {
+    public void SetParameter(int[] parameters) {
 
     }
 

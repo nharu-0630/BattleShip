@@ -8,24 +8,24 @@ public class DebugPlay {
     public static final int maxTurnCount = 60;
     public static final int deepTryCount = 1000;
     // public static final int deepTryCount = 100;
-    public static final boolean isVisibleLog = true;
-    // public static final boolean isVisibleLog = false;
+    // public static final boolean isVisibleLog = true;
+    public static final boolean isVisibleLog = false;
     public static final boolean isAttackResultArray = false;
     public static final boolean isEnemySecret = false;
-    public static final boolean isStepWait = true;
-    // public static final boolean isStepWait = false;
+    // public static final boolean isStepWait = true;
+    public static final boolean isStepWait = false;
 
     public static void main(String args[]) {
         // ParameterDeepTry();
-        // DeepTry(null);
-        Try(true, null);
+        DeepTry(null);
+        // Try(true, null);
         // Try(false, null);
     }
 
     public static void Try(boolean alphaSide, int[] parameters) {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
-        Algorithm008 alphaAlgorithm = new Algorithm008(true, isEnemySecret);
+        Algorithm009 alphaAlgorithm = new Algorithm009(true, isEnemySecret);
         switch ((int) (Math.random() * 4)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(true, 3);
@@ -53,7 +53,7 @@ public class DebugPlay {
                 break;
         }
 
-        Algorithm009 bravoAlgorithm = new Algorithm009(false, isEnemySecret);
+        Algorithm010 bravoAlgorithm = new Algorithm010(false, isEnemySecret);
         switch ((int) (Math.random() * 4)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(false, 3);

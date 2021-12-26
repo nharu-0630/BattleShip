@@ -7,8 +7,8 @@ class Algorithm003 extends Interface {
 
     private double attackProbability;
 
-    public void SetParameter(double[] parameters) {
-        attackProbability = parameters[0];
+    public void SetParameter(int[] parameters) {
+        attackProbability = parameters[0] / 100;
     }
 
     public void Think() {

@@ -6,7 +6,7 @@ class Algorithm001 extends Interface {
     }
 
     public void SetParameter(int[] parameters) {
-        
+
     }
 
     public void Think() {
