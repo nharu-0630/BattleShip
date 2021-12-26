@@ -219,10 +219,15 @@ class Algorithm011 extends Interface {
             // 自軍が命中した = 命中したポイントの逆評価値を10に設定する
             if (Board.GetLastAttackResult(!alphaSide).contains(2)) {
                 Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValue(alphaSide, 1, 10);
-                ArrayList<Point> points = Board.GetFilterMoveEnablePoints(alphaSide,
-                        Board.GetLastAttackPoint(!alphaSide),
-                        Board.GetCrossPoints(Board.GetLastAttackPoint(!alphaSide), 2, 2));
 
+                // ArrayList<Point> points = Board.GetFilterMoveEnablePoints(alphaSide,
+                // Board.GetLastAttackPoint(!alphaSide),
+                // Board.GetCrossPoints(Board.GetLastAttackPoint(!alphaSide), 1, 2));
+                // if (Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).GetHp(alphaSide) == 2
+                // && points.size() != 0) {
+                // DoMove(Board.GetLastAttackPoint(!alphaSide), Board.GetRandomPoint(points));
+                // return;
+                // }
             }
             // 自軍が波高しした = 攻撃したポイントの逆評価値を0に設定する, 周囲のポイントに1を追加する
             if (Board.GetLastAttackResult(!alphaSide).contains(1)) {
