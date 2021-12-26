@@ -26,7 +26,7 @@ public class DebugPlay {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
         Algorithm011 alphaAlgorithm = new Algorithm011(true, isEnemySecret);
-        switch ((int) (Math.random() * 4)) {
+        switch ((int) (Math.random() * 2)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(true, 3);
                 Board.GetCell(3, 1).SetHp(true, 3);
@@ -39,22 +39,22 @@ public class DebugPlay {
                 Board.GetCell(3, 3).SetHp(true, 3);
                 Board.GetCell(0, 4).SetHp(true, 3);
                 break;
-            case 2:
-                Board.GetCell(1, 1).SetHp(true, 3);
-                Board.GetCell(1, 3).SetHp(true, 3);
-                Board.GetCell(3, 1).SetHp(true, 3);
-                Board.GetCell(3, 3).SetHp(true, 3);
-                break;
-            case 3:
-                Board.GetCell(2, 1).SetHp(true, 3);
-                Board.GetCell(2, 3).SetHp(true, 3);
-                Board.GetCell(1, 2).SetHp(true, 3);
-                Board.GetCell(3, 2).SetHp(true, 3);
-                break;
+            // case 2:
+            // Board.GetCell(1, 1).SetHp(true, 3);
+            // Board.GetCell(1, 3).SetHp(true, 3);
+            // Board.GetCell(3, 1).SetHp(true, 3);
+            // Board.GetCell(3, 3).SetHp(true, 3);
+            // break;
+            // case 3:
+            // Board.GetCell(2, 1).SetHp(true, 3);
+            // Board.GetCell(2, 3).SetHp(true, 3);
+            // Board.GetCell(1, 2).SetHp(true, 3);
+            // Board.GetCell(3, 2).SetHp(true, 3);
+            // break;
         }
 
-        Algorithm010 bravoAlgorithm = new Algorithm010(false, isEnemySecret);
-        switch ((int) (Math.random() * 4)) {
+        Algorithm011 bravoAlgorithm = new Algorithm011(false, isEnemySecret);
+        switch ((int) (Math.random() * 2)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(false, 3);
                 Board.GetCell(3, 1).SetHp(false, 3);
@@ -67,18 +67,18 @@ public class DebugPlay {
                 Board.GetCell(3, 3).SetHp(false, 3);
                 Board.GetCell(0, 4).SetHp(false, 3);
                 break;
-            case 2:
-                Board.GetCell(1, 1).SetHp(false, 3);
-                Board.GetCell(1, 3).SetHp(false, 3);
-                Board.GetCell(3, 1).SetHp(false, 3);
-                Board.GetCell(3, 3).SetHp(false, 3);
-                break;
-            case 3:
-                Board.GetCell(2, 1).SetHp(false, 3);
-                Board.GetCell(2, 3).SetHp(false, 3);
-                Board.GetCell(1, 2).SetHp(false, 3);
-                Board.GetCell(3, 2).SetHp(false, 3);
-                break;
+            // case 2:
+            // Board.GetCell(1, 1).SetHp(false, 3);
+            // Board.GetCell(1, 3).SetHp(false, 3);
+            // Board.GetCell(3, 1).SetHp(false, 3);
+            // Board.GetCell(3, 3).SetHp(false, 3);
+            // break;
+            // case 3:
+            // Board.GetCell(2, 1).SetHp(false, 3);
+            // Board.GetCell(2, 3).SetHp(false, 3);
+            // Board.GetCell(1, 2).SetHp(false, 3);
+            // Board.GetCell(3, 2).SetHp(false, 3);
+            // break;
         }
 
         alphaAlgorithm.SetParameter(parameters);
