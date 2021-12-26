@@ -111,6 +111,7 @@ public class ReleasePlay {
                     System.out.print(ConsoleColors.RESET);
                     switch (scanner.nextLine()) {
                         case "a":
+                            System.out.print(ConsoleColors.YELLOW);
                             System.out.print("ポイント: ");
                             System.out.print(ConsoleColors.RESET);
                             Point point = new Point(scanner.nextLine());
@@ -131,6 +132,7 @@ public class ReleasePlay {
                             }
                             break;
                         case "m":
+                            System.out.print(ConsoleColors.YELLOW);
                             System.out.print("ベクトル: ");
                             System.out.print(ConsoleColors.RESET);
                             point = new Point(scanner.nextLine());
