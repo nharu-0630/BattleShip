@@ -634,6 +634,24 @@ class Board {
     // }
     // }
 
+    public static void SetRandom4Points(boolean alphaSide) {
+        for (int i = 0; i < 4; i++) {
+            LOOP: while (true) {
+                int x = (int) (Math.random() * Board.GetBoardSize());
+                int y = (int) (Math.random() * Board.GetBoardSize());
+                if (!Board.GetCell(x, y).IsAlive(alphaSide)) {
+                    for (Point point : Board.GetRoundPoints(new Point(x, y))) {
+                        if (Board.GetCell(point).IsAlive(alphaSide)) {
+                            continue LOOP;
+                        }
+                    }
+                    Board.GetCell(x, y).SetHp(alphaSide, 3);
+                    break;
+                }
+            }
+        }
+    }
+
     public static ArrayList<Point> GetMaxValuePoints(boolean alphaSide, boolean isEnableAttack, int layer) {
         HashMap<Point, Integer> pointsValue = new HashMap<Point, Integer>();
         for (int x = 0; x < Board.GetBoardSize(); x++) {

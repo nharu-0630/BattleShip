@@ -12,30 +12,9 @@ class Algorithm011 extends Interface {
     private Point preparePoint = null;
 
     private int enemyMoveCount = 0;
-    private int allyNormalAttackCount = 0;
-
-    // [0] = 0
-    // [1] = 346
-    // [3] = 409
-    // [2] = 420
-    // [9] = 422
-    // [8] = 425
-    // [12] = 430
-    // [6] = 431
-    // [10] = 433
-    // [4] = 436
-    // [11] = 440
-    // [13] = 443
-    // [14] = 444
-    // [5] = 449
-    // [15] = 454
-    // [7] = 468
-    private int allyNormalAttackLimit = 7;
 
     public void SetParameter(int[] parameters) {
-        if (parameters != null) {
-            allyNormalAttackLimit = parameters[0];
-        }
+
     }
 
     public void Think() {
@@ -68,6 +47,18 @@ class Algorithm011 extends Interface {
         // 敵軍が移動した = 移動先の可能性があるポイントの評価値に1を追加する
         if (Board.GetLastMoveVector(!alphaSide) != null) {
             enemyMoveCount++;
+            ArrayList<Point> minusPoints = new ArrayList<Point>();
+            for (int x = 0; x < Board.GetBoardSize(); x++) {
+                for (int y = 0; y < Board.GetBoardSize(); y++) {
+                    Point oldPoint = new Point(x, y);
+                    Point newPoint = oldPoint.Plus(Board.GetLastMoveVector(!alphaSide));
+                    if (Board.GetCell(oldPoint).GetValue(alphaSide, 0) == -1
+                            && 0 <= newPoint.x && newPoint.x <= Board.GetBoardSize() - 1
+                            && 0 <= newPoint.y && newPoint.y <= Board.GetBoardSize() - 1) {
+                        minusPoints.add(newPoint);
+                    }
+                }
+            }
             switch (Board.GetLastMoveVector(!alphaSide).x) {
                 case 2:
                 case 1:
@@ -119,6 +110,9 @@ class Algorithm011 extends Interface {
                         }
                     }
                     break;
+            }
+            for (Point point : minusPoints) {
+                Board.GetCell(point).SetValueForce(alphaSide, 0, -1);
             }
         }
 
@@ -296,20 +290,11 @@ class Algorithm011 extends Interface {
             }
         }
 
-        if (Board.GetMaxValuePoints(alphaSide, true, 0).size() != 0 && allyNormalAttackCount < allyNormalAttackLimit) {
-            allyNormalAttackCount++;
+        if (Board.GetMaxValuePoints(alphaSide, true, 0).size() != 0) {
             DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true, 0)));
             return;
         } else {
-            allyNormalAttackCount = 0;
-            for (Point point : Board.GetShipPoints(alphaSide)) {
-                if (Board.GetFilterMoveEnablePoints(alphaSide, point, Board.GetCrossPoints(point, 1, 2)).size() != 0) {
-                    DoMove(point, Board.GetRandomPoint(
-                            Board.GetFilterMoveEnablePoints(alphaSide, point, Board.GetCrossPoints(point, 1, 2))));
-                    return;
-                }
-            }
+            Board.WriteDisableTurn();
         }
-        Board.WriteDisableTurn();
     }
 }

@@ -10,21 +10,23 @@ public class DebugPlay {
     // public static final int deepTryCount = 100;
     public static final boolean isSaveLog = true;
     // public static final boolean isSaveLog = false;
-    // public static final boolean isVisibleLog = true;
-    public static final boolean isVisibleLog = false;
+    public static final boolean isVisibleLog = true;
+    // public static final boolean isVisibleLog = false;
     public static final boolean isAttackResultArray = false;
     public static final boolean isEnemySecret = false;
-    // public static final boolean isStepWait = true;
-    public static final boolean isStepWait = false;
+    public static final boolean isStepWait = true;
+    // public static final boolean isStepWait = false;
 
     public static int alphaAlgorithmNumber = 10;
     public static int bravoAlgorithmNumber = 10;
 
     public static void main(String args[]) {
         // ParameterDeepTry();
-        DeepTry(null);
-        // Try(true, null);
-        // Try(false, null);
+
+        // DeepTry(null);
+
+        Try(true, null);
+        Try(false, null);
 
         // for (int i = 1; i <= 11; i++) {
         // for (int j = i; j <= 11; j++) {
@@ -69,32 +71,33 @@ public class DebugPlay {
         }
 
         AlgorithmSwitcher bravoAlgorithm = new AlgorithmSwitcher(false, isEnemySecret);
-        switch ((int) (Math.random() * 2)) {
-            case 0:
-                Board.GetCell(0, 0).SetHp(false, 3);
-                Board.GetCell(3, 1).SetHp(false, 3);
-                Board.GetCell(1, 3).SetHp(false, 3);
-                Board.GetCell(4, 4).SetHp(false, 3);
-                break;
-            case 1:
-                Board.GetCell(4, 0).SetHp(false, 3);
-                Board.GetCell(1, 1).SetHp(false, 3);
-                Board.GetCell(3, 3).SetHp(false, 3);
-                Board.GetCell(0, 4).SetHp(false, 3);
-                break;
-            // case 2:
-            // Board.GetCell(1, 1).SetHp(false, 3);
-            // Board.GetCell(1, 3).SetHp(false, 3);
-            // Board.GetCell(3, 1).SetHp(false, 3);
-            // Board.GetCell(3, 3).SetHp(false, 3);
-            // break;
-            // case 3:
-            // Board.GetCell(2, 1).SetHp(false, 3);
-            // Board.GetCell(2, 3).SetHp(false, 3);
-            // Board.GetCell(1, 2).SetHp(false, 3);
-            // Board.GetCell(3, 2).SetHp(false, 3);
-            // break;
-        }
+        Board.SetRandom4Points(false);
+        // switch ((int) (Math.random() * 2)) {
+        // case 0:
+        // Board.GetCell(0, 0).SetHp(false, 3);
+        // Board.GetCell(3, 1).SetHp(false, 3);
+        // Board.GetCell(1, 3).SetHp(false, 3);
+        // Board.GetCell(4, 4).SetHp(false, 3);
+        // break;
+        // case 1:
+        // Board.GetCell(4, 0).SetHp(false, 3);
+        // Board.GetCell(1, 1).SetHp(false, 3);
+        // Board.GetCell(3, 3).SetHp(false, 3);
+        // Board.GetCell(0, 4).SetHp(false, 3);
+        // break;
+        // // case 2:
+        // // Board.GetCell(1, 1).SetHp(false, 3);
+        // // Board.GetCell(1, 3).SetHp(false, 3);
+        // // Board.GetCell(3, 1).SetHp(false, 3);
+        // // Board.GetCell(3, 3).SetHp(false, 3);
+        // // break;
+        // // case 3:
+        // // Board.GetCell(2, 1).SetHp(false, 3);
+        // // Board.GetCell(2, 3).SetHp(false, 3);
+        // // Board.GetCell(1, 2).SetHp(false, 3);
+        // // Board.GetCell(3, 2).SetHp(false, 3);
+        // // break;
+        // }
 
         alphaAlgorithm.SetAlgorithm(alphaAlgorithmNumber);
         bravoAlgorithm.SetAlgorithm(bravoAlgorithmNumber);
