@@ -9,11 +9,12 @@ public class ReleasePlay {
     public static final boolean isAttackResultArray = false;
     public static final boolean isEnemySecret = true;
 
+    public static int alphaAlgorithmNumber = 11;
+
     public static void main(String args[]) {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
-        Algorithm010 alphaAlgorithm = new Algorithm010(true, isEnemySecret);
-        alphaAlgorithm.SetParameter(null);
+        AlgorithmSwitcher alphaAlgorithm = new AlgorithmSwitcher(true, isEnemySecret);
         switch ((int) (Math.random() * 3)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(true, 3);
@@ -35,14 +36,17 @@ public class ReleasePlay {
                 break;
         }
 
+        alphaAlgorithm.SetAlgorithm(alphaAlgorithmNumber);
+        alphaAlgorithm.SetParameter(null);
+
         Logger.CreateLogger(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(LocalDateTime.now()) + "-"
-                + alphaAlgorithm.getClass().getCanonicalName() + "-" + "AlgorithmHuman" + ".json", true);
+                + String.format("%03d", alphaAlgorithmNumber) + "-" + "Release" + ".json", true);
 
         System.out.print(ConsoleColors.RED);
-        System.out.println("┌" + "─".repeat(18) + "┬" + "─".repeat(28) + "┬" + "─".repeat(56) + "┐");
-        System.out.println("│   " + alphaAlgorithm.getClass().getCanonicalName()
+        System.out.println("┌" + "─".repeat(9) + "┬" + "─".repeat(28) + "┬" + "─".repeat(40) + "┐");
+        System.out.println("│   " + String.format("%03d", alphaAlgorithmNumber)
                 + "   │         BattleShip         │   " + Logger.GetFileName() + "   │");
-        System.out.println("└" + "─".repeat(18) + "┴" + "─".repeat(28) + "┴" + "─".repeat(56) + "┘");
+        System.out.println("└" + "─".repeat(9) + "┴" + "─".repeat(28) + "┴" + "─".repeat(40) + "┘");
         System.out.print(ConsoleColors.RESET);
 
         boolean alphaSide = true;

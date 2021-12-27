@@ -8,12 +8,17 @@ public class DebugPlay {
     public static final int maxTurnCount = 60;
     public static final int deepTryCount = 1000;
     // public static final int deepTryCount = 100;
+    // public static final boolean isSaveLog = true;
+    public static final boolean isSaveLog = false;
     // public static final boolean isVisibleLog = true;
     public static final boolean isVisibleLog = false;
     public static final boolean isAttackResultArray = false;
     public static final boolean isEnemySecret = false;
     // public static final boolean isStepWait = true;
     public static final boolean isStepWait = false;
+
+    public static int alphaAlgorithmNumber = 11;
+    public static int bravoAlgorithmNumber = 11;
 
     public static void main(String args[]) {
         // ParameterDeepTry();
@@ -25,7 +30,7 @@ public class DebugPlay {
     public static void Try(boolean alphaSide, int[] parameters) {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
-        Algorithm011 alphaAlgorithm = new Algorithm011(true, isEnemySecret);
+        AlgorithmSwitcher alphaAlgorithm = new AlgorithmSwitcher(true, isEnemySecret);
         switch ((int) (Math.random() * 2)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(true, 3);
@@ -53,7 +58,7 @@ public class DebugPlay {
             // break;
         }
 
-        Algorithm011 bravoAlgorithm = new Algorithm011(false, isEnemySecret);
+        AlgorithmSwitcher bravoAlgorithm = new AlgorithmSwitcher(false, isEnemySecret);
         switch ((int) (Math.random() * 2)) {
             case 0:
                 Board.GetCell(0, 0).SetHp(false, 3);
@@ -81,12 +86,16 @@ public class DebugPlay {
             // break;
         }
 
+        alphaAlgorithm.SetAlgorithm(alphaAlgorithmNumber);
+        bravoAlgorithm.SetAlgorithm(bravoAlgorithmNumber);
+
         alphaAlgorithm.SetParameter(parameters);
         bravoAlgorithm.SetParameter(null);
 
         Logger.CreateLogger(
-                DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(LocalDateTime.now()) + "-" + alphaAlgorithm
-                        .getClass().getCanonicalName() + "-" + bravoAlgorithm.getClass().getCanonicalName(),
+                DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(LocalDateTime.now()) + "-"
+                        + String.format("%03d", alphaAlgorithmNumber) + "-"
+                        + String.format("%03d", bravoAlgorithmNumber),
                 false);
 
         while (Board.IsContinue(false)) {
@@ -105,7 +114,9 @@ public class DebugPlay {
             }
         }
 
-        Logger.SaveLogger();
+        if (isSaveLog) {
+            Logger.SaveLogger();
+        }
     }
 
     public static void ParameterDeepTry() {
