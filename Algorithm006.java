@@ -196,7 +196,8 @@ class Algorithm006 extends Interface {
             preparePoint = null;
             return;
         }
-        if (Board.GetCell(Board.GetMaxValuePoints(alphaSide, false, 0).get(0)).GetValue(alphaSide, 0) > 5) {
+        if (Board.GetCell(Board.GetMaxValuePoints(alphaSide, false, 0).get(0)).GetValue(alphaSide, 0) > 5 && Board
+                .GetMaxValuePoints(alphaSide, true, 0).size() != 0) {
             if (Board.GetCell(Board.GetMaxValuePoints(alphaSide, false, 0).get(0)).GetValue(alphaSide, 0) != Board
                     .GetCell(Board.GetMaxValuePoints(alphaSide, true, 0).get(0)).GetValue(alphaSide, 0)) {
                 preparePoint = Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, false, 0));
@@ -242,8 +243,18 @@ class Algorithm006 extends Interface {
             }
         }
 
-        DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true, 0)));
-        return;
+        if (Board.GetMaxValuePoints(alphaSide, true, 0).size() != 0) {
+            DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true, 0)));
+            return;
+        } else {
+            for (Point point : Board.GetShipPoints(alphaSide)) {
+                if (Board.GetFilterMoveEnablePoints(alphaSide, point, Board.GetCrossPoints(point, 1, 2)).size() != 0) {
+                    DoMove(point, Board.GetRandomPoint(
+                            Board.GetFilterMoveEnablePoints(alphaSide, point, Board.GetCrossPoints(point, 1, 2))));
+                    return;
+                }
+            }
+        }
 
         // Board.WriteDisableTurn();
     }

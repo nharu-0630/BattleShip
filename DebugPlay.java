@@ -22,9 +22,19 @@ public class DebugPlay {
 
     public static void main(String args[]) {
         // ParameterDeepTry();
-        DeepTry(null);
+        // DeepTry(null);
         // Try(true, null);
         // Try(false, null);
+
+        for (int i = 1; i <= 11; i++) {
+            for (int j = i; j <= 11; j++) {
+                alphaAlgorithmNumber = i;
+                bravoAlgorithmNumber = j;
+                if (i != 3 && j != 3) {
+                    DeepTry(null);
+                }
+            }
+        }
     }
 
     public static void Try(boolean alphaSide, int[] parameters) {
@@ -120,12 +130,12 @@ public class DebugPlay {
     }
 
     public static void ParameterDeepTry() {
-        HashMap<int[], Integer> parameterWinCounts = new HashMap<int[], Integer>();
+        HashMap<int[], Double> parameterWinCounts = new HashMap<int[], Double>();
         for (int parameter1 = 0; parameter1 <= 15; parameter1 += 1) {
             parameterWinCounts.put(new int[] { parameter1 },
-                    DeepTry(new int[] { parameter1 }));
+                    DeepTry(new int[] { parameter1 })[0]);
         }
-        java.util.stream.Stream<Map.Entry<int[], Integer>> sortedParameterWinCounts = parameterWinCounts.entrySet()
+        java.util.stream.Stream<Map.Entry<int[], Double>> sortedParameterWinCounts = parameterWinCounts.entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue());
         sortedParameterWinCounts
@@ -133,7 +143,7 @@ public class DebugPlay {
                         .println(Arrays.toString(entry.getKey()) + " = " + entry.getValue()));
     }
 
-    public static int DeepTry(int[] parameters) {
+    public static double[] DeepTry(int[] parameters) {
         int alphaWinCount = 0;
         int bravoWinCount = 0;
         for (int i = 0; i < deepTryCount; i++) {
@@ -144,15 +154,24 @@ public class DebugPlay {
                 bravoWinCount++;
             }
         }
-        System.out.println(
-                "α勝利数 = " + alphaWinCount + " (" + Math.round(alphaWinCount * 100.0 / deepTryCount)
-                        + "%)");
-        System.out.println(
-                "β勝利数 = " + bravoWinCount + " (" + Math.round(bravoWinCount * 100.0 / deepTryCount)
-                        + "%)");
-        System.out.println("引き分け数 = " + (deepTryCount - alphaWinCount - bravoWinCount) + " ("
-                + Math.round((deepTryCount - alphaWinCount - bravoWinCount) * 100.0 / deepTryCount)
-                + "%)");
-        return alphaWinCount;
+        // System.out.println(
+        // "α勝利数 = " + alphaWinCount + " (" + Math.round(alphaWinCount * 100.0 /
+        // deepTryCount)
+        // + "%)");
+        // System.out.println(
+        // "β勝利数 = " + bravoWinCount + " (" + Math.round(bravoWinCount * 100.0 /
+        // deepTryCount)
+        // + "%)");
+        // System.out.println("引き分け数 = " + (deepTryCount - alphaWinCount -
+        // bravoWinCount) + " ("
+        // + Math.round((deepTryCount - alphaWinCount - bravoWinCount) * 100.0 /
+        // deepTryCount)
+        // + "%)");
+        double[] result = new double[] { (alphaWinCount * 100.0 / deepTryCount),
+                (bravoWinCount * 100.0 / deepTryCount),
+                ((deepTryCount - alphaWinCount - bravoWinCount) * 100.0 / deepTryCount) };
+        System.out.println(String.format("%03d", alphaAlgorithmNumber) + "-"
+                + String.format("%03d", bravoAlgorithmNumber) + " = " + Arrays.toString(result));
+        return result;
     }
 }
