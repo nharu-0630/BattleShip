@@ -248,5 +248,8 @@ class Algorithm007 extends Interface {
         }
 
         DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true, 0)));
+        return;
+
+        // Board.WriteDisableTurn();
     }
 }

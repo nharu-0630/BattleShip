@@ -310,5 +310,7 @@ class Algorithm011 extends Interface {
                 }
             }
         }
+
+        Board.WriteDisableTurn();
     }
 }

@@ -272,5 +272,7 @@ class Algorithm008 extends Interface {
 
         // }
         // return;
+
+        Board.WriteDisableTurn();
     }
 }

@@ -386,6 +386,13 @@ class Board {
         }
     }
 
+    public static void WriteDisableTurn() {
+        System.out.print(ConsoleColors.RED_BOLD);
+        System.out.println("【警告】無効ターン");
+        System.out.println(Logger.GetFileName() + " : " + Board.GetTurnCount());
+        System.out.print(ConsoleColors.RESET);
+    }
+
     public static boolean IsContinue(boolean interrupt) {
         if (!(!alphaWin && !bravoWin)) {
             return false;
@@ -835,8 +842,10 @@ class Board {
             Logger.AddLogger(alphaSide);
             return true;
         } else {
+            System.out.print(ConsoleColors.RED_BOLD);
             System.out.println("【警告】移動拒否");
             System.out.println(Logger.GetFileName() + " : " + Board.GetTurnCount());
+            System.out.print(ConsoleColors.RESET);
             WriteLogLine("移動】拒否されました");
             Logger.AddLogger(alphaSide);
             return false;
@@ -962,8 +971,10 @@ class Board {
             Logger.AddLogger(alphaSide);
             return true;
         } else {
+            System.out.print(ConsoleColors.RED_BOLD);
             System.out.println("【警告】攻撃拒否");
             System.out.println(Logger.GetFileName() + " : " + Board.GetTurnCount());
+            System.out.print(ConsoleColors.RESET);
             WriteLogLine("攻撃】 拒否されました");
             if (alphaSide) {
                 lastAlphaAttackPoint = null;

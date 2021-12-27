@@ -129,5 +129,7 @@ class Algorithm003 extends Interface {
             DoMove(oldPoint, Board.GetRandomPoint(points));
             return;
         }
+
+        // Board.WriteDisableTurn();
     }
 }
