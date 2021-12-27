@@ -634,22 +634,43 @@ class Board {
     // }
     // }
 
-    public static void SetRandom4Points(boolean alphaSide) {
-        for (int i = 0; i < 4; i++) {
+    public static void SetRandom4Points(boolean alphaSide, boolean roundTrim, boolean cornerTrim) {
+        for (Point point : GetRandomPoints(4, roundTrim, cornerTrim)) {
+            GetCell(point).SetHp(alphaSide, 3);
+        }
+    }
+
+    public static ArrayList<Point> GetRandomPoints(int count, boolean roundTrim,
+            boolean cornerTrim) {
+        ArrayList<Point> points = new ArrayList<Point>();
+        for (int i = 0; i < count; i++) {
             LOOP: while (true) {
                 int x = (int) (Math.random() * Board.GetBoardSize());
                 int y = (int) (Math.random() * Board.GetBoardSize());
-                if (!Board.GetCell(x, y).IsAlive(alphaSide)) {
-                    for (Point point : Board.GetRoundPoints(new Point(x, y))) {
-                        if (Board.GetCell(point).IsAlive(alphaSide)) {
-                            continue LOOP;
+                for (Point point : points) {
+                    if (point.Equal(new Point(x, y))) {
+                        continue LOOP;
+                    }
+                }
+                if (roundTrim) {
+                    for (Point roundPoint : Board.GetRoundPoints(new Point(x, y))) {
+                        for (Point point : points) {
+                            if (point.Equal(roundPoint)) {
+                                continue LOOP;
+                            }
                         }
                     }
-                    Board.GetCell(x, y).SetHp(alphaSide, 3);
-                    break;
                 }
+                if (cornerTrim) {
+                    if ((x == 0 || x == Board.GetBoardSize() - 1) && (y == 0 || y == Board.GetBoardSize() - 1)) {
+                        continue LOOP;
+                    }
+                }
+                points.add(new Point(x, y));
+                break;
             }
         }
+        return points;
     }
 
     public static ArrayList<Point> GetMaxValuePoints(boolean alphaSide, boolean isEnableAttack, int layer) {

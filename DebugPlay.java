@@ -26,7 +26,7 @@ public class DebugPlay {
         // DeepTry(null);
 
         Try(true, null);
-        Try(false, null);
+        // Try(false, null);
 
         // for (int i = 1; i <= 11; i++) {
         // for (int j = i; j <= 11; j++) {
@@ -71,7 +71,7 @@ public class DebugPlay {
         }
 
         AlgorithmSwitcher bravoAlgorithm = new AlgorithmSwitcher(false, isEnemySecret);
-        Board.SetRandom4Points(false);
+        Board.SetRandom4Points(false, true, true);
         // switch ((int) (Math.random() * 2)) {
         // case 0:
         // Board.GetCell(0, 0).SetHp(false, 3);
