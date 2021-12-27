@@ -9,7 +9,7 @@ public class ReleasePlay {
     public static final boolean isAttackResultArray = false;
     public static final boolean isEnemySecret = true;
 
-    public static int alphaAlgorithmNumber = 11;
+    public static int alphaAlgorithmNumber = 10;
 
     public static void main(String args[]) {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);

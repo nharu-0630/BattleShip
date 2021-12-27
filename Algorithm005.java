@@ -202,9 +202,18 @@ class Algorithm005 extends Interface {
             }
         }
 
-        DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true, 0)));
-        return;
-
-        // Board.WriteDisableTurn();
+        if (Board.GetMaxValuePoints(alphaSide, true, 0).size() != 0) {
+            DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true, 0)));
+            return;
+        } else {
+            for (Point point : Board.GetShipPoints(alphaSide)) {
+                if (Board.GetFilterMoveEnablePoints(alphaSide, point, Board.GetCrossPoints(point, 1, 2)).size() != 0) {
+                    DoMove(point, Board.GetRandomPoint(
+                            Board.GetFilterMoveEnablePoints(alphaSide, point, Board.GetCrossPoints(point, 1, 2))));
+                    return;
+                }
+            }
+        }
+        Board.WriteDisableTurn();
     }
 }

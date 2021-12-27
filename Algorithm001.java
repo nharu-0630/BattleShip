@@ -122,9 +122,12 @@ class Algorithm001 extends Interface {
                 }
             }
         }
-        DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true, 0)));
-        return;
 
-        // Board.WriteDisableTurn();
+        if (Board.GetMaxValuePoints(alphaSide, true, 0).size() != 0) {
+            DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true, 0)));
+            return;
+        } else {
+            Board.WriteDisableTurn();
+        }
     }
 }

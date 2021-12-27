@@ -8,8 +8,8 @@ public class DebugPlay {
     public static final int maxTurnCount = 60;
     public static final int deepTryCount = 1000;
     // public static final int deepTryCount = 100;
-    // public static final boolean isSaveLog = true;
-    public static final boolean isSaveLog = false;
+    public static final boolean isSaveLog = true;
+    // public static final boolean isSaveLog = false;
     // public static final boolean isVisibleLog = true;
     public static final boolean isVisibleLog = false;
     public static final boolean isAttackResultArray = false;
@@ -17,24 +17,24 @@ public class DebugPlay {
     // public static final boolean isStepWait = true;
     public static final boolean isStepWait = false;
 
-    public static int alphaAlgorithmNumber = 11;
-    public static int bravoAlgorithmNumber = 11;
+    public static int alphaAlgorithmNumber = 10;
+    public static int bravoAlgorithmNumber = 10;
 
     public static void main(String args[]) {
         // ParameterDeepTry();
-        // DeepTry(null);
+        DeepTry(null);
         // Try(true, null);
         // Try(false, null);
 
-        for (int i = 1; i <= 11; i++) {
-            for (int j = i; j <= 11; j++) {
-                alphaAlgorithmNumber = i;
-                bravoAlgorithmNumber = j;
-                if (i != 3 && j != 3) {
-                    DeepTry(null);
-                }
-            }
-        }
+        // for (int i = 1; i <= 11; i++) {
+        // for (int j = i; j <= 11; j++) {
+        // alphaAlgorithmNumber = i;
+        // bravoAlgorithmNumber = j;
+        // if (i != 3 && j != 3) {
+        // DeepTry(null);
+        // }
+        // }
+        // }
     }
 
     public static void Try(boolean alphaSide, int[] parameters) {

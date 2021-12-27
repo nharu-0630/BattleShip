@@ -255,7 +255,6 @@ class Algorithm006 extends Interface {
                 }
             }
         }
-
-        // Board.WriteDisableTurn();
+        Board.WriteDisableTurn();
     }
 }

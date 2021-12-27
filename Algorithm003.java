@@ -115,7 +115,7 @@ class Algorithm003 extends Interface {
             }
         }
         Random random = new Random();
-        if (random.nextDouble() <= attackProbability) {
+        if (random.nextDouble() <= attackProbability && Board.GetMaxValuePoints(alphaSide, true, 0).size() != 0) {
             DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true, 0)));
             return;
         } else {
@@ -126,10 +126,12 @@ class Algorithm003 extends Interface {
                     points.add(point);
                 }
             }
-            DoMove(oldPoint, Board.GetRandomPoint(points));
-            return;
+            if (points.size() != 0) {
+                DoMove(oldPoint, Board.GetRandomPoint(points));
+                return;
+            } else {
+                Board.WriteDisableTurn();
+            }
         }
-
-        // Board.WriteDisableTurn();
     }
 }
