@@ -44,32 +44,6 @@ public class DebugPlay {
 
         AlgorithmSwitcher alphaAlgorithm = new AlgorithmSwitcher(true, isEnemySecret);
         Board.SetRandom4Points(true, true, true);
-        // switch ((int) (Math.random() * 2)) {
-        // case 0:
-        // Board.GetCell(0, 0).SetHp(true, 3);
-        // Board.GetCell(3, 1).SetHp(true, 3);
-        // Board.GetCell(1, 3).SetHp(true, 3);
-        // Board.GetCell(4, 4).SetHp(true, 3);
-        // break;
-        // case 1:
-        // Board.GetCell(4, 0).SetHp(true, 3);
-        // Board.GetCell(1, 1).SetHp(true, 3);
-        // Board.GetCell(3, 3).SetHp(true, 3);
-        // Board.GetCell(0, 4).SetHp(true, 3);
-        // break;
-        // // case 2:
-        // // Board.GetCell(1, 1).SetHp(true, 3);
-        // // Board.GetCell(1, 3).SetHp(true, 3);
-        // // Board.GetCell(3, 1).SetHp(true, 3);
-        // // Board.GetCell(3, 3).SetHp(true, 3);
-        // // break;
-        // // case 3:
-        // // Board.GetCell(2, 1).SetHp(true, 3);
-        // // Board.GetCell(2, 3).SetHp(true, 3);
-        // // Board.GetCell(1, 2).SetHp(true, 3);
-        // // Board.GetCell(3, 2).SetHp(true, 3);
-        // // break;
-        // }
 
         AlgorithmSwitcher bravoAlgorithm = new AlgorithmSwitcher(false, isEnemySecret);
         Board.SetRandom4Points(false, true, true);
