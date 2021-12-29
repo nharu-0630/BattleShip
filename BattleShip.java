@@ -76,6 +76,24 @@ class Cell {
         }
     }
 
+    public void AddValue(boolean alphaSide, int layer, int value) {
+        if (alphaSide) {
+            while (layer >= alphaValues.size()) {
+                alphaValues.add(0);
+            }
+            if (alphaValues.get(layer) >= 0) {
+                alphaValues.set(layer, GetValue(alphaSide, layer) + value);
+            }
+        } else {
+            while (layer >= bravoValues.size()) {
+                bravoValues.add(0);
+            }
+            if (bravoValues.get(layer) >= 0) {
+                bravoValues.set(layer, GetValue(alphaSide, layer) + value);
+            }
+        }
+    }
+
     public void SetValueForce(boolean alphaSide, int layer, int value) {
         if (alphaSide) {
             while (layer >= alphaValues.size()) {
@@ -408,7 +426,7 @@ class Board {
             bravoSumHp += GetCell(point).GetHp(false);
         }
         if (!interrupt) {
-            SetTurnCount();
+            AddTurnCount();
         }
 
         WriteLog(ConsoleColors.RED);
@@ -506,7 +524,7 @@ class Board {
         return bravoWin;
     }
 
-    public static void SetTurnCount() {
+    public static void AddTurnCount() {
         turnCount++;
     }
 

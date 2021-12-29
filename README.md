@@ -33,6 +33,8 @@ https://xyzyxjp.github.io/BattleShip/
 | GetValue    | boolean, int      | ArrayList\<Integer\>              | 評価値を取得    | 第2引数`layer`              |
 | GetValues   | boolean           | ArrayList\<ArrayList\<Integer\>\> | 評価値リストを取得 |                          |
 | SetValue    | boolean, int, int |                                   | 評価値を設定    | 第2引数`layer`, 第3引数`value` |
+| AddValue    | boolean, int, int |                                   | 評価値を加算    | 第2引数`layer`, 第3引数`value` |
+| SetValueForce    | boolean, int, int |                                   | 評価値を強制設定    | 第2引数`layer`, 第3引数`value` |
 | SetEnableAttack | boolean, boolean  |                                   | 攻撃の可否を設定  |                          |
 | GetEnableAttack | boolean, boolean  | boolean                           | 攻撃の可否を取得  |                          |
 | IsAlive     | boolean           | boolean                           | 戦艦の生死を取得  |                          |
@@ -91,7 +93,7 @@ https://xyzyxjp.github.io/BattleShip/
 | Interrupt                    |                                        |                           | ターンの強制終了                |                                                |
 | GetAlphaWin                  |                                        | boolean                   | αの勝利を取得                 |                                                |
 | GetBravoWin                  |                                        | boolean                   | βの勝利を取得                 |                                                |
-| SetTurnCount                 |                                        |                           | ターン数に1加算                |                                                |
+| AdTurnCount                 |                                        |                           | ターン数に1加算                |                                                |
 | GetTurnCount*                |                                        | int                       | ターン数を取得                 |                                                |
 | GetBoardSize*                |                                        | int                       | ボードの1辺の長さを取得            |                                                |
 | GetCell*                     | Point                                  | Cell                      | ポイントのセルを取得              |                                                |
