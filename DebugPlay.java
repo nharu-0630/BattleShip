@@ -17,8 +17,8 @@ public class DebugPlay {
     // public static final boolean isStepWait = true;
     public static final boolean isStepWait = false;
 
-    public static int alphaAlgorithmNumber = 12;
-    public static int bravoAlgorithmNumber = 12;
+    public static int alphaAlgorithmNumber = 13;
+    public static int bravoAlgorithmNumber = 13;
 
     public static void main(String args[]) {
         DeepTry(null);
