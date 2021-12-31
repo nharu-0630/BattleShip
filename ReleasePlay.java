@@ -4,11 +4,11 @@ import java.util.*;
 
 public class ReleasePlay {
     public static Scanner scanner = new Scanner(System.in);
-
     public static final boolean isVisibleLog = true;
     public static final boolean isAttackResultArray = false;
     public static final boolean isEnemySecret = true;
 
+    // アルゴリズム
     public static int alphaAlgorithmNumber = 12;
 
     public static void main(String args[]) {

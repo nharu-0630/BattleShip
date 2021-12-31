@@ -4,19 +4,29 @@ import java.util.*;
 
 public class DebugPlay {
     public static Scanner scanner = new Scanner(System.in);
-
-    public static final int maxTurnCount = 60;
-    public static final int deepTryCount = 1000;
-    // public static final int deepTryCount = 100;
-    public static final boolean isSaveLog = true;
-    // public static final boolean isSaveLog = false;
-    // public static final boolean isVisibleLog = true;
-    public static final boolean isVisibleLog = false;
     public static final boolean isAttackResultArray = false;
     public static final boolean isEnemySecret = false;
+
+    // ターン上限数
+    public static final int maxTurnCount = 60;
+
+    // ゲーム試合数
+    public static final int deepTryCount = 1000;
+    // public static final int deepTryCount = 100;
+
+    // ログ保存
+    public static final boolean isSaveLog = true;
+    // public static final boolean isSaveLog = false;
+
+    // ログ表示
+    // public static final boolean isVisibleLog = true;
+    public static final boolean isVisibleLog = false;
+
+    // ステップ待機
     // public static final boolean isStepWait = true;
     public static final boolean isStepWait = false;
 
+    // アルゴリズム
     public static int alphaAlgorithmNumber = 13;
     public static int bravoAlgorithmNumber = 13;
 
