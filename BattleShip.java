@@ -112,7 +112,7 @@ class Cell {
         }
     }
 
-    public void SetEnableAttak(boolean alphaSide, boolean enableAttack) {
+    public void SetEnableAttack(boolean alphaSide, boolean enableAttack) {
         if (enableAttack) {
             if (alphaSide) {
                 if (alphaHp == -1) {
@@ -931,17 +931,17 @@ class Board {
     public static void SearchEnableAttackPoints(boolean alphaSide) {
         for (int x = 0; x < Board.GetBoardSize(); x++) {
             for (int y = 0; y < Board.GetBoardSize(); y++) {
-                Board.GetCell(x, y).SetEnableAttak(alphaSide, false);
+                Board.GetCell(x, y).SetEnableAttack(alphaSide, false);
             }
         }
         for (Point shipPoint : Board.GetShipPoints(alphaSide)) {
             for (Point point : GetRoundPoints(shipPoint)) {
-                Board.GetCell(point).SetEnableAttak(alphaSide, true);
+                Board.GetCell(point).SetEnableAttack(alphaSide, true);
             }
         }
         for (Point shipPoint : Board.GetShipPoints(!alphaSide)) {
             if (Board.GetCell(shipPoint).GetHp(!alphaSide) == 0) {
-                Board.GetCell(shipPoint).SetEnableAttak(alphaSide, false);
+                Board.GetCell(shipPoint).SetEnableAttack(alphaSide, false);
             }
         }
     }
