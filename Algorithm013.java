@@ -182,9 +182,9 @@ class Algorithm013 extends Interface {
                     estimatedAttackedFlag = false;
                     if (Board.IsEnableAttackPoint(alphaSide, estimatedBeforePoint)) {
                         DoAttack(estimatedBeforePoint);
+                        estimatedBeforePoint = null;
+                        return;
                     }
-                    estimatedBeforePoint = null;
-                    return;
                 }
             }
             // 敵軍が波高しした = 攻撃したポイントの評価値を-1に固定する, 周囲のポイントの評価値に1を追加する
