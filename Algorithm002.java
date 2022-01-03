@@ -77,14 +77,8 @@ class Algorithm002 extends Interface {
                     // 敵が移動した
                     // if (enemyCount == 1) {
                     // 敵が1機のみ
-                    if (0 <= Board.GetLastAttackPoint(alphaSide)
-                            .Plus(Board.GetLastMoveVector(!alphaSide)).x
-                            && Board.GetLastAttackPoint(alphaSide)
-                                    .Plus(Board.GetLastMoveVector(!alphaSide)).x <= 4
-                            && 0 <= Board.GetLastAttackPoint(alphaSide)
-                                    .Plus(Board.GetLastMoveVector(!alphaSide)).y
-                            && Board.GetLastAttackPoint(alphaSide)
-                                    .Plus(Board.GetLastMoveVector(!alphaSide)).y <= 4) {
+                    if (Board.GetLastAttackPoint(alphaSide)
+                            .Plus(Board.GetLastMoveVector(!alphaSide)).IsRange()) {
                         Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, 0);
                         Board.GetCell(Board.GetLastAttackPoint(alphaSide)
                                 .Plus(Board.GetLastMoveVector(!alphaSide))).SetValue(alphaSide, 0, 10);

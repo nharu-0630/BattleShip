@@ -154,8 +154,7 @@ class Algorithm011 extends Interface {
                     Point estimatedPoint = Board.GetLastAttackPoint(alphaSide)
                             .Plus(Board.GetLastMoveVector(!alphaSide));
 
-                    if (0 <= estimatedPoint.x && estimatedPoint.x <= 4 && 0 <= estimatedPoint.y
-                            && estimatedPoint.y <= 4) {
+                    if (estimatedPoint.IsRange()) {
                         Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValueForce(alphaSide, 0, 0);
                         Board.GetCell(estimatedPoint).SetValueForce(alphaSide, 0, 20);
                         if (Board.IsEnableAttackPoint(alphaSide, estimatedPoint)) {

@@ -56,6 +56,7 @@ https://xyzyxjp.github.io/BattleShip/
 | Plus     | Point   | Point  | 引数のポイントを加算 |
 | Minus    | Point   | Point  | 引数のポイントを減算 |
 | Equal    | boolean | Point  | 引数のポイントと比較 |
+| IsRange  | boolean |        | ボード内の座標有無 |
 | toString |         | String | (x, y)     |
 
 ### ボード(Board)

@@ -28,7 +28,7 @@ public class DebugPlay {
 
     // アルゴリズム
     public static int alphaAlgorithmNumber = 13;
-    public static int bravoAlgorithmNumber = 13;
+    public static int bravoAlgorithmNumber = 14;
 
     public static void main(String args[]) {
         DeepTry(null);

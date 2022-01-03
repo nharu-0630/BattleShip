@@ -238,6 +238,10 @@ class Point {
         return (x == point.x && y == point.y);
     }
 
+    public boolean IsRange() {
+        return (0 <= x && x < Board.GetBoardSize() && 0 <= y && y < Board.GetBoardSize());
+    }
+
     @Override
     public String toString() {
         return "(" + x + ", " + y + ")";

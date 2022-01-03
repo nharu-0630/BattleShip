@@ -17,6 +17,7 @@ class AlgorithmSwitcher extends Interface {
     private Algorithm011 algorithm011;
     private Algorithm012 algorithm012;
     private Algorithm013 algorithm013;
+    private Algorithm014 algorithm014;
 
     public void SetAlgorithm(int algorithmNumber) {
         this.algorithmNumber = algorithmNumber;
@@ -76,6 +77,10 @@ class AlgorithmSwitcher extends Interface {
                 algorithm013 = new Algorithm013(alphaSide, isEnemySecret);
                 algorithm013.SetParameter(parameters);
                 break;
+            case 14:
+                algorithm014 = new Algorithm014(alphaSide, isEnemySecret);
+                algorithm014.SetParameter(parameters);
+                break;
         }
     }
 
@@ -119,6 +124,9 @@ class AlgorithmSwitcher extends Interface {
                 break;
             case 13:
                 algorithm013.Think();
+                break;
+            case 14:
+                algorithm014.Think();
                 break;
         }
     }
