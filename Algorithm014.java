@@ -50,14 +50,22 @@ class Algorithm014 extends Interface {
         if (Board.GetLastMoveVector(!alphaSide) != null) {
             enemyMoveCount++;
 
-            ArrayList<Point> minusPoints = new ArrayList<Point>();
+            ArrayList<Point> excludePoints = new ArrayList<Point>();
             for (int x = 0; x < Board.BOARD_SIZE; x++) {
                 for (int y = 0; y < Board.BOARD_SIZE; y++) {
+                    Point point = (new Point(x, y)).Plus(Board.GetLastMoveVector(!alphaSide));
                     if (Board.GetCell(x, y).GetValue(alphaSide, 0) == -1 || Board.GetCell(x, y).GetValue(alphaSide,
                             0) == -2) {
-                        Point point = (new Point(x, y)).Plus(Board.GetLastMoveVector(!alphaSide));
                         if (point.IsRange() && Board.GetCell(point).GetValue(alphaSide, 0) == -1) {
-                            minusPoints.add(point);
+                            excludePoints.add(point);
+                        }
+                    }
+                    if (Board.GetLastMoveVector(!alphaSide).Distance() == 2) {
+                        if ((new Point(x, y).Plus(Board.GetLastMoveVector(!alphaSide)).Divide(2)).IsRange()) {
+                            if (Board.GetCell(new Point(x, y).Plus(Board.GetLastMoveVector(!alphaSide)).Divide(2))
+                                    .GetValue(alphaSide, 0) == -2) {
+                                excludePoints.add(point);
+                            }
                         }
                     }
                 }
@@ -68,6 +76,9 @@ class Algorithm014 extends Interface {
                 case 1:
                     for (int x = Board.GetLastMoveVector(!alphaSide).x; x < Board.BOARD_SIZE; x++) {
                         for (int y = 0; y < Board.BOARD_SIZE; y++) {
+                            if (excludePoints.contains(new Point(x, y))) {
+                                continue;
+                            }
                             int value = Board.GetCell(x, y).GetValue(alphaSide, 0);
                             value = value < 0 ? 0 : value;
                             Board.GetCell(x, y).SetValueForce(alphaSide, 0, value + 1);
@@ -78,6 +89,9 @@ class Algorithm014 extends Interface {
                 case -2:
                     for (int x = 0; x < Board.BOARD_SIZE + Board.GetLastMoveVector(!alphaSide).x; x++) {
                         for (int y = 0; y < Board.BOARD_SIZE; y++) {
+                            if (excludePoints.contains(new Point(x, y))) {
+                                continue;
+                            }
                             int value = Board.GetCell(x, y).GetValue(alphaSide, 0);
                             value = value < 0 ? 0 : value;
                             Board.GetCell(x, y).SetValueForce(alphaSide, 0, value + 1);
@@ -90,6 +104,9 @@ class Algorithm014 extends Interface {
                 case 1:
                     for (int x = 0; x < Board.BOARD_SIZE; x++) {
                         for (int y = Board.GetLastMoveVector(!alphaSide).y; y < Board.BOARD_SIZE; y++) {
+                            if (excludePoints.contains(new Point(x, y))) {
+                                continue;
+                            }
                             int value = Board.GetCell(x, y).GetValue(alphaSide, 0);
                             value = value < 0 ? 0 : value;
                             Board.GetCell(x, y).SetValueForce(alphaSide, 0, value + 1);
@@ -100,16 +117,15 @@ class Algorithm014 extends Interface {
                 case -2:
                     for (int x = 0; x < Board.BOARD_SIZE; x++) {
                         for (int y = 0; y < Board.BOARD_SIZE + Board.GetLastMoveVector(!alphaSide).y; y++) {
+                            if (excludePoints.contains(new Point(x, y))) {
+                                continue;
+                            }
                             int value = Board.GetCell(x, y).GetValue(alphaSide, 0);
                             value = value < 0 ? 0 : value;
                             Board.GetCell(x, y).SetValueForce(alphaSide, 0, value + 1);
                         }
                     }
                     break;
-            }
-
-            for (Point point : minusPoints) {
-                Board.GetCell(point).SetValueForce(alphaSide, 0, -1);
             }
         }
 

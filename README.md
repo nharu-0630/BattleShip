@@ -6,7 +6,7 @@
 RTX 3080 Ti  
 https://xyzyxjp.github.io/BattleShip/
 
-![](https://cdn.discordapp.com/attachments/919744937753460756/927855981432565780/unknown.png)
+![](https://media.discordapp.net/attachments/919744937753460756/927931310218051664/unknown.png)
 
 # Documentation
 
@@ -57,6 +57,7 @@ https://xyzyxjp.github.io/BattleShip/
 | Minus               | Point   | Point  | 引数のポイントを減算  |
 | Multiply            | int     | Point  | 引数を乗算       |
 | Divide              | int     | Point  | 引数を除算       |
+| Distance            |         | int    | 距離を取得       |
 | equals              | boolean | Point  | 引数のポイントと比較  |
 | IsRange             | boolean |        | ボード内の座標有無   |
 | toString            |         | String | (x, y)      |

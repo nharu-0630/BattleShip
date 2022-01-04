@@ -242,6 +242,10 @@ class Point {
         return new Point(x / number, y / number);
     }
 
+    public int Distance() {
+        return Math.abs(x) + Math.abs(y);
+    }
+
     @Override
     public boolean equals(Object object) {
         if (object == this) {
