@@ -52,9 +52,7 @@ class Algorithm011 extends Interface {
                 for (int y = 0; y < Board.BOARD_SIZE; y++) {
                     Point oldPoint = new Point(x, y);
                     Point newPoint = oldPoint.Plus(Board.GetLastMoveVector(!alphaSide));
-                    if (Board.GetCell(oldPoint).GetValue(alphaSide, 0) == -1
-                            && 0 <= newPoint.x && newPoint.x <= Board.BOARD_SIZE - 1
-                            && 0 <= newPoint.y && newPoint.y <= Board.BOARD_SIZE - 1) {
+                    if (Board.GetCell(oldPoint).GetValue(alphaSide, 0) == -1 && newPoint.IsRange()) {
                         minusPoints.add(newPoint);
                     }
                 }
