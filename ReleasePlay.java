@@ -12,6 +12,8 @@ public class ReleasePlay {
     public static int alphaAlgorithmNumber = 14;
 
     public static void main(String args[]) {
+        System.out.println(new Point(3, 2) == new Point(3, 2));
+
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
         AlgorithmSwitcher alphaAlgorithm = new AlgorithmSwitcher(true, isEnemySecret);

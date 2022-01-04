@@ -244,6 +244,9 @@ class Point {
 
     @Override
     public boolean equals(Object object) {
+        if (object == this) {
+            return true;
+        }
         if (object instanceof Point) {
             Point point = (Point) object;
             return (x == point.x && y == point.y);
@@ -686,14 +689,14 @@ class Board {
                 int x = (int) (Math.random() * Board.BOARD_SIZE);
                 int y = (int) (Math.random() * Board.BOARD_SIZE);
                 for (Point point : points) {
-                    if (point == (new Point(x, y))) {
+                    if (point.equals(new Point(x, y))) {
                         continue LOOP;
                     }
                 }
                 if (roundTrim) {
                     for (Point roundPoint : Board.GetRoundPoints(new Point(x, y))) {
                         for (Point point : points) {
-                            if (point == roundPoint) {
+                            if (point.equals(roundPoint)) {
                                 continue LOOP;
                             }
                         }
