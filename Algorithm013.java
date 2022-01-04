@@ -170,7 +170,9 @@ class Algorithm013 extends Interface {
             }
         }
 
+        // 自軍が攻撃した
         if (Board.IsLastAttack(alphaSide)) {
+            // 敵軍が命中した
             if (Board.GetLastAttackResult(alphaSide).contains(2)) {
                 // 敵軍が移動した = 命中したポイントに移動ベクトルを足したポイントが範囲内ならそのポイントに移動したと判断し、攻撃可能範囲内なら攻撃する (A)
                 // 敵軍が移動しなかった = 命中したポイントにもう一度攻撃する
@@ -252,8 +254,8 @@ class Algorithm013 extends Interface {
                         }
                         if (moveVector != null) {
                             if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)
-                                    || point.Equal(movePoint.Plus(moveVector))) {
-                                moveVector = new Point(moveVector.x / 2, moveVector.y / 2);
+                                    || point == movePoint.Plus(moveVector)) {
+                                moveVector = moveVector.Divide(2);
                                 if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
                                     moveVector = null;
                                 }

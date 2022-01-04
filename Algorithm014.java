@@ -13,7 +13,7 @@ class Algorithm014 extends Interface {
 
     private int enemyMoveCount = 0;
 
-    private int allyEscapeCount = 0;
+    // private int allyEscapeCount = 0;
 
     public void SetParameter(int[] parameters) {
 
@@ -49,6 +49,19 @@ class Algorithm014 extends Interface {
         // 敵軍が移動した = 移動先の可能性があるポイントの評価値に1を追加する
         if (Board.GetLastMoveVector(!alphaSide) != null) {
             enemyMoveCount++;
+
+            ArrayList<Point> minusPoints = new ArrayList<Point>();
+            for (int x = 0; x < Board.GetBoardSize(); x++) {
+                for (int y = 0; y < Board.GetBoardSize(); y++) {
+                    if (Board.GetCell(x, y).GetValue(alphaSide, 0) == -1) {
+                        Point point = (new Point(x, y)).Plus(Board.GetLastMoveVector(!alphaSide));
+                        if (point.IsRange()) {
+                            minusPoints.add(point);
+                        }
+                    }
+                }
+            }
+
             switch (Board.GetLastMoveVector(!alphaSide).x) {
                 case 2:
                 case 1:
@@ -92,6 +105,10 @@ class Algorithm014 extends Interface {
                         }
                     }
                     break;
+            }
+
+            for (Point point : minusPoints) {
+                Board.GetCell(point).SetValueForce(alphaSide, 0, -1);
             }
         }
 
@@ -214,32 +231,32 @@ class Algorithm014 extends Interface {
             }
         }
 
-        // 敵軍が攻撃した
-        if (Board.IsLastAttack(!alphaSide)) {
-            // 自軍が命中した
-            if (Board.GetLastAttackResult(!alphaSide).contains(2)) {
-                allyEscapeCount++;
-                Point movePoint;
-                if (allyEscapeCount % 2 != 0 && allyCount != 1) {
-                    movePoint = Board.GetRandomPoint(Board.GetShipPoints(alphaSide));
-                    while (movePoint.Equal(Board.GetLastAttackPoint(!alphaSide))) {
-                        movePoint = Board.GetRandomPoint(Board.GetShipPoints(alphaSide));
-                    }
-                } else {
-                    movePoint = Board.GetLastAttackPoint(!alphaSide);
-                }
-                ArrayList<Point> points = new ArrayList<Point>();
-                for (Point point : Board.GetCrossPoints(movePoint, 2, 2)) {
-                    if (Board.IsMoveEnablePoint(alphaSide, movePoint, point)) {
-                        points.add(point);
-                    }
-                }
-                if (points.size() != 0) {
-                    DoMove(movePoint, Board.GetRandomPoint(points));
-                    return;
-                }
-            }
-        }
+        // // 敵軍が攻撃した
+        // if (Board.IsLastAttack(!alphaSide)) {
+        // // 自軍が命中した
+        // if (Board.GetLastAttackResult(!alphaSide).contains(2)) {
+        // allyEscapeCount++;
+        // Point movePoint;
+        // if (allyEscapeCount % 2 != 0 && allyCount != 1) {
+        // movePoint = Board.GetRandomPoint(Board.GetShipPoints(alphaSide));
+        // while (movePoint.Equal(Board.GetLastAttackPoint(!alphaSide))) {
+        // movePoint = Board.GetRandomPoint(Board.GetShipPoints(alphaSide));
+        // }
+        // } else {
+        // movePoint = Board.GetLastAttackPoint(!alphaSide);
+        // }
+        // ArrayList<Point> points = new ArrayList<Point>();
+        // for (Point point : Board.GetCrossPoints(movePoint, 2, 2)) {
+        // if (Board.IsMoveEnablePoint(alphaSide, movePoint, point)) {
+        // points.add(point);
+        // }
+        // }
+        // if (points.size() != 0) {
+        // DoMove(movePoint, Board.GetRandomPoint(points));
+        // return;
+        // }
+        // }
+        // }
 
         if (prepareTurned && Board.IsEnableAttackPoint(alphaSide, preparePoint)) {
             prepareTurned = false;
@@ -283,8 +300,8 @@ class Algorithm014 extends Interface {
                         }
                         if (moveVector != null) {
                             if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)
-                                    || point.Equal(movePoint.Plus(moveVector))) {
-                                moveVector = new Point(moveVector.x / 2, moveVector.y / 2);
+                                    || point == movePoint.Plus(moveVector)) {
+                                moveVector = moveVector.Divide(2);
                                 if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
                                     moveVector = null;
                                 }

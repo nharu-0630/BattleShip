@@ -228,7 +228,7 @@ class Algorithm006 extends Interface {
                     if (vectorPoint != null) {
                         if (!Board.IsMoveEnableVector(alphaSide, movePoint, vectorPoint)
                                 || minusPoint.x + minusPoint.y < 2) {
-                            vectorPoint = new Point(vectorPoint.x / 2, vectorPoint.y / 2);
+                            vectorPoint = vectorPoint.Divide(2);
                             if (!Board.IsMoveEnableVector(alphaSide, movePoint, vectorPoint)) {
                                 vectorPoint = null;
                             }

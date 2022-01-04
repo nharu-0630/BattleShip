@@ -234,8 +234,22 @@ class Point {
         return new Point(this.x - point.x, this.y - point.y);
     }
 
-    public boolean Equal(Point point) {
-        return (x == point.x && y == point.y);
+    public Point Multiply(int number) {
+        return new Point(x * number, y * number);
+    }
+
+    public Point Divide(int number) {
+        return new Point(x / number, y / number);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof Point) {
+            Point point = (Point) object;
+            return (x == point.x && y == point.y);
+        } else {
+            return false;
+        }
     }
 
     public boolean IsRange() {
@@ -670,14 +684,14 @@ class Board {
                 int x = (int) (Math.random() * Board.GetBoardSize());
                 int y = (int) (Math.random() * Board.GetBoardSize());
                 for (Point point : points) {
-                    if (point.Equal(new Point(x, y))) {
+                    if (point == (new Point(x, y))) {
                         continue LOOP;
                     }
                 }
                 if (roundTrim) {
                     for (Point roundPoint : Board.GetRoundPoints(new Point(x, y))) {
                         for (Point point : points) {
-                            if (point.Equal(roundPoint)) {
+                            if (point == roundPoint) {
                                 continue LOOP;
                             }
                         }

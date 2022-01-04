@@ -236,8 +236,8 @@ class Algorithm008 extends Interface {
                         }
                         if (moveVector != null) {
                             if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)
-                                    || point.Equal(movePoint.Plus(moveVector))) {
-                                moveVector = new Point(moveVector.x / 2, moveVector.y / 2);
+                                    || point == movePoint.Plus(moveVector)) {
+                                moveVector = moveVector.Divide(2);
                                 if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
                                     moveVector = null;
                                 }

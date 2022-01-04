@@ -273,7 +273,7 @@ class Algorithm011 extends Interface {
                         }
                         if (moveVector != null) {
                             if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)
-                                    || point.Equal(movePoint.Plus(moveVector))) {
+                                    || point == movePoint.Plus(moveVector)) {
                                 moveVector = new Point(moveVector.x / 2, moveVector.y / 2);
                                 if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
                                     moveVector = null;
