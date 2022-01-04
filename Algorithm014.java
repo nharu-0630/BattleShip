@@ -53,7 +53,8 @@ class Algorithm014 extends Interface {
             ArrayList<Point> minusPoints = new ArrayList<Point>();
             for (int x = 0; x < Board.BOARD_SIZE; x++) {
                 for (int y = 0; y < Board.BOARD_SIZE; y++) {
-                    if (Board.GetCell(x, y).GetValue(alphaSide, 0) == -1) {
+                    if (Board.GetCell(x, y).GetValue(alphaSide, 0) == -1 || Board.GetCell(x, y).GetValue(alphaSide,
+                            0) == -2) {
                         Point point = (new Point(x, y)).Plus(Board.GetLastMoveVector(!alphaSide));
                         if (point.IsRange() && Board.GetCell(point).GetValue(alphaSide, 0) == -1) {
                             minusPoints.add(point);
