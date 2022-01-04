@@ -54,8 +54,8 @@ class Algorithm006 extends Interface {
                     break;
                 case -1:
                 case -2:
-                    for (int x = 0; x < Board.BOARD_SIZE; x++) {
-                        for (int y = 0; y < Board.BOARD_SIZE + Board.GetLastMoveVector(!alphaSide).x; y++) {
+                    for (int x = 0; x < Board.BOARD_SIZE + Board.GetLastMoveVector(!alphaSide).x; x++) {
+                        for (int y = 0; y < Board.BOARD_SIZE; y++) {
                             Board.GetCell(x, y).SetValue(alphaSide, 0, Board.GetCell(x, y).GetValue(alphaSide, 0) + 1);
                         }
                     }

@@ -60,8 +60,8 @@ class Algorithm010 extends Interface {
                     break;
                 case -1:
                 case -2:
-                    for (int x = 0; x < Board.BOARD_SIZE; x++) {
-                        for (int y = 0; y < Board.BOARD_SIZE + Board.GetLastMoveVector(!alphaSide).x; y++) {
+                    for (int x = 0; x < Board.BOARD_SIZE + Board.GetLastMoveVector(!alphaSide).x; x++) {
+                        for (int y = 0; y < Board.BOARD_SIZE; y++) {
                             int value = Board.GetCell(x, y).GetValue(alphaSide, 0);
                             value = value < 0 ? 0 : value;
                             Board.GetCell(x, y).SetValueForce(alphaSide, 0, value + 1);

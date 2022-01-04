@@ -75,8 +75,8 @@ class Algorithm014 extends Interface {
                     break;
                 case -1:
                 case -2:
-                    for (int x = 0; x < Board.BOARD_SIZE; x++) {
-                        for (int y = 0; y < Board.BOARD_SIZE + Board.GetLastMoveVector(!alphaSide).x; y++) {
+                    for (int x = 0; x < Board.BOARD_SIZE + Board.GetLastMoveVector(!alphaSide).x; x++) {
+                        for (int y = 0; y < Board.BOARD_SIZE; y++) {
                             int value = Board.GetCell(x, y).GetValue(alphaSide, 0);
                             value = value < 0 ? 0 : value;
                             Board.GetCell(x, y).SetValueForce(alphaSide, 0, value + 1);
@@ -144,7 +144,9 @@ class Algorithm014 extends Interface {
                 Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValueForce(alphaSide, 0, -2);
                 Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValueForce(alphaSide, 1, -2);
                 for (Point point : Board.GetRoundPoints(Board.GetLastAttackPoint(alphaSide))) {
-                    Board.GetCell(point).AddValue(alphaSide, 0, -1);
+                    if (Board.GetCell(point).GetValue(alphaSide, 0) > 0) {
+                        Board.GetCell(point).AddValue(alphaSide, 0, -1);
+                    }
                 }
             }
             // 敵軍が命中した = 命中したポイントの評価値を20に設定する, 命中したポイントのX軸Y軸対称のポイントの評価値に5を追加する,
