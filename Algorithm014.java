@@ -13,6 +13,8 @@ class Algorithm014 extends Interface {
 
     private int enemyMoveCount = 0;
 
+    private int allyEscapeCount = 0;
+
     public void SetParameter(int[] parameters) {
 
     }
@@ -170,7 +172,9 @@ class Algorithm014 extends Interface {
             }
         }
 
+        // 自軍が攻撃した
         if (Board.IsLastAttack(alphaSide)) {
+            // 敵軍が命中した
             if (Board.GetLastAttackResult(alphaSide).contains(2)) {
                 // 敵軍が移動した = 命中したポイントに移動ベクトルを足したポイントが範囲内ならそのポイントに移動したと判断し、攻撃可能範囲内なら攻撃する (A)
                 // 敵軍が移動しなかった = 命中したポイントにもう一度攻撃する
@@ -206,6 +210,33 @@ class Algorithm014 extends Interface {
                 }
                 if (Board.GetLastAttackResult(alphaSide).contains(1)) {
 
+                }
+            }
+        }
+
+        // 敵軍が攻撃した
+        if (Board.IsLastAttack(!alphaSide)) {
+            // 自軍が命中した
+            if (Board.GetLastAttackResult(!alphaSide).contains(2)) {
+                allyEscapeCount++;
+                Point movePoint;
+                if (allyEscapeCount % 2 != 0 && allyCount != 1) {
+                    movePoint = Board.GetRandomPoint(Board.GetShipPoints(alphaSide));
+                    while (movePoint.Equal(Board.GetLastAttackPoint(!alphaSide))) {
+                        movePoint = Board.GetRandomPoint(Board.GetShipPoints(alphaSide));
+                    }
+                } else {
+                    movePoint = Board.GetLastAttackPoint(!alphaSide);
+                }
+                ArrayList<Point> points = new ArrayList<Point>();
+                for (Point point : Board.GetCrossPoints(movePoint, 2, 2)) {
+                    if (Board.IsMoveEnablePoint(alphaSide, movePoint, point)) {
+                        points.add(point);
+                    }
+                }
+                if (points.size() != 0) {
+                    DoMove(movePoint, Board.GetRandomPoint(points));
+                    return;
                 }
             }
         }
