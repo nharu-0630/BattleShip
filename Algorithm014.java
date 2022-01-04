@@ -47,19 +47,6 @@ class Algorithm014 extends Interface {
         // 敵軍が移動した = 移動先の可能性があるポイントの評価値に1を追加する
         if (Board.GetLastMoveVector(!alphaSide) != null) {
             enemyMoveCount++;
-
-            ArrayList<Point> minusPoints = new ArrayList<Point>();
-            for (int x = 0; x < Board.GetBoardSize(); x++) {
-                for (int y = 0; y < Board.GetBoardSize(); y++) {
-                    if (Board.GetCell(x, y).GetValue(alphaSide, 0) == -1) {
-                        Point point = (new Point(x, y)).Plus(Board.GetLastMoveVector(!alphaSide));
-                        if (point.IsRange()) {
-                            minusPoints.add(point);
-                        }
-                    }
-                }
-            }
-
             switch (Board.GetLastMoveVector(!alphaSide).x) {
                 case 2:
                 case 1:
@@ -103,10 +90,6 @@ class Algorithm014 extends Interface {
                         }
                     }
                     break;
-            }
-
-            for (Point point : minusPoints) {
-                Board.GetCell(point).SetValueForce(alphaSide, 0, -1);
             }
         }
 
