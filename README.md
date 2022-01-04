@@ -51,13 +51,17 @@ https://xyzyxjp.github.io/BattleShip/
 | x   | int | 0      | 座標のX値 |
 | y   | int | 0      | 座標のY値 |
 
-| メソッド名    | 引数型     | 戻り値型   |            |
-| -------- | ------- | ------ | ---------- |
-| Plus     | Point   | Point  | 引数のポイントを加算 |
-| Minus    | Point   | Point  | 引数のポイントを減算 |
-| Equal    | boolean | Point  | 引数のポイントと比較 |
-| IsRange  | boolean |        | ボード内の座標有無 |
-| toString |         | String | (x, y)     |
+| メソッド名               | 引数型     | 戻り値型   |             |
+| ------------------- | ------- | ------ | ----------- |
+| Plus                | Point   | Point  | 引数のポイントを加算  |
+| Minus               | Point   | Point  | 引数のポイントを減算  |
+| Multiply            | int     | Point  | 引数を乗算       |
+| Divide              | int     | Point  | 引数を除算       |
+| equals              | boolean | Point  | 引数のポイントと比較  |
+| IsRange             | boolean |        | ボード内の座標有無   |
+| toString            |         | String | (x, y)      |
+| toPointFormatString |         | String | `アルファベット数字` |
+| toVectorFormaString |         | String | `方角数字`      |
 
 ### ボード(Board)
 
@@ -189,26 +193,26 @@ class AlgorithmXXX extends Interface {
 
     public void Think() {
         if (Board.IsLastAttack(!alphaSide)) {
-            if (Board.GetLastAttackResult(!alphaSide).contains(3)) {
+            if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_SINK)) {
                 allySumHp--;
                 allyCount--;
                 if (allyCount == 0) {
                     Board.Interrupt();
                 }
             }
-            if (Board.GetLastAttackResult(!alphaSide).contains(2)) {
+            if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_HIT)) {
                 allySumHp--;
             }
         }
         if (Board.IsLastAttack(alphaSide)) {
-            if (Board.GetLastAttackResult(alphaSide).contains(3)) {
+            if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_SINK)) {
                 enemySumHp--;
                 enemyCount--;
                 if (enemyCount == 0) {
                     Board.Interrupt();
                 }
             }
-            if (Board.GetLastAttackResult(alphaSide).contains(2)) {
+            if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_HIT)) {
                 enemySumHp--;
             }
         }
