@@ -210,6 +210,7 @@ class Algorithm015 extends Interface {
 
         if (allySumHp - enemySumHp > 3) {
             defenceMoveFlag = true;
+            System.out.println("DefenceMove " + Logger.GetFileName() + " : " + Board.GetTurnCount());
         }
         if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_HIT)
                 || Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_SINK)) {
@@ -306,8 +307,7 @@ class Algorithm015 extends Interface {
         }
 
         ArrayList<Point> maxValuePoints = new ArrayList<Point>(
-                Board.GetPointValues(alphaSide, null, 0, 1)
-                        .keySet());
+                Board.GetPointValues(alphaSide, null, 0, 1).keySet());
         if (Board.GetCell(maxValuePoints.get(0)).GetValue(alphaSide, 0) > 5) {
             for (Point point : maxValuePoints) {
                 if (Board.GetCell(point).IsAlive(alphaSide)) {
