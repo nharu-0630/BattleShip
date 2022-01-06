@@ -15,8 +15,8 @@ public class DebugPlay {
     // public static final int deepTryCount = 100;
 
     // ログ保存
-    public static final boolean isSaveLog = true;
-    // public static final boolean isSaveLog = false;
+    // public static final boolean isSaveLog = true;
+    public static final boolean isSaveLog = false;
 
     // ログ表示
     // public static final boolean isVisibleLog = true;
@@ -27,21 +27,25 @@ public class DebugPlay {
     public static final boolean isStepWait = false;
 
     // アルゴリズム
-    public static int alphaAlgorithmNumber = 13;
+    public static int alphaAlgorithmNumber = 15;
     public static int bravoAlgorithmNumber = 14;
 
     public static void main(String args[]) {
-        // DeepTry(null);
+        // Try(true, null);
 
-        for (int i = 1; i <= 14; i++) {
-            for (int j = i; j <= 14; j++) {
-                alphaAlgorithmNumber = i;
-                bravoAlgorithmNumber = j;
-                if (i != 3 && j != 3) {
-                    DeepTry(null);
-                }
-            }
-        }
+        DeepTry(null);
+
+        // ParameterDeepTry();
+
+        // for (int i = 1; i <= 14; i++) {
+        // for (int j = i; j <= 14; j++) {
+        // alphaAlgorithmNumber = i;
+        // bravoAlgorithmNumber = j;
+        // if (i != 3 && j != 3) {
+        // DeepTry(null);
+        // }
+        // }
+        // }
     }
 
     public static void Try(boolean alphaSide, int[] parameters) {
@@ -88,16 +92,23 @@ public class DebugPlay {
 
     public static void ParameterDeepTry() {
         HashMap<int[], Double> parameterWinCounts = new HashMap<int[], Double>();
-        for (int parameter1 = 0; parameter1 <= 15; parameter1 += 1) {
-            parameterWinCounts.put(new int[] { parameter1 },
-                    DeepTry(new int[] { parameter1 })[0]);
+        for (int parameter1 = 0; parameter1 <= 20; parameter1 += 1) {
+            for (int parameter2 = 0; parameter2 <= 20; parameter2 += 1) {
+                for (int parameter3 = 0; parameter3 <= 20; parameter3 += 1) {
+                    int[] parameters = new int[] { parameter1, parameter2, parameter3 };
+                    parameterWinCounts.put(
+                            parameters,
+                            DeepTry(parameters)[0]);
+                }
+            }
         }
+
         java.util.stream.Stream<Map.Entry<int[], Double>> sortedParameterWinCounts = parameterWinCounts.entrySet()
                 .stream()
-                .sorted(Map.Entry.comparingByValue());
+                .sorted(Map.Entry
+                        .comparingByValue());
         sortedParameterWinCounts
-                .forEach(entry -> System.out
-                        .println(Arrays.toString(entry.getKey()) + " = " + entry.getValue()));
+                .forEach(entry -> System.out.println(Arrays.toString(entry.getKey()) + " = " + entry.getValue()));
     }
 
     public static double[] DeepTry(int[] parameters) {

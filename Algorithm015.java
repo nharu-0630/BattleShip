@@ -1,7 +1,7 @@
 import java.util.*;
 
-class Algorithm014 extends Interface {
-    Algorithm014(boolean alphaSide, boolean isEnemySecret) {
+class Algorithm015 extends Interface {
+    Algorithm015(boolean alphaSide, boolean isEnemySecret) {
         super(alphaSide, isEnemySecret);
         Board.InitializeValues(alphaSide, 1);
     }
@@ -12,6 +12,8 @@ class Algorithm014 extends Interface {
     private Point preparePoint = null;
 
     private int enemyMoveCount = 0;
+
+    private boolean defenceMoveFlag = false;
 
     public void SetParameter(int[] parameters) {
 
@@ -206,6 +208,27 @@ class Algorithm014 extends Interface {
             }
         }
 
+        if (allySumHp - enemySumHp > 3) {
+            defenceMoveFlag = true;
+        }
+        if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_HIT)
+                || Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_SINK)) {
+            defenceMoveFlag = false;
+        }
+        if (defenceMoveFlag) {
+            Point movePoint = Board.GetRandomPoint(Board.GetShipPoints(alphaSide));
+            ArrayList<Point> points = new ArrayList<Point>();
+            for (Point point : Board.GetCrossPoints(movePoint, 2, 2)) {
+                if (Board.IsMoveEnablePoint(alphaSide, movePoint, point)) {
+                    points.add(point);
+                }
+            }
+            if (points.size() != 0) {
+                DoMove(movePoint, Board.GetRandomPoint(points));
+                return;
+            }
+        }
+
         // 自軍が攻撃した
         if (Board.IsLastAttack(alphaSide)) {
             // 敵軍が命中した
@@ -283,7 +306,8 @@ class Algorithm014 extends Interface {
         }
 
         ArrayList<Point> maxValuePoints = new ArrayList<Point>(
-                Board.GetPointValues(alphaSide, null, 0, 1).keySet());
+                Board.GetPointValues(alphaSide, null, 0, 1)
+                        .keySet());
         if (Board.GetCell(maxValuePoints.get(0)).GetValue(alphaSide, 0) > 5) {
             for (Point point : maxValuePoints) {
                 if (Board.GetCell(point).IsAlive(alphaSide)) {
