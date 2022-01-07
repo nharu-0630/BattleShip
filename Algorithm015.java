@@ -10,7 +10,8 @@ class Algorithm015 extends Interface {
     private Point estimatedBeforePoint = null;
     private boolean prepareTurned = false;
     private Point preparePoint = null;
-    private boolean trapMoveFlag = false;
+    private boolean fakeMoveEnable = true;
+    private boolean fakeMoveFlag = false;
 
     private int enemyMoveCount = 0;
 
@@ -44,121 +45,6 @@ class Algorithm015 extends Interface {
             }
         }
         Board.SearchEnableAttackPoints(alphaSide);
-
-        if (Board.GetLastMoveVector(!alphaSide) != null) {
-            // 敵軍が移動した = 移動先の可能性があるポイントの評価値に1を追加する
-
-            enemyMoveCount++;
-            ArrayList<Point> excludePoints = new ArrayList<Point>();
-            for (int x = 0; x < Board.BOARD_SIZE; x++) {
-                for (int y = 0; y < Board.BOARD_SIZE; y++) {
-                    Point point = (new Point(x, y)).Plus(Board.GetLastMoveVector(!alphaSide));
-                    if (Board.GetCell(x, y).GetValue(alphaSide, 0) == -1 || Board.GetCell(x, y).GetValue(alphaSide,
-                            0) == -2) {
-                        if (point.IsRange() && Board.GetCell(point).GetValue(alphaSide, 0) == -1) {
-                            excludePoints.add(point);
-                        }
-                    }
-                    if (Board.GetLastMoveVector(!alphaSide).Distance() == 2) {
-                        if ((new Point(x, y).Plus(Board.GetLastMoveVector(!alphaSide)).Divide(2)).IsRange()) {
-                            if (Board.GetCell(new Point(x, y).Plus(Board.GetLastMoveVector(!alphaSide)).Divide(2))
-                                    .GetValue(alphaSide, 0) == -2) {
-                                excludePoints.add(point);
-                            }
-                        }
-                    }
-                }
-            }
-
-            switch (Board.GetLastMoveVector(!alphaSide).x) {
-                case 2:
-                case 1:
-                    for (int x = Board.GetLastMoveVector(!alphaSide).x; x < Board.BOARD_SIZE; x++) {
-                        for (int y = 0; y < Board.BOARD_SIZE; y++) {
-                            if (excludePoints.contains(new Point(x, y))) {
-                                continue;
-                            }
-                            int value = Board.GetCell(x, y).GetValue(alphaSide, 0);
-                            value = value < 0 ? 0 : value;
-                            Board.GetCell(x, y).SetValueForce(alphaSide, 0, value + 1);
-                        }
-                    }
-                    break;
-                case -1:
-                case -2:
-                    for (int x = 0; x < Board.BOARD_SIZE + Board.GetLastMoveVector(!alphaSide).x; x++) {
-                        for (int y = 0; y < Board.BOARD_SIZE; y++) {
-                            if (excludePoints.contains(new Point(x, y))) {
-                                continue;
-                            }
-                            int value = Board.GetCell(x, y).GetValue(alphaSide, 0);
-                            value = value < 0 ? 0 : value;
-                            Board.GetCell(x, y).SetValueForce(alphaSide, 0, value + 1);
-                        }
-                    }
-                    break;
-            }
-            switch (Board.GetLastMoveVector(!alphaSide).y) {
-                case 2:
-                case 1:
-                    for (int x = 0; x < Board.BOARD_SIZE; x++) {
-                        for (int y = Board.GetLastMoveVector(!alphaSide).y; y < Board.BOARD_SIZE; y++) {
-                            if (excludePoints.contains(new Point(x, y))) {
-                                continue;
-                            }
-                            int value = Board.GetCell(x, y).GetValue(alphaSide, 0);
-                            value = value < 0 ? 0 : value;
-                            Board.GetCell(x, y).SetValueForce(alphaSide, 0, value + 1);
-                        }
-                    }
-                    break;
-                case -1:
-                case -2:
-                    for (int x = 0; x < Board.BOARD_SIZE; x++) {
-                        for (int y = 0; y < Board.BOARD_SIZE + Board.GetLastMoveVector(!alphaSide).y; y++) {
-                            if (excludePoints.contains(new Point(x, y))) {
-                                continue;
-                            }
-                            int value = Board.GetCell(x, y).GetValue(alphaSide, 0);
-                            value = value < 0 ? 0 : value;
-                            Board.GetCell(x, y).SetValueForce(alphaSide, 0, value + 1);
-                        }
-                    }
-                    break;
-            }
-        }
-
-        if (Board.IsLastAttack(!alphaSide)) {
-            // 敵軍が攻撃した = 攻撃したポイントの評価値を-1に固定する, 周囲のポイントの評価値に1を追加する
-
-            Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValueForce(alphaSide, 0, -1);
-            for (Point point : Board.GetRoundPoints(Board.GetLastAttackPoint(!alphaSide))) {
-                Board.GetCell(point).AddValue(alphaSide, 0, 1);
-            }
-            // 自軍が撃沈した = 命中したポイントの評価値, 逆評価値を-2に固定する
-            if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_SINK)) {
-                Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValueForce(alphaSide, 0, -2);
-                Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValueForce(alphaSide, 1, -2);
-            }
-            // 自軍が命中した = 命中したポイントの逆評価値を10に設定する
-            if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_HIT)) {
-                Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValue(alphaSide, 1, 20);
-            }
-            // 自軍が波高しした = 攻撃したポイントの逆評価値を0に設定する, 周囲のポイントに1を追加する
-            if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_NEAR)) {
-                Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValue(alphaSide, 1, 0);
-                for (Point point : Board.GetRoundPoints(Board.GetLastAttackPoint(!alphaSide))) {
-                    Board.GetCell(point).AddValue(alphaSide, 1, 1);
-                }
-            }
-            // 自軍が外れした = 攻撃したポイント, 周囲のポイントの逆評価値を-1に固定する
-            if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_NOHIT)) {
-                Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValueForce(alphaSide, 1, -1);
-                for (Point point : Board.GetRoundPoints(Board.GetLastAttackPoint(!alphaSide))) {
-                    Board.GetCell(point).SetValueForce(alphaSide, 1, -1);
-                }
-            }
-        }
 
         if (Board.GetLastMoveVector(alphaSide) != null) {
             // 自軍が移動した = 移動先の可能性があるポイントの逆評価値に1を追加する
@@ -303,6 +189,127 @@ class Algorithm015 extends Interface {
             }
         }
 
+        if (Board.GetLastMoveVector(!alphaSide) != null) {
+            // 敵軍が移動した = 移動先の可能性があるポイントの評価値に1を追加する
+
+            enemyMoveCount++;
+            ArrayList<Point> excludePoints = new ArrayList<Point>();
+            for (int x = 0; x < Board.BOARD_SIZE; x++) {
+                for (int y = 0; y < Board.BOARD_SIZE; y++) {
+                    Point point = (new Point(x, y)).Plus(Board.GetLastMoveVector(!alphaSide));
+                    if (Board.GetCell(x, y).GetValue(alphaSide, 0) == -1 || Board.GetCell(x, y).GetValue(alphaSide,
+                            0) == -2) {
+                        if (point.IsRange() && Board.GetCell(point).GetValue(alphaSide, 0) == -1) {
+                            excludePoints.add(point);
+                        }
+                    }
+                    if (Board.GetLastMoveVector(!alphaSide).Distance() == 2) {
+                        if ((new Point(x, y).Plus(Board.GetLastMoveVector(!alphaSide)).Divide(2)).IsRange()) {
+                            if (Board.GetCell(new Point(x, y).Plus(Board.GetLastMoveVector(!alphaSide)).Divide(2))
+                                    .GetValue(alphaSide, 0) == -2) {
+                                excludePoints.add(point);
+                            }
+                        }
+                    }
+                }
+            }
+
+            switch (Board.GetLastMoveVector(!alphaSide).x) {
+                case 2:
+                case 1:
+                    for (int x = Board.GetLastMoveVector(!alphaSide).x; x < Board.BOARD_SIZE; x++) {
+                        for (int y = 0; y < Board.BOARD_SIZE; y++) {
+                            if (excludePoints.contains(new Point(x, y))) {
+                                continue;
+                            }
+                            int value = Board.GetCell(x, y).GetValue(alphaSide, 0);
+                            value = value < 0 ? 0 : value;
+                            Board.GetCell(x, y).SetValueForce(alphaSide, 0, value + 1);
+                        }
+                    }
+                    break;
+                case -1:
+                case -2:
+                    for (int x = 0; x < Board.BOARD_SIZE + Board.GetLastMoveVector(!alphaSide).x; x++) {
+                        for (int y = 0; y < Board.BOARD_SIZE; y++) {
+                            if (excludePoints.contains(new Point(x, y))) {
+                                continue;
+                            }
+                            int value = Board.GetCell(x, y).GetValue(alphaSide, 0);
+                            value = value < 0 ? 0 : value;
+                            Board.GetCell(x, y).SetValueForce(alphaSide, 0, value + 1);
+                        }
+                    }
+                    break;
+            }
+            switch (Board.GetLastMoveVector(!alphaSide).y) {
+                case 2:
+                case 1:
+                    for (int x = 0; x < Board.BOARD_SIZE; x++) {
+                        for (int y = Board.GetLastMoveVector(!alphaSide).y; y < Board.BOARD_SIZE; y++) {
+                            if (excludePoints.contains(new Point(x, y))) {
+                                continue;
+                            }
+                            int value = Board.GetCell(x, y).GetValue(alphaSide, 0);
+                            value = value < 0 ? 0 : value;
+                            Board.GetCell(x, y).SetValueForce(alphaSide, 0, value + 1);
+                        }
+                    }
+                    break;
+                case -1:
+                case -2:
+                    for (int x = 0; x < Board.BOARD_SIZE; x++) {
+                        for (int y = 0; y < Board.BOARD_SIZE + Board.GetLastMoveVector(!alphaSide).y; y++) {
+                            if (excludePoints.contains(new Point(x, y))) {
+                                continue;
+                            }
+                            int value = Board.GetCell(x, y).GetValue(alphaSide, 0);
+                            value = value < 0 ? 0 : value;
+                            Board.GetCell(x, y).SetValueForce(alphaSide, 0, value + 1);
+                        }
+                    }
+                    break;
+            }
+        }
+
+        if (Board.IsLastAttack(!alphaSide)) {
+            // 敵軍が攻撃した = 攻撃したポイントの評価値を-1に固定する, 周囲のポイントの評価値に1を追加する
+
+            Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValueForce(alphaSide, 0, -1);
+            for (Point point : Board.GetRoundPoints(Board.GetLastAttackPoint(!alphaSide))) {
+                Board.GetCell(point).AddValue(alphaSide, 0, 1);
+            }
+            // 自軍が撃沈した = 命中したポイントの評価値, 逆評価値を-2に固定する
+            if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_SINK)) {
+                Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValueForce(alphaSide, 0, -2);
+                Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValueForce(alphaSide, 1, -2);
+            }
+            // 自軍が命中した = 命中したポイントの逆評価値を10に設定する
+            if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_HIT)) {
+                if (fakeMoveFlag) {
+                    // System.out.println("Fake Move is Ban.");
+                    fakeMoveEnable = false;
+                }
+                Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValue(alphaSide, 1, 20);
+            }
+            // 自軍が波高しした = 攻撃したポイントの逆評価値を0に設定する, 周囲のポイントに1を追加する
+            if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_NEAR)) {
+                Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValue(alphaSide, 1, 0);
+                for (Point point : Board.GetRoundPoints(Board.GetLastAttackPoint(!alphaSide))) {
+                    Board.GetCell(point).AddValue(alphaSide, 1, 1);
+                }
+            }
+            // 自軍が外れした = 攻撃したポイント, 周囲のポイントの逆評価値を-1に固定する
+            if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_NOHIT)) {
+                Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValueForce(alphaSide, 1, -1);
+                for (Point point : Board.GetRoundPoints(Board.GetLastAttackPoint(!alphaSide))) {
+                    Board.GetCell(point).SetValueForce(alphaSide, 1, -1);
+                }
+            }
+        }
+
+        fakeMoveFlag = false;
+
         // 自軍が攻撃した
         if (Board.IsLastAttack(alphaSide)) {
             // 敵軍が命中した
@@ -349,32 +356,34 @@ class Algorithm015 extends Interface {
         if (Board.IsLastAttack(!alphaSide)) {
             // 自軍が命中した
             if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_HIT)) {
-                if (Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).GetHp(alphaSide) == 2) {
-                    HashMap<Point, Integer> pointsValue = new HashMap<Point, Integer>();
-                    for (Point point : Board.GetCrossPoints(Board.GetLastAttackPoint(!alphaSide), 1, 1)) {
-                        if (Board.IsMoveEnablePoint(alphaSide, Board.GetLastAttackPoint(!alphaSide), point)) {
-                            pointsValue.put(point, Board.GetPointDistance(point, new Point(2, 2)));
+                if (fakeMoveEnable) {
+                    if (Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).GetHp(alphaSide) == 2) {
+                        HashMap<Point, Integer> pointsValue = new HashMap<Point, Integer>();
+                        for (Point point : Board.GetCrossPoints(Board.GetLastAttackPoint(!alphaSide), 1, 1)) {
+                            if (Board.IsMoveEnablePoint(alphaSide, Board.GetLastAttackPoint(!alphaSide), point)) {
+                                pointsValue.put(point, Board.GetPointDistance(point, new Point(2, 2)));
+                            }
                         }
-                    }
-                    if (pointsValue.size() != 0) {
-                        int maxValue = Collections.max(pointsValue.values());
-                        for (Map.Entry<Point, Integer> pointValue : pointsValue.entrySet()) {
-                            if (pointValue.getValue() == maxValue) {
-                                for (Point movePoint : Board.GetShipPoints(alphaSide)) {
-                                    Point moveVector = pointValue.getKey().Minus(Board.GetLastAttackPoint(!alphaSide));
-                                    if (movePoint == Board.GetLastAttackPoint(!alphaSide)) {
-                                        continue;
-                                    }
-                                    if (!movePoint.Plus(moveVector).IsRange()) {
-                                        continue;
-                                    }
-                                    if (Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
-                                        System.out
-                                                .println("Yuito Move = " + Logger.GetFileName() + " : "
-                                                        + Board.GetTurnCount());
-                                        DoMove(movePoint, movePoint.Plus(moveVector));
-                                        trapMoveFlag = true;
-                                        return;
+                        if (pointsValue.size() != 0) {
+                            int maxValue = Collections.max(pointsValue.values());
+                            for (Map.Entry<Point, Integer> pointValue : pointsValue.entrySet()) {
+                                if (pointValue.getValue() == maxValue) {
+                                    for (Point movePoint : Board.GetShipPoints(alphaSide)) {
+                                        Point moveVector = pointValue.getKey()
+                                                .Minus(Board.GetLastAttackPoint(!alphaSide));
+                                        if (movePoint == Board.GetLastAttackPoint(!alphaSide)) {
+                                            continue;
+                                        }
+                                        if (!movePoint.Plus(moveVector).IsRange()) {
+                                            continue;
+                                        }
+                                        if (Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
+                                            // System.out.println("Fake Move = " + Logger.GetFileName() + " : "
+                                            // + Board.GetTurnCount());
+                                            fakeMoveFlag = true;
+                                            DoMove(movePoint, movePoint.Plus(moveVector));
+                                            return;
+                                        }
                                     }
                                 }
                             }
