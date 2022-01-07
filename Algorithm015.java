@@ -13,13 +13,14 @@ class Algorithm015 extends Interface {
 
     private int enemyMoveCount = 0;
 
-    private boolean defenceMoveFlag = false;
+    // private boolean defenceMoveFlag = false;
 
     public void SetParameter(int[] parameters) {
 
     }
 
     public void Think() {
+        // #region HP値 推測
         if (Board.IsLastAttack(!alphaSide)) {
             if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_SINK)) {
                 allySumHp--;
@@ -45,10 +46,11 @@ class Algorithm015 extends Interface {
             }
         }
         Board.SearchEnableAttackPoints(alphaSide);
+        // #endregion
 
+        // #region 敵軍移動 推測
         if (Board.GetLastMoveVector(!alphaSide) != null) {
-            // 敵軍が移動した = 移動先の可能性があるポイントの評価値に1を追加する
-
+            // 移動先の可能性があるポイントの評価値に1を追加する
             enemyMoveCount++;
             ArrayList<Point> excludePoints = new ArrayList<Point>();
             for (int x = 0; x < Board.BOARD_SIZE; x++) {
@@ -70,7 +72,6 @@ class Algorithm015 extends Interface {
                     }
                 }
             }
-
             switch (Board.GetLastMoveVector(!alphaSide).x) {
                 case 2:
                 case 1:
@@ -128,10 +129,11 @@ class Algorithm015 extends Interface {
                     break;
             }
         }
+        // #endregion
 
+        // #region 敵軍攻撃 推測
         if (Board.IsLastAttack(!alphaSide)) {
-            // 敵軍が攻撃した = 攻撃したポイントの評価値を-1に固定する, 周囲のポイントの評価値に1を追加する
-
+            // 攻撃したポイントの評価値を-1に固定する, 周囲のポイントの評価値に1を追加する
             Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValueForce(alphaSide, 0, -1);
             for (Point point : Board.GetRoundPoints(Board.GetLastAttackPoint(!alphaSide))) {
                 Board.GetCell(point).AddValue(alphaSide, 0, 1);
@@ -160,10 +162,11 @@ class Algorithm015 extends Interface {
                 }
             }
         }
+        // #endregion
 
+        // #region 自軍移動 推測
         if (Board.GetLastMoveVector(alphaSide) != null) {
-            // 自軍が移動した = 移動先の可能性があるポイントの逆評価値に1を追加する
-
+            // 移動先の可能性があるポイントの逆評価値に1を追加する
             ArrayList<Point> excludePoints = new ArrayList<Point>();
             for (int x = 0; x < Board.BOARD_SIZE; x++) {
                 for (int y = 0; y < Board.BOARD_SIZE; y++) {
@@ -184,7 +187,6 @@ class Algorithm015 extends Interface {
                     }
                 }
             }
-
             switch (Board.GetLastMoveVector(alphaSide).x) {
                 case 2:
                 case 1:
@@ -242,10 +244,11 @@ class Algorithm015 extends Interface {
                     break;
             }
         }
+        // #endregion
 
+        // #region 自軍攻撃 推測
         if (Board.IsLastAttack(alphaSide)) {
-            // 自軍が攻撃した = 攻撃したポイントの逆評価値を-1に固定する, 周囲のポイントの逆評価値に1を追加する
-
+            // 攻撃したポイントの逆評価値を-1に固定する, 周囲のポイントの逆評価値に1を追加する
             Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValueForce(alphaSide, 1, -1);
             for (Point point : Board.GetRoundPoints(Board.GetLastAttackPoint(alphaSide))) {
                 Board.GetCell(point).AddValue(alphaSide, 1, 1);
@@ -303,30 +306,32 @@ class Algorithm015 extends Interface {
                 }
             }
         }
+        // #endregion
 
-        if (allySumHp - enemySumHp > 3) {
-            defenceMoveFlag = true;
-            System.out.println("DefenceMove " + Logger.GetFileName() + " : " + Board.GetTurnCount());
-        }
-        if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_HIT)
-                || Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_SINK)) {
-            defenceMoveFlag = false;
-        }
-        if (defenceMoveFlag) {
-            Point movePoint = Board.GetRandomPoint(Board.GetShipPoints(alphaSide));
-            ArrayList<Point> points = new ArrayList<Point>();
-            for (Point point : Board.GetCrossPoints(movePoint, 2, 2)) {
-                if (Board.IsMoveEnablePoint(alphaSide, movePoint, point)) {
-                    points.add(point);
-                }
-            }
-            if (points.size() != 0) {
-                DoMove(movePoint, Board.GetRandomPoint(points));
-                return;
-            }
-        }
+        // #region 勝ち逃げ
+        // if (allySumHp - enemySumHp > 3) {
+        // defenceMoveFlag = true;
+        // }
+        // if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_HIT)
+        // || Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_SINK)) {
+        // defenceMoveFlag = false;
+        // }
+        // if (defenceMoveFlag) {
+        // Point movePoint = Board.GetRandomPoint(Board.GetShipPoints(alphaSide));
+        // ArrayList<Point> points = new ArrayList<Point>();
+        // for (Point point : Board.GetCrossPoints(movePoint, 2, 2)) {
+        // if (Board.IsMoveEnablePoint(alphaSide, movePoint, point)) {
+        // points.add(point);
+        // }
+        // }
+        // if (points.size() != 0) {
+        // DoMove(movePoint, Board.GetRandomPoint(points));
+        // return;
+        // }
+        // }
+        // #endregion
 
-        // 自軍が攻撃した
+        // #region 自軍攻撃 攻撃
         if (Board.IsLastAttack(alphaSide)) {
             // 敵軍が命中した
             if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_HIT)) {
@@ -367,8 +372,9 @@ class Algorithm015 extends Interface {
                 }
             }
         }
+        // #endregion
 
-        // // 敵軍が攻撃した
+        // #region 敵軍攻撃 移動
         // if (Board.IsLastAttack(!alphaSide)) {
         // // 自軍が命中した
         // if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_HIT)) {
@@ -394,18 +400,23 @@ class Algorithm015 extends Interface {
         // }
         // }
         // }
+        // #endregion
 
+        // #region 準備移動 攻撃
         if (prepareTurned && Board.IsEnableAttackPoint(alphaSide, preparePoint)) {
+            System.out.println("Preparing attack = " + Board.GetTurnCount());
             prepareTurned = false;
             DoAttack(preparePoint);
             preparePoint = null;
             return;
         }
+        // #endregion
 
         ArrayList<Point> maxValuePoints = new ArrayList<Point>(
                 Board.GetPointValues(alphaSide, null, 0, 1).keySet());
         if (Board.GetCell(maxValuePoints.get(0)).GetValue(alphaSide, 0) > 5) {
             for (Point point : maxValuePoints) {
+
                 if (Board.GetCell(point).IsAlive(alphaSide)) {
                     HashMap<Point, Integer> crossPointValues = new HashMap<Point, Integer>();
                     for (Point crossPoint : Board.GetFilterMoveEnablePoints(alphaSide, point,
@@ -417,6 +428,8 @@ class Algorithm015 extends Interface {
                         int value = Collections.max(crossPointValues.values());
                         for (Map.Entry<Point, Integer> crossPointValue : crossPointValues.entrySet()) {
                             if (crossPointValue.getValue() == value) {
+                                prepareTurned = true;
+                                preparePoint = point;
                                 DoMove(point, crossPointValue.getKey());
                                 return;
                             }
@@ -444,6 +457,8 @@ class Algorithm015 extends Interface {
                                 }
                             }
                             if (moveVector != null) {
+                                prepareTurned = true;
+                                preparePoint = point;
                                 DoMove(movePoint, movePoint.Plus(moveVector));
                                 return;
                             }

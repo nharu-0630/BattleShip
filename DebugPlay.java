@@ -15,8 +15,8 @@ public class DebugPlay {
     // public static final int deepTryCount = 100;
 
     // ログ保存
-    // public static final boolean isSaveLog = true;
-    public static final boolean isSaveLog = false;
+    public static final boolean isSaveLog = true;
+    // public static final boolean isSaveLog = false;
 
     // ログ表示
     // public static final boolean isVisibleLog = true;
@@ -31,9 +31,9 @@ public class DebugPlay {
     public static int bravoAlgorithmNumber = 15;
 
     public static void main(String args[]) {
-        // Try(true, null);
+        Try(true, null);
 
-        DeepTry(null);
+        // DeepTry(null);
 
         // ParameterDeepTry();
 
