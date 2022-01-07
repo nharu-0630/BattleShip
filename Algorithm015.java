@@ -56,8 +56,8 @@ class Algorithm015 extends Interface {
             for (int x = 0; x < Board.BOARD_SIZE; x++) {
                 for (int y = 0; y < Board.BOARD_SIZE; y++) {
                     Point point = (new Point(x, y)).Plus(Board.GetLastMoveVector(!alphaSide));
-                    if (Board.GetCell(x, y).GetValue(alphaSide, 0) == -1 || Board.GetCell(x, y).GetValue(alphaSide,
-                            0) == -2) {
+                    if (Board.GetCell(x, y).GetValue(alphaSide, 0) == -1
+                            || Board.GetCell(x, y).GetValue(alphaSide, 0) == -2) {
                         if (point.IsRange() && Board.GetCell(point).GetValue(alphaSide, 0) == -1) {
                             excludePoints.add(point);
                         }
@@ -171,8 +171,8 @@ class Algorithm015 extends Interface {
             for (int x = 0; x < Board.BOARD_SIZE; x++) {
                 for (int y = 0; y < Board.BOARD_SIZE; y++) {
                     Point point = (new Point(x, y)).Plus(Board.GetLastMoveVector(alphaSide));
-                    if (Board.GetCell(x, y).GetValue(alphaSide, 1) == -1 || Board.GetCell(x, y).GetValue(alphaSide,
-                            1) == -2) {
+                    if (Board.GetCell(x, y).GetValue(alphaSide, 1) == -1
+                            || Board.GetCell(x, y).GetValue(alphaSide, 1) == -2) {
                         if (point.IsRange() && Board.GetCell(point).GetValue(alphaSide, 1) == -1) {
                             excludePoints.add(point);
                         }
@@ -308,7 +308,7 @@ class Algorithm015 extends Interface {
         }
         // #endregion
 
-        // #region 勝ち逃げ
+        // #region 勝ち逃げ 無効
         // if (allySumHp - enemySumHp > 3) {
         // defenceMoveFlag = true;
         // }
@@ -340,7 +340,6 @@ class Algorithm015 extends Interface {
                 if (Board.IsLastMove(!alphaSide)) {
                     Point estimatedPoint = Board.GetLastAttackPoint(alphaSide)
                             .Plus(Board.GetLastMoveVector(!alphaSide));
-
                     if (estimatedPoint.IsRange()) {
                         Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValueForce(alphaSide, 0, 0);
                         Board.GetCell(estimatedPoint).SetValueForce(alphaSide, 0, 20);
@@ -367,14 +366,17 @@ class Algorithm015 extends Interface {
                         return;
                     }
                 }
-                if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_NEAR)) {
+            }
+            if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_NEAR)) {
 
-                }
+            }
+            if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_NOHIT)) {
+
             }
         }
         // #endregion
 
-        // #region 敵軍攻撃 移動
+        // #region 敵軍攻撃 移動 無効
         // if (Board.IsLastAttack(!alphaSide)) {
         // // 自軍が命中した
         // if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_HIT)) {
@@ -404,7 +406,8 @@ class Algorithm015 extends Interface {
 
         // #region 準備移動 攻撃
         if (prepareTurned && Board.IsEnableAttackPoint(alphaSide, preparePoint)) {
-            System.out.println("Preparing attack = " + Board.GetTurnCount());
+            // System.out.println("Preparing Attack = " + Logger.GetFileName() + " (" +
+            // Board.GetTurnCount() + ")");
             prepareTurned = false;
             DoAttack(preparePoint);
             preparePoint = null;
@@ -412,17 +415,14 @@ class Algorithm015 extends Interface {
         }
         // #endregion
 
-        ArrayList<Point> maxValuePoints = new ArrayList<Point>(
-                Board.GetPointValues(alphaSide, null, 0, 1).keySet());
-        if (Board.GetCell(maxValuePoints.get(0)).GetValue(alphaSide, 0) > 5) {
+        ArrayList<Point> maxValuePoints = new ArrayList<Point>(Board.GetPointValues(alphaSide, null, 0, 1).keySet());
+        if (Board.GetCell(maxValuePoints.get(0)).GetValue(alphaSide, 0) > 10) {
             for (Point point : maxValuePoints) {
-
                 if (Board.GetCell(point).IsAlive(alphaSide)) {
                     HashMap<Point, Integer> crossPointValues = new HashMap<Point, Integer>();
                     for (Point crossPoint : Board.GetFilterMoveEnablePoints(alphaSide, point,
                             Board.GetCrossPoints(point, 1, 1))) {
-                        crossPointValues.put(crossPoint,
-                                Board.GetCell(crossPoint).GetValue(alphaSide, 1));
+                        crossPointValues.put(crossPoint, Board.GetCell(crossPoint).GetValue(alphaSide, 1));
                     }
                     if (crossPointValues.size() != 0) {
                         int value = Collections.max(crossPointValues.values());
@@ -452,11 +452,8 @@ class Algorithm015 extends Interface {
                             if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)
                                     || point.equals(movePoint.Plus(moveVector))) {
                                 moveVector = moveVector.Divide(2);
-                                if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
-                                    moveVector = null;
-                                }
                             }
-                            if (moveVector != null) {
+                            if (Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
                                 prepareTurned = true;
                                 preparePoint = point;
                                 DoMove(movePoint, movePoint.Plus(moveVector));

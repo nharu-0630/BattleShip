@@ -270,23 +270,30 @@ class Point {
 
     public String toPointFormatString() {
         String[] yStrings = new String[] { "A", "B", "C", "D", "E" };
-        return yStrings[y] + (x + 1);
+        if (0 <= y && y <= 4) {
+            return yStrings[y] + (x + 1);
+        }
+        return toString();
     }
 
     public String toVectorFormaString() {
-        if (x > 0) {
-            return "東" + x;
+        if (y == 0) {
+            if (x > 0) {
+                return "東" + x;
+            }
+            if (x < 0) {
+                return "西" + Math.abs(x);
+            }
         }
-        if (x < 0) {
-            return "西" + Math.abs(x);
+        if (x == 0) {
+            if (y > 0) {
+                return "南" + y;
+            }
+            if (y < 0) {
+                return "北" + Math.abs(y);
+            }
         }
-        if (y > 0) {
-            return "南" + y;
-        }
-        if (y < 0) {
-            return "北" + Math.abs(y);
-        }
-        return toPointFormatString();
+        return toString();
     }
 }
 
