@@ -874,6 +874,9 @@ class Board {
     }
 
     public static boolean IsMoveEnablePoint(boolean alphaSide, Point oldPoint, Point newPoint) {
+        if (!oldPoint.IsRange() || !newPoint.IsRange()) {
+            return false;
+        }
         if (Board.GetCell(oldPoint).IsAlive(alphaSide) && Board.GetCell(newPoint).IsEmpty(alphaSide)) {
             if (GetPointDistance(oldPoint, newPoint) == 1) {
                 return true;
@@ -993,6 +996,9 @@ class Board {
     }
 
     public static boolean IsEnableAttackPoint(boolean alphaSide, Point point) {
+        if (!point.IsRange()) {
+            return false;
+        }
         SearchEnableAttackPoints(alphaSide);
         return Board.GetCell(point).GetEnableAttack(alphaSide);
     }

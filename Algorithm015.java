@@ -287,7 +287,6 @@ class Algorithm015 extends Interface {
             // 自軍が命中した = 命中したポイントの逆評価値を10に設定する
             if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_HIT)) {
                 if (fakeMoveFlag) {
-                    // System.out.println("Fake Move is Ban.");
                     fakeMoveEnable = false;
                 }
                 Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValue(alphaSide, 1, 20);

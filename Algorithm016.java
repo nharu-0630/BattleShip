@@ -287,7 +287,6 @@ class Algorithm016 extends Interface {
             // 自軍が命中した = 命中したポイントの逆評価値を10に設定する
             if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_HIT)) {
                 if (fakeMoveFlag) {
-                    // System.out.println("Fake Move is Ban.");
                     fakeMoveEnable = false;
                 }
                 Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValue(alphaSide, 1, 20);
@@ -398,6 +397,34 @@ class Algorithm016 extends Interface {
             DoAttack(preparePoint);
             preparePoint = null;
             return;
+        }
+
+        if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_NOHIT)) {
+            for (Point movePoint : Board.GetShortPoints(alphaSide, Board.GetLastAttackPoint(!alphaSide))) {
+                Point minusVector = movePoint.Minus(Board.GetLastAttackPoint(!alphaSide));
+                Point moveVector = null;
+                if (minusVector.x > 1) {
+                    moveVector = new Point(2, 0);
+                } else if (minusVector.x < -1) {
+                    moveVector = new Point(-2, 0);
+                } else if (minusVector.y > 1) {
+                    moveVector = new Point(0, 2);
+                } else if (minusVector.y < -1) {
+                    moveVector = new Point(0, -2);
+                }
+                if (moveVector != null) {
+                    if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
+                        moveVector = moveVector.Divide(2);
+                        if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
+                            moveVector = null;
+                        }
+                    }
+                    if (moveVector != null) {
+                        DoMove(movePoint, movePoint.Plus(moveVector));
+                        return;
+                    }
+                }
+            }
         }
 
         ArrayList<Point> maxValuePoints = new ArrayList<Point>(
