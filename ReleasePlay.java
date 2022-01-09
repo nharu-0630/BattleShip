@@ -15,7 +15,11 @@ public class ReleasePlay {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
         AlgorithmSwitcher alphaAlgorithm = new AlgorithmSwitcher(true, isEnemySecret);
-        Board.SetRandom4Points(true, true, true);
+        // Board.SetRandom4Points(true, true, true);
+        Board.GetCell(new Point("B2")).SetHp(true, 3);
+        Board.GetCell(new Point("B4")).SetHp(true, 3);
+        Board.GetCell(new Point("D2")).SetHp(true, 3);
+        Board.GetCell(new Point("D4")).SetHp(true, 3);
 
         alphaAlgorithm.SetAlgorithm(alphaAlgorithmNumber);
         alphaAlgorithm.SetParameter(null);

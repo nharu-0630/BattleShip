@@ -400,7 +400,7 @@ class Algorithm016 extends Interface {
         }
 
         if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_NOHIT)) {
-            for (Point movePoint : Board.GetShortPoints(alphaSide, Board.GetLastAttackPoint(!alphaSide))) {
+            for (Point movePoint : Board.GetShipPoints(alphaSide)) {
                 Point minusVector = movePoint.Minus(Board.GetLastAttackPoint(!alphaSide));
                 Point moveVector = null;
                 if (minusVector.x > 1) {

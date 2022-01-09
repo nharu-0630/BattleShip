@@ -11,8 +11,8 @@ public class DebugPlay {
     public static final int maxTurnCount = 60;
 
     // ゲーム試合数
-    public static final int deepTryCount = 1000;
-    // public static final int deepTryCount = 10;
+    // public static final int deepTryCount = 1000;
+    public static final int deepTryCount = 10;
 
     // ログ保存
     // public static final boolean isSaveLog = true;
@@ -52,7 +52,10 @@ public class DebugPlay {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
         AlgorithmSwitcher alphaAlgorithm = new AlgorithmSwitcher(true, isEnemySecret);
-        Board.SetRandom4Points(true, true, true);
+        Board.GetCell(new Point("B2")).SetHp(true, 3);
+        Board.GetCell(new Point("B4")).SetHp(true, 3);
+        Board.GetCell(new Point("D2")).SetHp(true, 3);
+        Board.GetCell(new Point("D4")).SetHp(true, 3);
 
         AlgorithmSwitcher bravoAlgorithm = new AlgorithmSwitcher(false, isEnemySecret);
         Board.SetRandom4Points(false, true, true);

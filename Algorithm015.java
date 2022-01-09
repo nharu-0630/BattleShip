@@ -377,8 +377,8 @@ class Algorithm015 extends Interface {
                                             continue;
                                         }
                                         if (Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
-                                            // System.out.println("Fake Move = " + Logger.GetFileName() + " : "
-                                            // + Board.GetTurnCount());
+                                            System.out.println("Fake Move = " + Logger.GetFileName() + " : "
+                                                    + Board.GetTurnCount());
                                             fakeMoveFlag = true;
                                             DoMove(movePoint, movePoint.Plus(moveVector));
                                             return;
