@@ -399,37 +399,15 @@ class Algorithm016 extends Interface {
             return;
         }
 
-        if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_NOHIT)) {
-            for (Point movePoint : Board.GetShipPoints(alphaSide)) {
-                Point minusVector = movePoint.Minus(Board.GetLastAttackPoint(!alphaSide));
-                Point moveVector = null;
-                if (minusVector.x > 1) {
-                    moveVector = new Point(2, 0);
-                } else if (minusVector.x < -1) {
-                    moveVector = new Point(-2, 0);
-                } else if (minusVector.y > 1) {
-                    moveVector = new Point(0, 2);
-                } else if (minusVector.y < -1) {
-                    moveVector = new Point(0, -2);
-                }
-                if (moveVector != null) {
-                    if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
-                        moveVector = moveVector.Divide(2);
-                        if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
-                            moveVector = null;
-                        }
-                    }
-                    if (moveVector != null) {
-                        DoMove(movePoint, movePoint.Plus(moveVector));
-                        return;
-                    }
-                }
-            }
-        }
-
         ArrayList<Point> maxValuePoints = new ArrayList<Point>(
                 Board.GetPointValues(alphaSide, null, 0, 1).keySet());
         if (Board.GetCell(maxValuePoints.get(0)).GetValue(alphaSide, 0) > 5) {
+            for (Point point : maxValuePoints) {
+                if (Board.IsEnableAttackPoint(alphaSide, point)) {
+                    DoAttack(point);
+                    return;
+                }
+            }
             for (Point point : maxValuePoints) {
                 if (Board.GetCell(point).IsAlive(alphaSide)) {
                     HashMap<Point, Integer> crossPointValues = new HashMap<Point, Integer>();
