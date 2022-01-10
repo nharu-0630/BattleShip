@@ -11,7 +11,7 @@ public class DebugPlay {
     public static final int maxTurnCount = 60;
 
     // ゲーム試合数
-    public static final int deepTryCount = 1000;
+    public static final int deepTryCount = 30000;
     // public static final int deepTryCount = 10;
 
     // ログ保存
@@ -28,7 +28,7 @@ public class DebugPlay {
 
     // アルゴリズム
     public static int alphaAlgorithmNumber = 16;
-    public static int bravoAlgorithmNumber = 16;
+    public static int bravoAlgorithmNumber = 17;
 
     public static void main(String args[]) {
         // Try(true, null);
