@@ -25,7 +25,7 @@ public class ReleasePlay {
         alphaAlgorithm.SetParameter(null);
 
         Logger.CreateLogger(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(LocalDateTime.now()) + "-"
-                + String.format("%03d", alphaAlgorithmNumber) + "-" + "Release" + ".json", true);
+                + String.format("%03d", alphaAlgorithmNumber) + "-" + "Release", true);
 
         System.out.print(ConsoleColors.RED);
         System.out.println("┌" + "─".repeat(9) + "┬" + "─".repeat(28) + "┬" + "─".repeat(40) + "┐");
