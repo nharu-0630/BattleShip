@@ -15,8 +15,6 @@ public class UndoPlay {
     public static int alphaAlgorithmNumber = 17;
 
     public static void main(String args[]) throws JSONException, IOException {
-        System.out.println(ConsoleInput.InputKeys(new String[] { "ハズレ！", "波高し！", "命中！", "撃沈！" }, "攻撃結果"));
-
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
         AlgorithmSwitcher alphaAlgorithm = new AlgorithmSwitcher(true, isEnemySecret);
@@ -74,119 +72,10 @@ public class UndoPlay {
             }
         }
 
-        String tempLine = "";
-
-        int allyCount = 0;
-        CONFIRM: while (true) {
-            System.out.print(ConsoleColors.YELLOW);
-            System.out.print("AllyCount: ");
-            System.out.print(ConsoleColors.RESET);
-            tempLine = scanner.nextLine();
-            if (tempLine.chars().allMatch(Character::isDigit)) {
-                allyCount = Integer.parseInt(tempLine);
-                if (0 <= allyCount && allyCount <= 4) {
-                    System.out.println("AllyCount = " + allyCount);
-                    System.out.print(ConsoleColors.YELLOW);
-                    System.out.print("確定(y), 取消(n): ");
-                    System.out.print(ConsoleColors.RESET);
-                    if (scanner.nextLine().equals("y")) {
-                        break CONFIRM;
-                    } else {
-                        System.out.print(ConsoleColors.RED);
-                        System.out.println("取消されました");
-                        System.out.print(ConsoleColors.RESET);
-                        continue CONFIRM;
-                    }
-                }
-            }
-            System.out.print(ConsoleColors.RED);
-            System.out.println("入力が正しくありません");
-            System.out.print(ConsoleColors.RESET);
-        }
-
-        int allySumHp = 0;
-        CONFIRM: while (true) {
-            System.out.print(ConsoleColors.YELLOW);
-            System.out.print("AllySumHp: ");
-            System.out.print(ConsoleColors.RESET);
-            tempLine = scanner.nextLine();
-            if (tempLine.chars().allMatch(Character::isDigit)) {
-                allySumHp = Integer.parseInt(tempLine);
-                if (0 <= allySumHp && allySumHp <= 12) {
-                    System.out.println("AllySumHp = " + allySumHp);
-                    System.out.print(ConsoleColors.YELLOW);
-                    System.out.print("確定(y), 取消(n): ");
-                    System.out.print(ConsoleColors.RESET);
-                    if (scanner.nextLine().equals("y")) {
-                        break CONFIRM;
-                    } else {
-                        System.out.print(ConsoleColors.RED);
-                        System.out.println("取消されました");
-                        System.out.print(ConsoleColors.RESET);
-                        continue CONFIRM;
-                    }
-                }
-            }
-            System.out.print(ConsoleColors.RED);
-            System.out.println("入力が正しくありません");
-            System.out.print(ConsoleColors.RESET);
-        }
-
-        int enemyCount = 0;
-        CONFIRM: while (true) {
-            System.out.print(ConsoleColors.YELLOW);
-            System.out.print("EnemyCount: ");
-            System.out.print(ConsoleColors.RESET);
-            tempLine = scanner.nextLine();
-            if (tempLine.chars().allMatch(Character::isDigit)) {
-                enemyCount = Integer.parseInt(tempLine);
-                if (0 <= enemyCount && enemyCount <= 4) {
-                    System.out.println("EnemyCount = " + enemyCount);
-                    System.out.print(ConsoleColors.YELLOW);
-                    System.out.print("確定(y), 取消(n): ");
-                    System.out.print(ConsoleColors.RESET);
-                    if (scanner.nextLine().equals("y")) {
-                        break CONFIRM;
-                    } else {
-                        System.out.print(ConsoleColors.RED);
-                        System.out.println("取消されました");
-                        System.out.print(ConsoleColors.RESET);
-                        continue CONFIRM;
-                    }
-                }
-            }
-            System.out.print(ConsoleColors.RED);
-            System.out.println("入力が正しくありません");
-            System.out.print(ConsoleColors.RESET);
-        }
-
-        int enemySumHp = 0;
-        CONFIRM: while (true) {
-            System.out.print(ConsoleColors.YELLOW);
-            System.out.print("EnemySumHp: ");
-            System.out.print(ConsoleColors.RESET);
-            tempLine = scanner.nextLine();
-            if (tempLine.chars().allMatch(Character::isDigit)) {
-                enemySumHp = Integer.parseInt(tempLine);
-                if (0 <= enemySumHp && enemySumHp <= 12) {
-                    System.out.println("EnemySumHp = " + enemySumHp);
-                    System.out.print(ConsoleColors.YELLOW);
-                    System.out.print("確定(y), 取消(n): ");
-                    System.out.print(ConsoleColors.RESET);
-                    if (scanner.nextLine().equals("y")) {
-                        break CONFIRM;
-                    } else {
-                        System.out.print(ConsoleColors.RED);
-                        System.out.println("取消されました");
-                        System.out.print(ConsoleColors.RESET);
-                        continue CONFIRM;
-                    }
-                }
-            }
-            System.out.print(ConsoleColors.RED);
-            System.out.println("入力が正しくありません");
-            System.out.print(ConsoleColors.RESET);
-        }
+        int allyCount = ConsoleInput.InputInt("AllyCount", 0, 4);
+        int allySumHp = ConsoleInput.InputInt("AllySumHp", 0, 12);
+        int enemyCount = ConsoleInput.InputInt("EnemyCount", 0, 4);
+        int enemySumHp = ConsoleInput.InputInt("EnemySumHp", 0, 12);
 
         alphaAlgorithm.SetAlgorithm(alphaAlgorithmNumber);
         alphaAlgorithm.SetParameter(null);
@@ -203,118 +92,31 @@ public class UndoPlay {
         System.out.print(ConsoleColors.RESET);
 
         boolean alphaSide = true;
-        tempLine = "";
-        CONFIRM: while (true) {
-            System.out.print(ConsoleColors.YELLOW);
-            System.out.print("先攻(f), 後攻(s): ");
-            System.out.print(ConsoleColors.RESET);
-            tempLine = scanner.nextLine();
-            if (tempLine.equals("f") || tempLine.equals("s")) {
-                switch (tempLine) {
-                    case "f":
-                        alphaSide = true;
-                        System.out.println("先攻");
-                        break;
-                    case "s":
-                        alphaSide = false;
-                        System.out.println("後攻");
-                        break;
-                }
-                break CONFIRM;
-            }
-            System.out.print(ConsoleColors.RED);
-            System.out.println("入力が正しくありません");
-            System.out.print(ConsoleColors.RESET);
+        switch (ConsoleInput.InputKeysValues(new String[] { "先攻", "後攻" }, new String[] { "f", "s" }, "")) {
+            case "f":
+                alphaSide = true;
+                break;
+            case "s":
+                alphaSide = false;
+                break;
         }
 
         while (Board.IsContinue(false)) {
             if (alphaSide) {
                 alphaAlgorithm.Think();
                 if (Board.IsLastAttack(alphaSide)) {
-                    CONFIRM: while (true) {
-                        System.out.print(ConsoleColors.YELLOW);
-                        System.out.print("ハズレ！(0), 波高し！(1), 命中！(2), 撃沈！(3): ");
-                        System.out.print(ConsoleColors.RESET);
-                        tempLine = scanner.nextLine();
-                        if (tempLine.chars().allMatch(Character::isDigit)) {
-                            int attackResult = Integer.parseInt(tempLine);
-                            if (0 <= attackResult && attackResult <= 3) {
-                                String[] tempStrings = new String[] { "ハズレ！", "波高し！", "命中！", "撃沈！" };
-                                System.out.println("攻撃結果 = " + tempStrings[attackResult]);
-                                System.out.print(ConsoleColors.YELLOW);
-                                System.out.print("確定(y), 取消(n): ");
-                                System.out.print(ConsoleColors.RESET);
-                                if (scanner.nextLine().equals("y")) {
-                                    Board.AttackResultTransfer(alphaSide,
-                                            new ArrayList<Integer>(Arrays.asList(attackResult)));
-                                    break CONFIRM;
-                                } else {
-                                    System.out.print(ConsoleColors.RED);
-                                    System.out.println("取消されました");
-                                    System.out.print(ConsoleColors.RESET);
-                                    continue CONFIRM;
-                                }
-                            }
-                        }
-                        System.out.print(ConsoleColors.RED);
-                        System.out.println("入力が正しくありません");
-                        System.out.print(ConsoleColors.RESET);
-                    }
+                    Board.AttackResultTransfer(alphaSide,
+                            new ArrayList<Integer>(Arrays.asList(ConsoleInput
+                                    .InputKeys(new String[] { "ハズレ！", "波高し！", "命中！", "撃沈！" }, "攻撃結果"))));
                 }
             } else {
-                CONFIRM: while (true) {
-                    System.out.print(ConsoleColors.YELLOW);
-                    System.out.print("攻撃(a), 移動(m): ");
-                    System.out.print(ConsoleColors.RESET);
-                    switch (scanner.nextLine()) {
-                        case "a":
-                            System.out.print(ConsoleColors.YELLOW);
-                            System.out.print("ポイント: ");
-                            System.out.print(ConsoleColors.RESET);
-                            Point point = new Point(scanner.nextLine());
-                            if (!point.empty && 0 <= point.x && point.x <= 4 && 0 <= point.y && point.y <= 4) {
-                                System.out.println("攻撃 = " + point.toPointFormatString());
-                                System.out.print(ConsoleColors.YELLOW);
-                                System.out.print("確定(y), 取消(n): ");
-                                System.out.print(ConsoleColors.RESET);
-                                if (scanner.nextLine().equals("y")) {
-                                    Board.AttackPointForce(alphaSide, point);
-                                    break CONFIRM;
-                                } else {
-                                    System.out.print(ConsoleColors.RED);
-                                    System.out.println("取消されました");
-                                    System.out.print(ConsoleColors.RESET);
-                                    continue CONFIRM;
-                                }
-                            }
-                            break;
-                        case "m":
-                            System.out.print(ConsoleColors.YELLOW);
-                            System.out.print("ベクトル: ");
-                            System.out.print(ConsoleColors.RESET);
-                            point = new Point(scanner.nextLine());
-                            if (!point.empty
-                                    && (point.x == 0 || point.y == 0) && ((Math.abs(point.x) + Math.abs(point.y)) == 1
-                                            || (Math.abs(point.x) + Math.abs(point.y)) == 2)) {
-                                System.out.println("移動 = " + point.toVectorFormaString());
-                                System.out.print(ConsoleColors.YELLOW);
-                                System.out.print("確定(y), 取消(n): ");
-                                System.out.print(ConsoleColors.RESET);
-                                if (scanner.nextLine().equals("y")) {
-                                    Board.MoveVectorForce(alphaSide, point);
-                                    break CONFIRM;
-                                } else {
-                                    System.out.print(ConsoleColors.RED);
-                                    System.out.println("取消されました");
-                                    System.out.print(ConsoleColors.RESET);
-                                    continue CONFIRM;
-                                }
-                            }
-                            break;
-                    }
-                    System.out.print(ConsoleColors.RED);
-                    System.out.println("入力が正しくありません");
-                    System.out.print(ConsoleColors.RESET);
+                switch (ConsoleInput.InputKeysValues(new String[] { "攻撃", "移動" }, new String[] { "a", "m" }, "")) {
+                    case "a":
+                        Board.AttackPointForce(alphaSide, ConsoleInput.InputPoint("攻撃"));
+                        break;
+                    case "m":
+                        Board.MoveVectorForce(alphaSide, ConsoleInput.InputVector("移動"));
+                        break;
                 }
             }
             alphaSide = !alphaSide;

@@ -1044,18 +1044,20 @@ class Board {
                     }
                 }
             }
+            Board.WriteLog(ConsoleColors.BLUE_BOLD);
             if (attackResult.contains(ATTACK_SINK)) {
-                WriteLogLine("撃沈！");
+                WriteLogLine("<撃沈！>");
             }
             if (attackResult.contains(ATTACK_HIT)) {
-                WriteLogLine("命中！");
+                WriteLogLine("<命中！>");
             }
             if (attackResult.contains(ATTACK_NEAR)) {
-                WriteLogLine("波高し！");
+                WriteLogLine("<波高し！>");
             }
             if (attackResult.contains(ATTACK_NOHIT)) {
-                WriteLogLine("ハズレ！");
+                WriteLogLine("<ハズレ！>");
             }
+            Board.WriteLog(ConsoleColors.RESET);
             if (alphaSide) {
                 lastAlphaAttackPoint = point;
                 lastAlphaAttackResult = attackResult;
@@ -1088,23 +1090,25 @@ class Board {
     }
 
     public static void AttackResultTransfer(boolean alphaSide, ArrayList<Integer> attackResult) {
+        Board.WriteLog(ConsoleColors.BLUE_BOLD);
         for (int i = 0; i < attackResult.size(); i++) {
             switch (attackResult.get(i)) {
                 case ATTACK_SINK:
-                    WriteLogLine("撃沈！");
+                    WriteLogLine("<撃沈！>");
                     Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetHp(!alphaSide, 0);
                     break;
                 case ATTACK_HIT:
-                    WriteLogLine("命中！");
+                    WriteLogLine("<命中！>");
                     break;
                 case ATTACK_NEAR:
-                    WriteLogLine("波高し！");
+                    WriteLogLine("<波高し！>");
                     break;
                 case ATTACK_NOHIT:
-                    WriteLogLine("ハズレ！");
+                    WriteLogLine("<ハズレ！>");
                     break;
             }
         }
+        Board.WriteLog(ConsoleColors.RESET);
         if (alphaSide) {
             lastAlphaAttackResult = attackResult;
         } else {
@@ -1140,18 +1144,20 @@ class Board {
                 }
             }
         }
+        Board.WriteLog(ConsoleColors.BLUE_BOLD);
         if (attackResult.contains(ATTACK_SINK)) {
-            WriteLogLine("撃沈！");
+            WriteLogLine("<撃沈！>");
         }
         if (attackResult.contains(ATTACK_HIT)) {
-            WriteLogLine("命中！");
+            WriteLogLine("<命中！>");
         }
         if (attackResult.contains(ATTACK_NEAR)) {
-            WriteLogLine("波高し！");
+            WriteLogLine("<波高し！>");
         }
         if (attackResult.contains(ATTACK_NOHIT)) {
-            WriteLogLine("ハズレ！");
+            WriteLogLine("<ハズレ！>");
         }
+        Board.WriteLog(ConsoleColors.RESET);
         if (alphaSide) {
             lastAlphaAttackPoint = point;
             lastAlphaAttackResult = attackResult;
@@ -1190,7 +1196,7 @@ class Interface {
         enemySumHp = parameters[3];
     }
 
-    public int[] GetCountSumHp() {
+    public int[] SetCountSumHp() {
         return new int[] { allyCount, allySumHp, enemyCount, enemySumHp };
     }
 
