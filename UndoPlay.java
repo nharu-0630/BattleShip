@@ -27,23 +27,33 @@ public class UndoPlay {
             lastIndex++;
         }
         lastIndex--;
-        JSONObject lastObject = jsonObject.getJSONObject(String.valueOf(lastIndex)).getJSONObject("true");
-        JSONArray lastHpArray = lastObject.getJSONArray("hp");
-        for (int i = 0; i < lastHpArray.length(); i++) {
+        JSONObject lastAlphaObject = jsonObject.getJSONObject(String.valueOf(lastIndex)).getJSONObject("true");
+        JSONArray lastAlphaHpArray = lastAlphaObject.getJSONArray("hp");
+        for (int i = 0; i < lastAlphaHpArray.length(); i++) {
             int x = i % 5;
             int y = i / 5;
-            int hp = (Integer) lastHpArray.get(i);
+            int hp = (Integer) lastAlphaHpArray.get(i);
             if (hp != -1) {
                 Board.GetCell(x, y).SetHp(true, hp);
             }
         }
-        JSONArray lastValuesArray = lastObject.getJSONArray("values");
-        for (int i = 0; i < lastValuesArray.length(); i++) {
+        JSONArray lastAlphaValuesArray = lastAlphaObject.getJSONArray("values");
+        for (int i = 0; i < lastAlphaValuesArray.length(); i++) {
             int x = i % 5;
             int y = i / 5;
-            int[] value = JSonArrayToIntArray(lastValuesArray.getJSONArray(i));
+            int[] value = JSonArrayToIntArray(lastAlphaValuesArray.getJSONArray(i));
             for (int j = 0; j < value.length; j++) {
                 Board.GetCell(x, y).SetValueForce(true, j, value[j]);
+            }
+        }
+        JSONObject lastBravoObject = jsonObject.getJSONObject(String.valueOf(lastIndex)).getJSONObject("false");
+        JSONArray lastBravoHpArray = lastBravoObject.getJSONArray("hp");
+        for (int i = 0; i < lastBravoHpArray.length(); i++) {
+            int x = i % 5;
+            int y = i / 5;
+            int hp = (Integer) lastBravoHpArray.get(i);
+            if (hp == 0) {
+                Board.GetCell(x, y).SetHp(false, 0);
             }
         }
 
@@ -54,10 +64,10 @@ public class UndoPlay {
                 + String.format("%03d", alphaAlgorithmNumber) + "-" + "Release", true);
 
         System.out.print(ConsoleColors.RED);
-        System.out.println("┌" + "─".repeat(9) + "┬" + "─".repeat(28) + "┬" + "─".repeat(40) + "┐");
+        System.out.println("┌" + "─".repeat(9) + "┬" + "─".repeat(28) + "┬" + "─".repeat(35) + "┐");
         System.out.println("│   " + String.format("%03d", alphaAlgorithmNumber)
                 + "   │         BattleShip         │   " + Logger.GetFileName() + "   │");
-        System.out.println("└" + "─".repeat(9) + "┴" + "─".repeat(28) + "┴" + "─".repeat(40) + "┘");
+        System.out.println("└" + "─".repeat(9) + "┴" + "─".repeat(28) + "┴" + "─".repeat(35) + "┘");
         System.out.print(ConsoleColors.RESET);
 
         boolean alphaSide = true;

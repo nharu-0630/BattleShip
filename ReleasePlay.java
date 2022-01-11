@@ -28,10 +28,10 @@ public class ReleasePlay {
                 + String.format("%03d", alphaAlgorithmNumber) + "-" + "Release", true);
 
         System.out.print(ConsoleColors.RED);
-        System.out.println("┌" + "─".repeat(9) + "┬" + "─".repeat(28) + "┬" + "─".repeat(40) + "┐");
+        System.out.println("┌" + "─".repeat(9) + "┬" + "─".repeat(28) + "┬" + "─".repeat(35) + "┐");
         System.out.println("│   " + String.format("%03d", alphaAlgorithmNumber)
                 + "   │         BattleShip         │   " + Logger.GetFileName() + "   │");
-        System.out.println("└" + "─".repeat(9) + "┴" + "─".repeat(28) + "┴" + "─".repeat(40) + "┘");
+        System.out.println("└" + "─".repeat(9) + "┴" + "─".repeat(28) + "┴" + "─".repeat(35) + "┘");
         System.out.print(ConsoleColors.RESET);
 
         boolean alphaSide = true;
