@@ -1,9 +1,12 @@
-class AlgorithmSwitcher extends Interface {
+class AlgorithmSwitcher {
     AlgorithmSwitcher(boolean alphaSide, boolean isEnemySecret) {
-        super(alphaSide, isEnemySecret);
+        this.alphaSide = alphaSide;
+        this.isEnemySecret = isEnemySecret;
     }
 
     private int algorithmNumber = 1;
+    private boolean alphaSide = true;
+    private boolean isEnemySecret = true;
     private Algorithm001 algorithm001;
     private Algorithm002 algorithm002;
     private Algorithm003 algorithm003;
@@ -95,6 +98,62 @@ class AlgorithmSwitcher extends Interface {
             case 17:
                 algorithm017 = new Algorithm017(alphaSide, isEnemySecret);
                 algorithm017.SetParameter(parameters);
+                break;
+        }
+    }
+
+    public void SetCountSumHp(int[] parameters) {
+        switch (algorithmNumber) {
+            case 1:
+                algorithm001.SetCountSumHp(parameters);
+                break;
+            case 2:
+                algorithm002.SetCountSumHp(parameters);
+                break;
+            case 3:
+                algorithm003.SetCountSumHp(parameters);
+                break;
+            case 4:
+                algorithm004.SetCountSumHp(parameters);
+                break;
+            case 5:
+                algorithm005.SetCountSumHp(parameters);
+                break;
+            case 6:
+                algorithm006.SetCountSumHp(parameters);
+                break;
+            case 7:
+                algorithm007.SetCountSumHp(parameters);
+                break;
+            case 8:
+                algorithm008.SetCountSumHp(parameters);
+                break;
+            case 9:
+                algorithm009.SetCountSumHp(parameters);
+                break;
+            case 10:
+                algorithm010.SetCountSumHp(parameters);
+                break;
+            case 11:
+                algorithm011.SetCountSumHp(parameters);
+                break;
+            case 12:
+                algorithm012.SetCountSumHp(parameters);
+                break;
+            case 13:
+                algorithm013.SetCountSumHp(parameters);
+                break;
+            case 14:
+                algorithm014.SetCountSumHp(parameters);
+                break;
+            case 15:
+                algorithm015.SetCountSumHp(parameters);
+                break;
+            case 16:
+                algorithm016.SetCountSumHp(parameters);
+                break;
+            case 17:
+                algorithm017.SetCountSumHp(parameters);
                 break;
         }
     }

@@ -1183,8 +1183,21 @@ class Interface {
         enemySumHp = 12;
     }
 
+    public void SetCountSumHp(int[] parameters) {
+        allyCount = parameters[0];
+        allySumHp = parameters[1];
+        enemyCount = parameters[2];
+        enemySumHp = parameters[3];
+    }
+
+    public int[] GetCountSumHp() {
+        return new int[] { allyCount, allySumHp, enemyCount, enemySumHp };
+    }
+
     public void DoMove(Point oldPoint, Point newPoint) {
         Board.WriteBoard(alphaSide);
+        Board.WriteLogLine("allyCount = " + allyCount + ", allySumHp = " + allySumHp + ", enemyCount = " + enemyCount
+                + ", enemySumHp = " + enemySumHp);
         Board.WriteLog(ConsoleColors.BLUE_BOLD);
         Board.WriteLogLine("<" + newPoint.Minus(oldPoint).toVectorFormaString() + " に移動！>");
         Board.WriteLog(ConsoleColors.RESET);
@@ -1193,6 +1206,8 @@ class Interface {
 
     public void DoAttack(Point point) {
         Board.WriteBoard(alphaSide);
+        Board.WriteLogLine("allyCount = " + allyCount + ", allySumHp = " + allySumHp + ", enemyCount = " + enemyCount
+                + ", enemySumHp = " + enemySumHp);
         Board.WriteLog(ConsoleColors.BLUE_BOLD);
         Board.WriteLogLine("<" + point.toPointFormatString() + " に魚雷発射！>");
         Board.WriteLog(ConsoleColors.RESET);
@@ -1201,6 +1216,8 @@ class Interface {
 
     public void DoMoveForce(Point vectorPoint) {
         Board.WriteBoard(alphaSide);
+        Board.WriteLogLine("allyCount = " + allyCount + ", allySumHp = " + allySumHp + ", enemyCount = " + enemyCount
+                + ", enemySumHp = " + enemySumHp);
         Board.WriteLog(ConsoleColors.BLUE_BOLD);
         Board.WriteLogLine("<" + vectorPoint.toVectorFormaString() + " に移動！>");
         Board.WriteLog(ConsoleColors.RESET);
@@ -1209,6 +1226,8 @@ class Interface {
 
     public void DoAttackForce(Point point) {
         Board.WriteBoard(alphaSide);
+        Board.WriteLogLine("allyCount = " + allyCount + ", allySumHp = " + allySumHp + ", enemyCount = " + enemyCount
+                + ", enemySumHp = " + enemySumHp);
         Board.WriteLog(ConsoleColors.BLUE_BOLD);
         Board.WriteLogLine("<" + point.toPointFormatString() + " に魚雷発射！>");
         Board.WriteLog(ConsoleColors.RESET);
