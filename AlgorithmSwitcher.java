@@ -4,7 +4,7 @@ class AlgorithmSwitcher {
         this.isEnemySecret = isEnemySecret;
     }
 
-    private int algorithmNumber = 1;
+    private int algorithmNumber = 17;
     private boolean alphaSide = true;
     private boolean isEnemySecret = true;
     private Algorithm001 algorithm001;

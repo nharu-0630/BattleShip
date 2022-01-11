@@ -15,6 +15,8 @@ public class UndoPlay {
     public static int alphaAlgorithmNumber = 17;
 
     public static void main(String args[]) throws JSONException, IOException {
+        System.out.println(ConsoleInput.InputKeys(new String[] { "ハズレ！", "波高し！", "命中！", "撃沈！" }, "攻撃結果"));
+
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
         AlgorithmSwitcher alphaAlgorithm = new AlgorithmSwitcher(true, isEnemySecret);
