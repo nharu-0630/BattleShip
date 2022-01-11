@@ -1,8 +1,11 @@
+import java.io.*;
+import java.nio.file.*;
 import java.time.*;
 import java.time.format.*;
 import java.util.*;
+import org.json.*;
 
-public class ReleasePlay {
+public class UndoPlay {
     public static Scanner scanner = new Scanner(System.in);
     public static final boolean isVisibleLog = true;
     public static final boolean isAttackResultArray = false;
@@ -11,15 +14,38 @@ public class ReleasePlay {
     // アルゴリズム
     public static int alphaAlgorithmNumber = 17;
 
-    public static void main(String args[]) {
+    public static void main(String args[]) throws JSONException, IOException {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
         AlgorithmSwitcher alphaAlgorithm = new AlgorithmSwitcher(true, isEnemySecret);
-        // Board.SetRandom4Points(true, true, true);
-        Board.GetCell(new Point("A2")).SetHp(true, 3);
-        Board.GetCell(new Point("B4")).SetHp(true, 3);
-        Board.GetCell(new Point("D2")).SetHp(true, 3);
-        Board.GetCell(new Point("D4")).SetHp(true, 3);
+        System.out.print(ConsoleColors.YELLOW);
+        System.out.print("Jsonファイル: ");
+        String fileName = "log/" + scanner.nextLine();
+        JSONObject jsonObject = new JSONObject(Files.readString(Paths.get(fileName)));
+        int lastIndex = 1;
+        while (jsonObject.has(String.valueOf(lastIndex))) {
+            lastIndex++;
+        }
+        lastIndex--;
+        JSONObject lastObject = jsonObject.getJSONObject(String.valueOf(lastIndex)).getJSONObject("true");
+        JSONArray lastHpArray = lastObject.getJSONArray("hp");
+        for (int i = 0; i < lastHpArray.length(); i++) {
+            int x = i % 5;
+            int y = i / 5;
+            int hp = (Integer) lastHpArray.get(i);
+            if (hp != -1) {
+                Board.GetCell(x, y).SetHp(true, hp);
+            }
+        }
+        JSONArray lastValuesArray = lastObject.getJSONArray("values");
+        for (int i = 0; i < lastValuesArray.length(); i++) {
+            int x = i % 5;
+            int y = i / 5;
+            int[] value = JSonArrayToIntArray(lastValuesArray.getJSONArray(i));
+            for (int j = 0; j < value.length; j++) {
+                Board.GetCell(x, y).SetValueForce(true, j, value[j]);
+            }
+        }
 
         alphaAlgorithm.SetAlgorithm(alphaAlgorithmNumber);
         alphaAlgorithm.SetParameter(null);
@@ -151,5 +177,13 @@ public class ReleasePlay {
             }
             alphaSide = !alphaSide;
         }
+    }
+
+    public static int[] JSonArrayToIntArray(JSONArray jsonArray) {
+        int[] intArray = new int[jsonArray.length()];
+        for (int i = 0; i < intArray.length; ++i) {
+            intArray[i] = jsonArray.optInt(i);
+        }
+        return intArray;
     }
 }
