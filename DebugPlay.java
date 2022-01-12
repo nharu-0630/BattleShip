@@ -15,8 +15,8 @@ public class DebugPlay {
     public static final int deepTryCount = 1;
 
     // ログ保存
-    public static final boolean isSaveLog = true;
-    // public static final boolean isSaveLog = false;
+    // public static final boolean isSaveLog = true;
+    public static final boolean isSaveLog = false;
 
     // ログ表示
     public static final boolean isVisibleLog = true;
