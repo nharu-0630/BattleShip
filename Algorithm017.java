@@ -1,7 +1,7 @@
 import java.util.*;
 
-class Algorithm016 extends Interface {
-    Algorithm016(boolean alphaSide, boolean isEnemySecret) {
+class Algorithm017 extends Interface {
+    Algorithm017(boolean alphaSide, boolean isEnemySecret) {
         super(alphaSide, isEnemySecret);
         Board.InitializeValues(alphaSide, 1);
     }
@@ -221,7 +221,7 @@ class Algorithm016 extends Interface {
                         break;
                 }
             }
-            System.out.println(
+            Board.WriteLogLine(
                     "enemyFakeMoveCount = " + enemyFakeMoveCount + ", enemyRealMoveCount = " + enemyRealMoveCount
                             + ", enemyNoMoveCount = " + enemyNoMoveCount);
         }
@@ -367,6 +367,21 @@ class Algorithm016 extends Interface {
                             allyAttackType = TYPE_REALMOVE;
                             DoAttack(estimatedPoint);
                             return;
+                        }
+                    } else {
+                        if ((enemyFakeMoveCount + enemyRealMoveCount) % 2 == 0) {
+                            allyAttackType = TYPE_FAKEMOVE;
+                            DoAttack(AllyLastAttackPoint());
+                        } else {
+                            Board.GetCell(AllyLastAttackPoint()).SetValueForce(alphaSide, 0, 0);
+                            Board.GetCell(estimatedPoint).SetValueForce(alphaSide, 0, 20);
+                            if (Board.IsEnableAttackPoint(alphaSide, estimatedPoint)) {
+                                estimatedAttackedFlag = true;
+                                estimatedBeforePoint = AllyLastAttackPoint();
+                                allyAttackType = TYPE_REALMOVE;
+                                DoAttack(estimatedPoint);
+                                return;
+                            }
                         }
                     }
                 } else {

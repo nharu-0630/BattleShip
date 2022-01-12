@@ -210,7 +210,7 @@ class Algorithm016 extends Interface {
                         enemyNoMoveCount++;
                         break;
                 }
-                System.out.println(
+                Board.WriteLogLine(
                         "enemyFakeMoveCount = " + enemyFakeMoveCount + ", enemyRealMoveCount = " + enemyRealMoveCount
                                 + ", enemyNoMoveCount = " + enemyNoMoveCount);
             }
