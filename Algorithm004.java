@@ -98,7 +98,7 @@ class Algorithm004 extends Interface {
                 // 命中
                 // 被移動
                 Board.GetCell(AllyLastAttackPoint()).SetValue(alphaSide, 0, 10);
-                if (Board.IsLastMove(!alphaSide)) {
+                if (IsEnemyLastMove()) {
                     Point estimatedPoint = AllyLastAttackPoint()
                             .Plus(EnemyLastMoveVector());
 
@@ -136,7 +136,7 @@ class Algorithm004 extends Interface {
                             Board.GetCell(point).GetValue(alphaSide, 0) + 1);
                 }
                 // 被移動
-                if (Board.IsLastMove(!alphaSide)) {
+                if (IsEnemyLastMove()) {
                 } else {
                 }
             }

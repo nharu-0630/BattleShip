@@ -33,7 +33,7 @@ class Algorithm003 extends Interface {
         Board.SearchEnableAttackPoints(alphaSide);
 
         // ここから
-        if (Board.IsLastMove(!alphaSide)) {
+        if (IsEnemyLastMove()) {
             Board.NormalizeValues(alphaSide, 0);
         }
         if (IsEnemyLastAttack()) {
@@ -71,7 +71,7 @@ class Algorithm003 extends Interface {
             if (AllyLastAttackResult().contains(Board.ATTACK_HIT)) {
                 // 敵を命中した
                 Board.GetCell(AllyLastAttackPoint()).SetValue(alphaSide, 0, 10);
-                if (Board.IsLastMove(!alphaSide)) {
+                if (IsEnemyLastMove()) {
                     // 敵が移動した
                     if (enemyCount == 1) {
                         // 敵が1機のみ
@@ -101,7 +101,7 @@ class Algorithm003 extends Interface {
                     Board.GetCell(point).SetValue(alphaSide, 0,
                             Board.GetCell(point).GetValue(alphaSide, 0) + 1);
                 }
-                if (Board.IsLastMove(!alphaSide)) {
+                if (IsEnemyLastMove()) {
                     // 敵が移動した
                 } else {
                     // 敵が移動しなかった

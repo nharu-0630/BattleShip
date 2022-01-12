@@ -46,9 +46,8 @@ class Algorithm016 extends Interface {
         }
         Board.SearchEnableAttackPoints(alphaSide);
 
+        // 自軍が移動した = 移動先の可能性があるポイントの逆評価値に1を追加する
         if (IsAllyLastMove()) {
-            // 自軍が移動した = 移動先の可能性があるポイントの逆評価値に1を追加する
-
             ArrayList<Point> excludePoints = new ArrayList<Point>();
             for (int x = 0; x < Board.BOARD_SIZE; x++) {
                 for (int y = 0; y < Board.BOARD_SIZE; y++) {
@@ -128,9 +127,8 @@ class Algorithm016 extends Interface {
             }
         }
 
+        // 自軍が攻撃した = 攻撃したポイントの逆評価値を-1に固定する, 周囲のポイントの逆評価値に1を追加する
         if (IsAllyLastAttack()) {
-            // 自軍が攻撃した = 攻撃したポイントの逆評価値を-1に固定する, 周囲のポイントの逆評価値に1を追加する
-
             Board.GetCell(AllyLastAttackPoint()).SetValueForce(alphaSide, 1, -1);
             for (Point point : Board.GetRoundPoints(AllyLastAttackPoint())) {
                 Board.GetCell(point).AddValue(alphaSide, 1, 1);
@@ -189,9 +187,8 @@ class Algorithm016 extends Interface {
             }
         }
 
+        // 敵軍が移動した = 移動先の可能性があるポイントの評価値に1を追加する
         if (IsEnemyLastMove()) {
-            // 敵軍が移動した = 移動先の可能性があるポイントの評価値に1を追加する
-
             enemyMoveCount++;
             ArrayList<Point> excludePoints = new ArrayList<Point>();
             for (int x = 0; x < Board.BOARD_SIZE; x++) {
@@ -272,9 +269,8 @@ class Algorithm016 extends Interface {
             }
         }
 
+        // 敵軍が攻撃した = 攻撃したポイントの評価値を-1に固定する, 周囲のポイントの評価値に1を追加する
         if (IsEnemyLastAttack()) {
-            // 敵軍が攻撃した = 攻撃したポイントの評価値を-1に固定する, 周囲のポイントの評価値に1を追加する
-
             Board.GetCell(EnemyLastAttackPoint()).SetValueForce(alphaSide, 0, -1);
             for (Point point : Board.GetRoundPoints(EnemyLastAttackPoint())) {
                 Board.GetCell(point).AddValue(alphaSide, 0, 1);
@@ -312,10 +308,11 @@ class Algorithm016 extends Interface {
         // 自軍が攻撃した
         if (IsAllyLastAttack()) {
             // 敵軍が命中した
+            // 敵軍が命中しなかった = (A) の攻撃結果の場合は移動する前のポイントが攻撃可能範囲内なら攻撃する
             if (AllyLastAttackResult().contains(Board.ATTACK_HIT)) {
                 // 敵軍が移動した = 命中したポイントに移動ベクトルを足したポイントが範囲内ならそのポイントに移動したと判断し、攻撃可能範囲内なら攻撃する (A)
                 // 敵軍が移動しなかった = 命中したポイントにもう一度攻撃する
-                if (Board.IsLastMove(!alphaSide)) {
+                if (IsEnemyLastMove()) {
                     Point estimatedPoint = AllyLastAttackPoint()
                             .Plus(EnemyLastMoveVector());
 
@@ -335,7 +332,6 @@ class Algorithm016 extends Interface {
                         return;
                     }
                 }
-                // 敵軍が命中しなかった = (A) の攻撃結果の場合は移動する前のポイントが攻撃可能範囲内なら攻撃する
             } else {
                 if (estimatedAttackedFlag) {
                     estimatedAttackedFlag = false;
@@ -377,8 +373,6 @@ class Algorithm016 extends Interface {
                                             continue;
                                         }
                                         if (Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
-                                            // System.out.println("Fake Move = " + Logger.GetFileName() + " : "
-                                            // + Board.GetTurnCount());
                                             fakeMoveFlag = true;
                                             DoMove(movePoint, movePoint.Plus(moveVector));
                                             return;
@@ -389,6 +383,17 @@ class Algorithm016 extends Interface {
                         }
                     }
                 }
+                // ArrayList<Point> minValuePoints = new
+                // ArrayList<Point>(Board.GetPointValues(alphaSide,
+                // Board.GetCrossPoints(EnemyLastAttackPoint(), 1, 2), 1,
+                // -1).keySet());
+                // for (Point point : minValuePoints) {
+                // if (Board.IsMoveEnablePoint(alphaSide, EnemyLastAttackPoint(),
+                // point)) {
+                // DoMove(EnemyLastAttackPoint(), point);
+                // return;
+                // }
+                // }
             }
         }
 
@@ -401,7 +406,7 @@ class Algorithm016 extends Interface {
 
         ArrayList<Point> maxValuePoints = new ArrayList<Point>(
                 Board.GetPointValues(alphaSide, null, 0, 1).keySet());
-        if (Board.GetCell(maxValuePoints.get(0)).GetValue(alphaSide, 0) > 5) {
+        if (Board.GetCell(maxValuePoints.get(0)).GetValue(alphaSide, 0) >= 5) {
             for (Point point : maxValuePoints) {
                 if (Board.IsEnableAttackPoint(alphaSide, point)) {
                     DoAttack(point);
