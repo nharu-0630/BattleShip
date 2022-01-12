@@ -17,26 +17,26 @@ class Algorithm006 extends Interface {
 
     public void Think() {
         if (IsEnemyLastAttack()) {
-            if (EnemyLastAttackResult().contains(Board.ATTACK_SINK)) {
+            if (EnemyLastAttackResult().contains(Board.RESULT_SINK)) {
                 allySumHp--;
                 allyCount--;
                 if (allyCount == 0) {
                     Board.Interrupt();
                 }
             }
-            if (EnemyLastAttackResult().contains(Board.ATTACK_HIT)) {
+            if (EnemyLastAttackResult().contains(Board.RESULT_HIT)) {
                 allySumHp--;
             }
         }
         if (IsAllyLastAttack()) {
-            if (AllyLastAttackResult().contains(Board.ATTACK_SINK)) {
+            if (AllyLastAttackResult().contains(Board.RESULT_SINK)) {
                 enemySumHp--;
                 enemyCount--;
                 if (enemyCount == 0) {
                     Board.Interrupt();
                 }
             }
-            if (AllyLastAttackResult().contains(Board.ATTACK_HIT)) {
+            if (AllyLastAttackResult().contains(Board.RESULT_HIT)) {
                 enemySumHp--;
             }
         }
@@ -83,12 +83,12 @@ class Algorithm006 extends Interface {
 
         if (IsAllyLastAttack()) {
             // 攻撃
-            if (AllyLastAttackResult().contains(Board.ATTACK_SINK)) {
+            if (AllyLastAttackResult().contains(Board.RESULT_SINK)) {
                 // 撃沈
                 Board.GetCell(AllyLastAttackPoint()).SetValue(alphaSide, 0, -1);
                 Board.GetCell(AllyLastAttackPoint()).SetValue(alphaSide, 1, -1);
             }
-            if (AllyLastAttackResult().contains(Board.ATTACK_HIT)) {
+            if (AllyLastAttackResult().contains(Board.RESULT_HIT)) {
                 // 命中
                 // 被移動
                 Board.GetCell(AllyLastAttackPoint()).SetValue(alphaSide, 0, 10);
@@ -122,7 +122,7 @@ class Algorithm006 extends Interface {
                     return;
                 }
             }
-            if (AllyLastAttackResult().contains(Board.ATTACK_NEAR)) {
+            if (AllyLastAttackResult().contains(Board.RESULT_NEAR)) {
                 // 波高し
                 Board.GetCell(AllyLastAttackPoint()).SetValue(alphaSide, 0, 0);
                 for (Point point : Board.GetRoundPoints(AllyLastAttackPoint())) {
@@ -134,7 +134,7 @@ class Algorithm006 extends Interface {
                 } else {
                 }
             }
-            if (AllyLastAttackResult().contains(Board.ATTACK_NOHIT)) {
+            if (AllyLastAttackResult().contains(Board.RESULT_NOHIT)) {
                 // 外れ
                 Board.GetCell(AllyLastAttackPoint()).SetValue(alphaSide, 0, 0);
                 for (Point point : Board.GetRoundPoints(AllyLastAttackPoint())) {
@@ -153,14 +153,14 @@ class Algorithm006 extends Interface {
             // 敵軍評価
             Board.GetCell(EnemyLastAttackPoint()).SetValue(alphaSide, 1, 0);
 
-            if (EnemyLastAttackResult().contains(Board.ATTACK_SINK)) {
+            if (EnemyLastAttackResult().contains(Board.RESULT_SINK)) {
                 // 被撃沈
                 // 自軍評価
                 Board.GetCell(EnemyLastAttackPoint()).SetValue(alphaSide, 0, -1);
                 // 敵軍評価
                 Board.GetCell(EnemyLastAttackPoint()).SetValue(alphaSide, 1, -1);
             }
-            if (EnemyLastAttackResult().contains(Board.ATTACK_HIT)) {
+            if (EnemyLastAttackResult().contains(Board.RESULT_HIT)) {
                 // 被命中
                 // 敵軍評価
                 Board.GetCell(EnemyLastAttackPoint()).SetValue(alphaSide, 1, 10);
@@ -178,7 +178,7 @@ class Algorithm006 extends Interface {
                     return;
                 }
             }
-            if (EnemyLastAttackResult().contains(Board.ATTACK_NEAR)) {
+            if (EnemyLastAttackResult().contains(Board.RESULT_NEAR)) {
                 // 被波高し
                 // 敵軍評価
                 for (Point point : Board.GetRoundPoints(EnemyLastAttackPoint())) {

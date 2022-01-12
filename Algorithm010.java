@@ -19,26 +19,26 @@ class Algorithm010 extends Interface {
 
     public void Think() {
         if (IsEnemyLastAttack()) {
-            if (EnemyLastAttackResult().contains(Board.ATTACK_SINK)) {
+            if (EnemyLastAttackResult().contains(Board.RESULT_SINK)) {
                 allySumHp--;
                 allyCount--;
                 if (allyCount == 0) {
                     Board.Interrupt();
                 }
             }
-            if (EnemyLastAttackResult().contains(Board.ATTACK_HIT)) {
+            if (EnemyLastAttackResult().contains(Board.RESULT_HIT)) {
                 allySumHp--;
             }
         }
         if (IsAllyLastAttack()) {
-            if (AllyLastAttackResult().contains(Board.ATTACK_SINK)) {
+            if (AllyLastAttackResult().contains(Board.RESULT_SINK)) {
                 enemySumHp--;
                 enemyCount--;
                 if (enemyCount == 0) {
                     Board.Interrupt();
                 }
             }
-            if (AllyLastAttackResult().contains(Board.ATTACK_HIT)) {
+            if (AllyLastAttackResult().contains(Board.RESULT_HIT)) {
                 enemySumHp--;
             }
         }
@@ -96,13 +96,13 @@ class Algorithm010 extends Interface {
         // 自軍が攻撃した
         if (IsAllyLastAttack()) {
             // 敵軍が撃沈した = 命中したポイントの評価値, 逆評価値を-2に固定する
-            if (AllyLastAttackResult().contains(Board.ATTACK_SINK)) {
+            if (AllyLastAttackResult().contains(Board.RESULT_SINK)) {
                 Board.GetCell(AllyLastAttackPoint()).SetValueForce(alphaSide, 0, -2);
                 Board.GetCell(AllyLastAttackPoint()).SetValueForce(alphaSide, 1, -2);
             }
             // 敵軍が命中した = 命中したポイントの評価値を20に設定する, 命中したポイントのX軸Y軸対称のポイントの評価値に5を追加する,
             // = 命中したポイントのX軸, Y軸対称のポイントの評価値に3を追加する
-            if (AllyLastAttackResult().contains(Board.ATTACK_HIT)) {
+            if (AllyLastAttackResult().contains(Board.RESULT_HIT)) {
                 Board.GetCell(AllyLastAttackPoint()).SetValueForce(alphaSide, 0, 20);
 
                 if (enemyMoveCount == 0) {
@@ -156,14 +156,14 @@ class Algorithm010 extends Interface {
                 }
             }
             // 敵軍が波高しした = 攻撃したポイントの評価値を-1に固定する, 周囲のポイントの評価値に1を追加する
-            if (AllyLastAttackResult().contains(Board.ATTACK_NEAR)) {
+            if (AllyLastAttackResult().contains(Board.RESULT_NEAR)) {
                 Board.GetCell(AllyLastAttackPoint()).SetValueForce(alphaSide, 0, -1);
                 for (Point point : Board.GetRoundPoints(AllyLastAttackPoint())) {
                     Board.GetCell(point).AddValue(alphaSide, 0, 1);
                 }
             }
             // 敵軍が外れした = 攻撃したポイント, 周囲のポイントの評価値を-1に固定する
-            if (AllyLastAttackResult().contains(Board.ATTACK_NOHIT)) {
+            if (AllyLastAttackResult().contains(Board.RESULT_NOHIT)) {
                 Board.GetCell(AllyLastAttackPoint()).SetValueForce(alphaSide, 0, -1);
                 for (Point point : Board.GetRoundPoints(AllyLastAttackPoint())) {
                     Board.GetCell(point).SetValueForce(alphaSide, 0, -1);
@@ -179,16 +179,16 @@ class Algorithm010 extends Interface {
             }
             Board.GetCell(EnemyLastAttackPoint()).SetValue(alphaSide, 1, 0);
             // 自軍が撃沈した = 命中したポイントの評価値, 逆評価値を-2に固定する
-            if (EnemyLastAttackResult().contains(Board.ATTACK_SINK)) {
+            if (EnemyLastAttackResult().contains(Board.RESULT_SINK)) {
                 Board.GetCell(EnemyLastAttackPoint()).SetValueForce(alphaSide, 0, -2);
                 Board.GetCell(EnemyLastAttackPoint()).SetValueForce(alphaSide, 1, -2);
             }
             // 自軍が命中した = 命中したポイントの逆評価値を10に設定する
-            if (EnemyLastAttackResult().contains(Board.ATTACK_HIT)) {
+            if (EnemyLastAttackResult().contains(Board.RESULT_HIT)) {
                 Board.GetCell(EnemyLastAttackPoint()).SetValue(alphaSide, 1, 10);
             }
             // 自軍が波高しした = 攻撃したポイントの逆評価値を0に設定する, 周囲のポイントに1を追加する
-            if (EnemyLastAttackResult().contains(Board.ATTACK_NEAR)) {
+            if (EnemyLastAttackResult().contains(Board.RESULT_NEAR)) {
                 Board.GetCell(EnemyLastAttackPoint()).SetValue(alphaSide, 1, 0);
                 for (Point point : Board.GetRoundPoints(EnemyLastAttackPoint())) {
                     Board.GetCell(point).AddValue(alphaSide, 1, 1);

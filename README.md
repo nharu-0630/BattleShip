@@ -194,26 +194,26 @@ class AlgorithmXXX extends Interface {
 
     public void Think() {
         if (Board.IsLastAttack(!alphaSide)) {
-            if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_SINK)) {
+            if (Board.GetLastAttackResult(!alphaSide).contains(Board.RESULT_SINK)) {
                 allySumHp--;
                 allyCount--;
                 if (allyCount == 0) {
                     Board.Interrupt();
                 }
             }
-            if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_HIT)) {
+            if (Board.GetLastAttackResult(!alphaSide).contains(Board.RESULT_HIT)) {
                 allySumHp--;
             }
         }
         if (Board.IsLastAttack(alphaSide)) {
-            if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_SINK)) {
+            if (Board.GetLastAttackResult(alphaSide).contains(Board.RESULT_SINK)) {
                 enemySumHp--;
                 enemyCount--;
                 if (enemyCount == 0) {
                     Board.Interrupt();
                 }
             }
-            if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_HIT)) {
+            if (Board.GetLastAttackResult(alphaSide).contains(Board.RESULT_HIT)) {
                 enemySumHp--;
             }
         }

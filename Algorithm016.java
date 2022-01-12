@@ -15,32 +15,44 @@ class Algorithm016 extends Interface {
 
     private int enemyMoveCount = 0;
 
+    private int enemyFakeMoveCount = 0;
+    private int enemyRealMoveCount = 0;
+    private int enemyNoMoveCount = 0;
+
+    private int allyAttackType = 0;
+
+    private final int TYPE_SEARCH = 1;
+    private final int TYPE_HIT = 2;
+    private final int TYPE_FAKEMOVE = 3;
+    private final int TYPE_REALMOVE = 4;
+    private final int TYPE_NOMOVE = 5;
+
     public void SetParameter(int[] parameters) {
 
     }
 
     public void Think() {
         if (IsEnemyLastAttack()) {
-            if (EnemyLastAttackResult().contains(Board.ATTACK_SINK)) {
+            if (EnemyLastAttackResult().contains(Board.RESULT_SINK)) {
                 allySumHp--;
                 allyCount--;
                 if (allyCount == 0) {
                     Board.Interrupt();
                 }
             }
-            if (EnemyLastAttackResult().contains(Board.ATTACK_HIT)) {
+            if (EnemyLastAttackResult().contains(Board.RESULT_HIT)) {
                 allySumHp--;
             }
         }
         if (IsAllyLastAttack()) {
-            if (AllyLastAttackResult().contains(Board.ATTACK_SINK)) {
+            if (AllyLastAttackResult().contains(Board.RESULT_SINK)) {
                 enemySumHp--;
                 enemyCount--;
                 if (enemyCount == 0) {
                     Board.Interrupt();
                 }
             }
-            if (AllyLastAttackResult().contains(Board.ATTACK_HIT)) {
+            if (AllyLastAttackResult().contains(Board.RESULT_HIT)) {
                 enemySumHp--;
             }
         }
@@ -134,7 +146,7 @@ class Algorithm016 extends Interface {
                 Board.GetCell(point).AddValue(alphaSide, 1, 1);
             }
             // 敵軍が撃沈した = 命中したポイントの評価値, 逆評価値を-2に固定する
-            if (AllyLastAttackResult().contains(Board.ATTACK_SINK)) {
+            if (AllyLastAttackResult().contains(Board.RESULT_SINK)) {
                 Board.GetCell(AllyLastAttackPoint()).SetValueForce(alphaSide, 0, -2);
                 Board.GetCell(AllyLastAttackPoint()).SetValueForce(alphaSide, 1, -2);
 
@@ -146,7 +158,7 @@ class Algorithm016 extends Interface {
             }
             // 敵軍が命中した = 命中したポイントの評価値を20に設定する, 命中したポイントのX軸Y軸対称のポイントの評価値に5を追加する,
             // = 命中したポイントのX軸, Y軸対称のポイントの評価値に3を追加する
-            if (AllyLastAttackResult().contains(Board.ATTACK_HIT)) {
+            if (AllyLastAttackResult().contains(Board.RESULT_HIT)) {
                 Board.GetCell(AllyLastAttackPoint()).SetValueForce(alphaSide, 0, 20);
 
                 for (Point point : Board.GetRoundPoints(AllyLastAttackPoint())) {
@@ -172,18 +184,35 @@ class Algorithm016 extends Interface {
 
             }
             // 敵軍が波高しした = 攻撃したポイントの評価値を-1に固定する, 周囲のポイントの評価値に1を追加する
-            if (AllyLastAttackResult().contains(Board.ATTACK_NEAR)) {
+            if (AllyLastAttackResult().contains(Board.RESULT_NEAR)) {
                 Board.GetCell(AllyLastAttackPoint()).SetValueForce(alphaSide, 0, -1);
                 for (Point point : Board.GetRoundPoints(AllyLastAttackPoint())) {
                     Board.GetCell(point).AddValue(alphaSide, 0, 1);
                 }
             }
             // 敵軍が外れした = 攻撃したポイント, 周囲のポイントの評価値を-1に固定する
-            if (AllyLastAttackResult().contains(Board.ATTACK_NOHIT)) {
+            if (AllyLastAttackResult().contains(Board.RESULT_NOHIT)) {
                 Board.GetCell(AllyLastAttackPoint()).SetValueForce(alphaSide, 0, -1);
                 for (Point point : Board.GetRoundPoints(AllyLastAttackPoint())) {
                     Board.GetCell(point).SetValueForce(alphaSide, 0, -1);
                 }
+            }
+            if (AllyLastAttackResult().contains(Board.RESULT_SINK)
+                    || AllyLastAttackResult().contains(Board.RESULT_HIT)) {
+                switch (allyAttackType) {
+                    case TYPE_FAKEMOVE:
+                        enemyFakeMoveCount++;
+                        break;
+                    case TYPE_REALMOVE:
+                        enemyRealMoveCount++;
+                        break;
+                    case TYPE_NOMOVE:
+                        enemyNoMoveCount++;
+                        break;
+                }
+                System.out.println(
+                        "enemyFakeMoveCount = " + enemyFakeMoveCount + ", enemyRealMoveCount = " + enemyRealMoveCount
+                                + ", enemyNoMoveCount = " + enemyNoMoveCount);
             }
         }
 
@@ -276,26 +305,26 @@ class Algorithm016 extends Interface {
                 Board.GetCell(point).AddValue(alphaSide, 0, 1);
             }
             // 自軍が撃沈した = 命中したポイントの評価値, 逆評価値を-2に固定する
-            if (EnemyLastAttackResult().contains(Board.ATTACK_SINK)) {
+            if (EnemyLastAttackResult().contains(Board.RESULT_SINK)) {
                 Board.GetCell(EnemyLastAttackPoint()).SetValueForce(alphaSide, 0, -2);
                 Board.GetCell(EnemyLastAttackPoint()).SetValueForce(alphaSide, 1, -2);
             }
             // 自軍が命中した = 命中したポイントの逆評価値を10に設定する
-            if (EnemyLastAttackResult().contains(Board.ATTACK_HIT)) {
+            if (EnemyLastAttackResult().contains(Board.RESULT_HIT)) {
                 if (fakeMoveFlag) {
                     fakeMoveEnable = false;
                 }
                 Board.GetCell(EnemyLastAttackPoint()).SetValue(alphaSide, 1, 20);
             }
             // 自軍が波高しした = 攻撃したポイントの逆評価値を0に設定する, 周囲のポイントに1を追加する
-            if (EnemyLastAttackResult().contains(Board.ATTACK_NEAR)) {
+            if (EnemyLastAttackResult().contains(Board.RESULT_NEAR)) {
                 Board.GetCell(EnemyLastAttackPoint()).SetValue(alphaSide, 1, 0);
                 for (Point point : Board.GetRoundPoints(EnemyLastAttackPoint())) {
                     Board.GetCell(point).AddValue(alphaSide, 1, 1);
                 }
             }
             // 自軍が外れした = 攻撃したポイント, 周囲のポイントの逆評価値を-1に固定する
-            if (EnemyLastAttackResult().contains(Board.ATTACK_NOHIT)) {
+            if (EnemyLastAttackResult().contains(Board.RESULT_NOHIT)) {
                 Board.GetCell(EnemyLastAttackPoint()).SetValueForce(alphaSide, 1, -1);
                 for (Point point : Board.GetRoundPoints(EnemyLastAttackPoint())) {
                     Board.GetCell(point).SetValueForce(alphaSide, 1, -1);
@@ -309,7 +338,7 @@ class Algorithm016 extends Interface {
         if (IsAllyLastAttack()) {
             // 敵軍が命中した
             // 敵軍が命中しなかった = (A) の攻撃結果の場合は移動する前のポイントが攻撃可能範囲内なら攻撃する
-            if (AllyLastAttackResult().contains(Board.ATTACK_HIT)) {
+            if (AllyLastAttackResult().contains(Board.RESULT_HIT)) {
                 // 敵軍が移動した = 命中したポイントに移動ベクトルを足したポイントが範囲内ならそのポイントに移動したと判断し、攻撃可能範囲内なら攻撃する (A)
                 // 敵軍が移動しなかった = 命中したポイントにもう一度攻撃する
                 if (IsEnemyLastMove()) {
@@ -322,12 +351,14 @@ class Algorithm016 extends Interface {
                         if (Board.IsEnableAttackPoint(alphaSide, estimatedPoint)) {
                             estimatedAttackedFlag = true;
                             estimatedBeforePoint = AllyLastAttackPoint();
+                            allyAttackType = TYPE_REALMOVE;
                             DoAttack(estimatedPoint);
                             return;
                         }
                     }
                 } else {
                     if (Board.IsEnableAttackPoint(alphaSide, AllyLastAttackPoint())) {
+                        allyAttackType = TYPE_NOMOVE;
                         DoAttack(AllyLastAttackPoint());
                         return;
                     }
@@ -336,12 +367,13 @@ class Algorithm016 extends Interface {
                 if (estimatedAttackedFlag) {
                     estimatedAttackedFlag = false;
                     if (Board.IsEnableAttackPoint(alphaSide, estimatedBeforePoint)) {
+                        allyAttackType = TYPE_FAKEMOVE;
                         DoAttack(estimatedBeforePoint);
                         estimatedBeforePoint = null;
                         return;
                     }
                 }
-                if (AllyLastAttackResult().contains(Board.ATTACK_NEAR)) {
+                if (AllyLastAttackResult().contains(Board.RESULT_NEAR)) {
 
                 }
             }
@@ -350,7 +382,7 @@ class Algorithm016 extends Interface {
         // 敵軍が攻撃した
         if (IsEnemyLastAttack()) {
             // 自軍が命中した
-            if (EnemyLastAttackResult().contains(Board.ATTACK_HIT)) {
+            if (EnemyLastAttackResult().contains(Board.RESULT_HIT)) {
                 if (fakeMoveEnable) {
                     if (Board.GetCell(EnemyLastAttackPoint()).GetHp(alphaSide) == 2) {
                         HashMap<Point, Integer> pointsValue = new HashMap<Point, Integer>();
@@ -399,6 +431,7 @@ class Algorithm016 extends Interface {
 
         if (prepareTurned && Board.IsEnableAttackPoint(alphaSide, preparePoint)) {
             prepareTurned = false;
+            allyAttackType = TYPE_HIT;
             DoAttack(preparePoint);
             preparePoint = null;
             return;
@@ -409,6 +442,7 @@ class Algorithm016 extends Interface {
         if (Board.GetCell(maxValuePoints.get(0)).GetValue(alphaSide, 0) >= 5) {
             for (Point point : maxValuePoints) {
                 if (Board.IsEnableAttackPoint(alphaSide, point)) {
+                    allyAttackType = TYPE_SEARCH;
                     DoAttack(point);
                     return;
                 }
@@ -462,6 +496,7 @@ class Algorithm016 extends Interface {
         }
 
         if (Board.GetMaxValuePoints(alphaSide, true, 0).size() != 0) {
+            allyAttackType = TYPE_SEARCH;
             DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true, 0)));
             return;
         } else {

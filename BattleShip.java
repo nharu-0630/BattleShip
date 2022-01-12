@@ -308,10 +308,10 @@ class Board {
     public static final int BOARD_SIZE = 5;
 
     public static final int ATTACK_NULL = -1;
-    public static final int ATTACK_NOHIT = 0;
-    public static final int ATTACK_NEAR = 1;
-    public static final int ATTACK_HIT = 2;
-    public static final int ATTACK_SINK = 3;
+    public static final int RESULT_NOHIT = 0;
+    public static final int RESULT_NEAR = 1;
+    public static final int RESULT_HIT = 2;
+    public static final int RESULT_SINK = 3;
 
     private static Cell[][] cells;
     private static int turnCount = 0;
@@ -1029,39 +1029,39 @@ class Board {
                 if (Board.GetCell(point).IsAlive(!alphaSide)) {
                     Board.GetCell(point).SetHp(!alphaSide, Board.GetCell(point).GetHp(!alphaSide) - 1);
                     // 命中！
-                    attackResult = new ArrayList<Integer>(Arrays.asList(ATTACK_HIT));
+                    attackResult = new ArrayList<Integer>(Arrays.asList(RESULT_HIT));
                     if (Board.GetCell(point).GetHp(!alphaSide) == 0) {
                         // 撃沈！
-                        attackResult = new ArrayList<Integer>(Arrays.asList(ATTACK_SINK));
+                        attackResult = new ArrayList<Integer>(Arrays.asList(RESULT_SINK));
                     }
                 } else {
                     // ハズレ！
-                    attackResult = new ArrayList<Integer>(Arrays.asList(ATTACK_NOHIT));
+                    attackResult = new ArrayList<Integer>(Arrays.asList(RESULT_NOHIT));
                 }
                 for (Point roundPoint : GetRoundPoints(point)) {
                     if (Board.GetCell(roundPoint).IsAlive(!alphaSide)) {
                         // 波高し！
                         if (isAttackResultArray) {
-                            attackResult.add(ATTACK_NEAR);
+                            attackResult.add(RESULT_NEAR);
                         } else {
-                            if (attackResult.contains(ATTACK_NOHIT)) {
-                                attackResult = new ArrayList<Integer>(Arrays.asList(ATTACK_NEAR));
+                            if (attackResult.contains(RESULT_NOHIT)) {
+                                attackResult = new ArrayList<Integer>(Arrays.asList(RESULT_NEAR));
                             }
                         }
                     }
                 }
             }
             Board.WriteLog(ConsoleColors.BLUE_BOLD);
-            if (attackResult.contains(ATTACK_SINK)) {
+            if (attackResult.contains(RESULT_SINK)) {
                 WriteLogLine("<撃沈！>");
             }
-            if (attackResult.contains(ATTACK_HIT)) {
+            if (attackResult.contains(RESULT_HIT)) {
                 WriteLogLine("<命中！>");
             }
-            if (attackResult.contains(ATTACK_NEAR)) {
+            if (attackResult.contains(RESULT_NEAR)) {
                 WriteLogLine("<波高し！>");
             }
-            if (attackResult.contains(ATTACK_NOHIT)) {
+            if (attackResult.contains(RESULT_NOHIT)) {
                 WriteLogLine("<ハズレ！>");
             }
             Board.WriteLog(ConsoleColors.RESET);
@@ -1100,17 +1100,17 @@ class Board {
         Board.WriteLog(ConsoleColors.BLUE_BOLD);
         for (int i = 0; i < attackResult.size(); i++) {
             switch (attackResult.get(i)) {
-                case ATTACK_SINK:
+                case RESULT_SINK:
                     WriteLogLine("<撃沈！>");
                     Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetHp(!alphaSide, 0);
                     break;
-                case ATTACK_HIT:
+                case RESULT_HIT:
                     WriteLogLine("<命中！>");
                     break;
-                case ATTACK_NEAR:
+                case RESULT_NEAR:
                     WriteLogLine("<波高し！>");
                     break;
-                case ATTACK_NOHIT:
+                case RESULT_NOHIT:
                     WriteLogLine("<ハズレ！>");
                     break;
             }
@@ -1130,38 +1130,38 @@ class Board {
         if (Board.GetCell(point).IsAlive(!alphaSide)) {
             Board.GetCell(point).SetHp(!alphaSide, Board.GetCell(point).GetHp(!alphaSide) - 1);
             // 命中！
-            attackResult = new ArrayList<Integer>(Arrays.asList(ATTACK_HIT));
+            attackResult = new ArrayList<Integer>(Arrays.asList(RESULT_HIT));
             if (Board.GetCell(point).GetHp(!alphaSide) == 0) {
                 // 撃沈！
-                attackResult = new ArrayList<Integer>(Arrays.asList(ATTACK_SINK));
+                attackResult = new ArrayList<Integer>(Arrays.asList(RESULT_SINK));
             }
         } else {
             // ハズレ！
-            attackResult = new ArrayList<Integer>(Arrays.asList(ATTACK_NOHIT));
+            attackResult = new ArrayList<Integer>(Arrays.asList(RESULT_NOHIT));
         }
         for (Point roundPoint : GetRoundPoints(point)) {
             if (Board.GetCell(roundPoint).IsAlive(!alphaSide)) {
                 // 波高し！
                 if (isAttackResultArray) {
-                    attackResult.add(ATTACK_NEAR);
+                    attackResult.add(RESULT_NEAR);
                 } else {
-                    if (attackResult.contains(ATTACK_NOHIT)) {
-                        attackResult = new ArrayList<Integer>(Arrays.asList(ATTACK_NEAR));
+                    if (attackResult.contains(RESULT_NOHIT)) {
+                        attackResult = new ArrayList<Integer>(Arrays.asList(RESULT_NEAR));
                     }
                 }
             }
         }
         Board.WriteLog(ConsoleColors.BLUE_BOLD);
-        if (attackResult.contains(ATTACK_SINK)) {
+        if (attackResult.contains(RESULT_SINK)) {
             WriteLogLine("<撃沈！>");
         }
-        if (attackResult.contains(ATTACK_HIT)) {
+        if (attackResult.contains(RESULT_HIT)) {
             WriteLogLine("<命中！>");
         }
-        if (attackResult.contains(ATTACK_NEAR)) {
+        if (attackResult.contains(RESULT_NEAR)) {
             WriteLogLine("<波高し！>");
         }
-        if (attackResult.contains(ATTACK_NOHIT)) {
+        if (attackResult.contains(RESULT_NOHIT)) {
             WriteLogLine("<ハズレ！>");
         }
         Board.WriteLog(ConsoleColors.RESET);
