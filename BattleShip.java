@@ -1187,6 +1187,46 @@ class Interface {
     public int enemyCount;
     public int enemySumHp;
 
+    public boolean IsEnemyLastAttack() {
+        return Board.IsLastAttack(!alphaSide);
+    }
+
+    public boolean IsAllyLastAttack() {
+        return Board.IsLastAttack(alphaSide);
+    }
+
+    public boolean IsEnemyLastMove() {
+        return (Board.GetLastMoveVector(!alphaSide) != null);
+    }
+
+    public boolean IsAllyLastMove() {
+        return (Board.GetLastMoveVector(alphaSide) != null);
+    }
+
+    public ArrayList<Integer> EnemyLastAttackResult() {
+        return Board.GetLastAttackResult(!alphaSide);
+    }
+
+    public ArrayList<Integer> AllyLastAttackResult() {
+        return Board.GetLastAttackResult(alphaSide);
+    }
+
+    public Point EnemyLastAttackPoint() {
+        return Board.GetLastAttackPoint(!alphaSide);
+    }
+
+    public Point AllyLastAttackPoint() {
+        return Board.GetLastAttackPoint(alphaSide);
+    }
+
+    public Point EnemyLastMoveVector() {
+        return Board.GetLastMoveVector(!alphaSide);
+    }
+
+    public Point AllyLastMoveVector() {
+        return Board.GetLastMoveVector(alphaSide);
+    }
+
     Interface(boolean alphaSide, boolean isEnemySecret) {
         this.alphaSide = alphaSide;
         this.isEnemySecret = isEnemySecret;

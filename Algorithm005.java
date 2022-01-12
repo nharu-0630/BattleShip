@@ -16,19 +16,19 @@ class Algorithm005 extends Interface {
     }
 
     public void Think() {
-        if (Board.IsLastAttack(!alphaSide)) {
-            if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_SINK)) {
+        if (IsEnemyLastAttack()) {
+            if (EnemyLastAttackResult().contains(Board.ATTACK_SINK)) {
                 allySumHp--;
                 allyCount--;
                 if (allyCount == 0) {
                     Board.Interrupt();
                 }
             }
-            if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_HIT)) {
+            if (EnemyLastAttackResult().contains(Board.ATTACK_HIT)) {
                 allySumHp--;
             }
         }
-        if (Board.IsLastAttack(alphaSide)) {
+        if (IsAllyLastAttack()) {
             if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_SINK)) {
                 enemySumHp--;
                 enemyCount--;
@@ -42,34 +42,34 @@ class Algorithm005 extends Interface {
         }
         Board.SearchEnableAttackPoints(alphaSide);
 
-        if (Board.IsLastAttack(alphaSide)) {
+        if (IsAllyLastAttack()) {
             // 攻撃
             if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_SINK)) {
                 // 撃沈
-                Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, -1);
-                Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 1, -1);
+                Board.GetCell(AllyLastAttackPoint()).SetValue(alphaSide, 0, -1);
+                Board.GetCell(AllyLastAttackPoint()).SetValue(alphaSide, 1, -1);
             }
             if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_HIT)) {
                 // 命中
                 // 被移動
-                Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, 10);
+                Board.GetCell(AllyLastAttackPoint()).SetValue(alphaSide, 0, 10);
                 if (Board.IsLastMove(!alphaSide)) {
-                    Point estimatedPoint = Board.GetLastAttackPoint(alphaSide)
-                            .Plus(Board.GetLastMoveVector(!alphaSide));
+                    Point estimatedPoint = AllyLastAttackPoint()
+                            .Plus(EnemyLastMoveVector());
 
                     if (estimatedPoint.IsRange()) {
-                        Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, 0);
+                        Board.GetCell(AllyLastAttackPoint()).SetValue(alphaSide, 0, 0);
                         Board.GetCell(estimatedPoint).SetValue(alphaSide, 0, 10);
                         if (Board.IsEnableAttackPoint(alphaSide, estimatedPoint)) {
                             estimatedAttacked = true;
-                            estimatedBeforePoint = Board.GetLastAttackPoint(alphaSide);
+                            estimatedBeforePoint = AllyLastAttackPoint();
                             DoAttack(estimatedPoint);
                             return;
                         }
                     }
                 } else {
-                    if (Board.IsEnableAttackPoint(alphaSide, Board.GetLastAttackPoint(alphaSide))) {
-                        DoAttack(Board.GetLastAttackPoint(alphaSide));
+                    if (Board.IsEnableAttackPoint(alphaSide, AllyLastAttackPoint())) {
+                        DoAttack(AllyLastAttackPoint());
                         return;
                     }
                 }
@@ -85,8 +85,8 @@ class Algorithm005 extends Interface {
             }
             if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_NEAR)) {
                 // 波高し
-                Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, 0);
-                for (Point point : Board.GetRoundPoints(Board.GetLastAttackPoint(alphaSide))) {
+                Board.GetCell(AllyLastAttackPoint()).SetValue(alphaSide, 0, 0);
+                for (Point point : Board.GetRoundPoints(AllyLastAttackPoint())) {
                     Board.GetCell(point).SetValue(alphaSide, 0,
                             Board.GetCell(point).GetValue(alphaSide, 0) + 1);
                 }
@@ -97,52 +97,52 @@ class Algorithm005 extends Interface {
             }
             if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_NOHIT)) {
                 // 外れ
-                Board.GetCell(Board.GetLastAttackPoint(alphaSide)).SetValue(alphaSide, 0, 0);
-                for (Point point : Board.GetRoundPoints(Board.GetLastAttackPoint(alphaSide))) {
+                Board.GetCell(AllyLastAttackPoint()).SetValue(alphaSide, 0, 0);
+                for (Point point : Board.GetRoundPoints(AllyLastAttackPoint())) {
                     Board.GetCell(point).SetValue(alphaSide, 0, 0);
                 }
             }
         }
 
-        if (Board.IsLastAttack(!alphaSide)) {
+        if (IsEnemyLastAttack()) {
             // 被攻撃
             // 自軍評価
-            Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValue(alphaSide, 0, 0);
-            for (Point point : Board.GetRoundPoints(Board.GetLastAttackPoint(!alphaSide))) {
+            Board.GetCell(EnemyLastAttackPoint()).SetValue(alphaSide, 0, 0);
+            for (Point point : Board.GetRoundPoints(EnemyLastAttackPoint())) {
                 Board.GetCell(point).SetValue(alphaSide, 0, Board.GetCell(point).GetValue(alphaSide, 0) + 1);
             }
             // 敵軍評価
-            Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValue(alphaSide, 1, 0);
+            Board.GetCell(EnemyLastAttackPoint()).SetValue(alphaSide, 1, 0);
 
-            if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_SINK)) {
+            if (EnemyLastAttackResult().contains(Board.ATTACK_SINK)) {
                 // 被撃沈
                 // 自軍評価
-                Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValue(alphaSide, 0, -1);
+                Board.GetCell(EnemyLastAttackPoint()).SetValue(alphaSide, 0, -1);
                 // 敵軍評価
-                Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValue(alphaSide, 1, -1);
+                Board.GetCell(EnemyLastAttackPoint()).SetValue(alphaSide, 1, -1);
             }
-            if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_HIT)) {
+            if (EnemyLastAttackResult().contains(Board.ATTACK_HIT)) {
                 // 被命中
                 // 敵軍評価
-                Board.GetCell(Board.GetLastAttackPoint(!alphaSide)).SetValue(alphaSide, 1, 10);
+                Board.GetCell(EnemyLastAttackPoint()).SetValue(alphaSide, 1, 10);
 
                 ArrayList<Point> points = new ArrayList<Point>();
-                for (Point point : Board.GetCrossPoints(Board.GetLastAttackPoint(!alphaSide), 2, 2)) {
-                    if (Board.IsMoveEnablePoint(alphaSide, Board.GetLastAttackPoint(!alphaSide),
+                for (Point point : Board.GetCrossPoints(EnemyLastAttackPoint(), 2, 2)) {
+                    if (Board.IsMoveEnablePoint(alphaSide, EnemyLastAttackPoint(),
                             point)) {
                         points.add(point);
                     }
                 }
                 if (points.size() != 0) {
-                    DoMove(Board.GetLastAttackPoint(!alphaSide), Board.GetRandomPoint(
+                    DoMove(EnemyLastAttackPoint(), Board.GetRandomPoint(
                             new ArrayList<Point>(Board.GetPointValues(alphaSide, points, 1, -1).keySet())));
                     return;
                 }
             }
-            if (Board.GetLastAttackResult(!alphaSide).contains(Board.ATTACK_NEAR)) {
+            if (EnemyLastAttackResult().contains(Board.ATTACK_NEAR)) {
                 // 被波高し
                 // 敵軍評価
-                for (Point point : Board.GetRoundPoints(Board.GetLastAttackPoint(!alphaSide))) {
+                for (Point point : Board.GetRoundPoints(EnemyLastAttackPoint())) {
                     Board.GetCell(point).SetValue(alphaSide, 1,
                             Board.GetCell(point).GetValue(alphaSide, 1) + 1);
                 }
