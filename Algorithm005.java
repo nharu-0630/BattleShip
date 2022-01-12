@@ -29,14 +29,14 @@ class Algorithm005 extends Interface {
             }
         }
         if (IsAllyLastAttack()) {
-            if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_SINK)) {
+            if (AllyLastAttackResult().contains(Board.ATTACK_SINK)) {
                 enemySumHp--;
                 enemyCount--;
                 if (enemyCount == 0) {
                     Board.Interrupt();
                 }
             }
-            if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_HIT)) {
+            if (AllyLastAttackResult().contains(Board.ATTACK_HIT)) {
                 enemySumHp--;
             }
         }
@@ -44,12 +44,12 @@ class Algorithm005 extends Interface {
 
         if (IsAllyLastAttack()) {
             // 攻撃
-            if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_SINK)) {
+            if (AllyLastAttackResult().contains(Board.ATTACK_SINK)) {
                 // 撃沈
                 Board.GetCell(AllyLastAttackPoint()).SetValue(alphaSide, 0, -1);
                 Board.GetCell(AllyLastAttackPoint()).SetValue(alphaSide, 1, -1);
             }
-            if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_HIT)) {
+            if (AllyLastAttackResult().contains(Board.ATTACK_HIT)) {
                 // 命中
                 // 被移動
                 Board.GetCell(AllyLastAttackPoint()).SetValue(alphaSide, 0, 10);
@@ -83,7 +83,7 @@ class Algorithm005 extends Interface {
                     return;
                 }
             }
-            if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_NEAR)) {
+            if (AllyLastAttackResult().contains(Board.ATTACK_NEAR)) {
                 // 波高し
                 Board.GetCell(AllyLastAttackPoint()).SetValue(alphaSide, 0, 0);
                 for (Point point : Board.GetRoundPoints(AllyLastAttackPoint())) {
@@ -95,7 +95,7 @@ class Algorithm005 extends Interface {
                 } else {
                 }
             }
-            if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_NOHIT)) {
+            if (AllyLastAttackResult().contains(Board.ATTACK_NOHIT)) {
                 // 外れ
                 Board.GetCell(AllyLastAttackPoint()).SetValue(alphaSide, 0, 0);
                 for (Point point : Board.GetRoundPoints(AllyLastAttackPoint())) {

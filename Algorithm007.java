@@ -29,14 +29,14 @@ class Algorithm007 extends Interface {
             }
         }
         if (IsAllyLastAttack()) {
-            if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_SINK)) {
+            if (AllyLastAttackResult().contains(Board.ATTACK_SINK)) {
                 enemySumHp--;
                 enemyCount--;
                 if (enemyCount == 0) {
                     Board.Interrupt();
                 }
             }
-            if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_HIT)) {
+            if (AllyLastAttackResult().contains(Board.ATTACK_HIT)) {
                 enemySumHp--;
             }
         }
@@ -101,12 +101,12 @@ class Algorithm007 extends Interface {
         // 自軍が攻撃した
         if (IsAllyLastAttack()) {
             // 敵軍が撃沈した = 命中したポイントの評価値, 逆評価値を-2に固定する
-            if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_SINK)) {
+            if (AllyLastAttackResult().contains(Board.ATTACK_SINK)) {
                 Board.GetCell(AllyLastAttackPoint()).SetValueForce(alphaSide, 0, -2);
                 Board.GetCell(AllyLastAttackPoint()).SetValueForce(alphaSide, 1, -2);
             }
             // 敵軍が命中した = 命中したポイントの評価値を10に設定する
-            if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_HIT)) {
+            if (AllyLastAttackResult().contains(Board.ATTACK_HIT)) {
                 Board.GetCell(AllyLastAttackPoint()).SetValueForce(alphaSide, 0, 10);
                 // 敵軍が移動した = 命中したポイントに移動ベクトルを足したポイントが範囲内ならそのポイントに移動したと判断し、攻撃可能範囲内なら攻撃する (A)
                 // 敵軍が移動しなかった = 命中したポイントにもう一度攻撃する
@@ -142,14 +142,14 @@ class Algorithm007 extends Interface {
                 }
             }
             // 敵軍が波高しした = 攻撃したポイントの評価値を-1に固定する, 周囲のポイントの評価値に1を追加する
-            if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_NEAR)) {
+            if (AllyLastAttackResult().contains(Board.ATTACK_NEAR)) {
                 Board.GetCell(AllyLastAttackPoint()).SetValueForce(alphaSide, 0, -1);
                 for (Point point : Board.GetRoundPoints(AllyLastAttackPoint())) {
                     Board.GetCell(point).SetValue(alphaSide, 0, Board.GetCell(point).GetValue(alphaSide, 0) + 1);
                 }
             }
             // 敵軍が外れした = 攻撃したポイント, 周囲のポイントの評価値を-1に固定する
-            if (Board.GetLastAttackResult(alphaSide).contains(Board.ATTACK_NOHIT)) {
+            if (AllyLastAttackResult().contains(Board.ATTACK_NOHIT)) {
                 Board.GetCell(AllyLastAttackPoint()).SetValueForce(alphaSide, 0, -1);
                 for (Point point : Board.GetRoundPoints(AllyLastAttackPoint())) {
                     Board.GetCell(point).SetValueForce(alphaSide, 0, -1);

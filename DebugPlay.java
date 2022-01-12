@@ -37,8 +37,8 @@ public class DebugPlay {
 
         // ParameterDeepTry();
 
-        // for (int i = 1; i <= 17; i++) {
-        // for (int j = i; j <= 17; j++) {
+        // for (int i = 1; i <= 16; i++) {
+        // for (int j = i; j <= 16; j++) {
         // alphaAlgorithmNumber = i;
         // bravoAlgorithmNumber = j;
         // if (i != 3 && j != 3) {
