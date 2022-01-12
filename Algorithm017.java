@@ -407,6 +407,18 @@ class Algorithm017 extends Interface {
                         }
                     }
                 }
+                // ArrayList<Point> minValuePoints = new
+                // ArrayList<Point>(Board.GetPointValues(alphaSide,
+                // Board.GetCrossPoints(Board.GetLastAttackPoint(!alphaSide), 1, 2), 1,
+                // -1).keySet());
+                // for (Point point : minValuePoints) {
+                // if (Board.IsMoveEnablePoint(alphaSide, Board.GetLastAttackPoint(!alphaSide),
+                // point)) {
+                // DoMove(Board.GetLastAttackPoint(!alphaSide), point);
+                // return;
+                // }
+                // }
+                // TODO
             }
         }
 
@@ -420,7 +432,7 @@ class Algorithm017 extends Interface {
 
         ArrayList<Point> maxValuePoints = new ArrayList<Point>(
                 Board.GetPointValues(alphaSide, null, 0, 1).keySet());
-        if (Board.GetCell(maxValuePoints.get(0)).GetValue(alphaSide, 0) > 5) {
+        if (Board.GetCell(maxValuePoints.get(0)).GetValue(alphaSide, 0) >= 5) {
             for (Point point : maxValuePoints) {
                 if (Board.IsEnableAttackPoint(alphaSide, point)) {
                     attackBeforeValue = Board.GetCell(point).GetValue(alphaSide, 0);

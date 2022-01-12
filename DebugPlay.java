@@ -11,7 +11,7 @@ public class DebugPlay {
     public static final int maxTurnCount = 60;
 
     // ゲーム試合数
-    public static final int deepTryCount = 30000;
+    public static final int deepTryCount = 10000;
     // public static final int deepTryCount = 10;
 
     // ログ保存
