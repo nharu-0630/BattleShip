@@ -2,6 +2,13 @@ import java.util.*;
 import java.io.*;
 import org.json.*;
 
+// class PointList<T> extends ArrayList<T> {
+
+//     public T GetRandom() {
+//         return super.get((int) (Math.random() * super.size()));
+//     }
+// }
+
 class Cell {
     private int alphaHp;
     private int bravoHp;
