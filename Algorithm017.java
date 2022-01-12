@@ -210,7 +210,6 @@ class Algorithm017 extends Interface {
                         enemyNoMoveCount++;
                         break;
                 }
-
             } else {
                 switch (allyAttackType) {
                     case TYPE_FAKEMOVE:
@@ -354,11 +353,11 @@ class Algorithm017 extends Interface {
                 if (IsEnemyLastMove()) {
                     Point estimatedPoint = AllyLastAttackPoint()
                             .Plus(EnemyLastMoveVector());
-                    if ((enemyFakeMoveCount >= 3 && enemyRealMoveCount == 0) || !estimatedPoint.IsRange()) {
+                    if ((enemyFakeMoveCount >= 1 && enemyRealMoveCount == 0) || !estimatedPoint.IsRange()) {
                         allyAttackType = TYPE_FAKEMOVE;
                         DoAttack(AllyLastAttackPoint());
                         return;
-                    } else if (enemyRealMoveCount >= 3 && enemyFakeMoveCount == 0) {
+                    } else if (enemyRealMoveCount >= 1 && enemyFakeMoveCount == 0) {
                         Board.GetCell(AllyLastAttackPoint()).SetValueForce(alphaSide, 0, 0);
                         Board.GetCell(estimatedPoint).SetValueForce(alphaSide, 0, 20);
                         if (Board.IsEnableAttackPoint(alphaSide, estimatedPoint)) {
