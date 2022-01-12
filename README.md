@@ -6,7 +6,7 @@
 RTX 3080 Ti  
 https://xyzyxjp.github.io/BattleShip/
 
-![](https://cdn.discordapp.com/attachments/913763321671458846/929757751175970846/unknown.png)
+![](https://cdn.discordapp.com/attachments/919744937753460756/930838044922224720/unknown.png)
 
 # Documentation
 
