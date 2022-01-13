@@ -10,12 +10,13 @@ import org.json.*;
 // }
 
 class Cell {
+    // 戦艦HP
     private int alphaHp;
     private int bravoHp;
-
+    // 評価値配列
     private ArrayList<Integer> alphaValues;
     private ArrayList<Integer> bravoValues;
-
+    // 攻撃可否
     private boolean alphaEnableAttack;
     private boolean bravoEnableAttack;
 
@@ -28,6 +29,12 @@ class Cell {
         bravoEnableAttack = false;
     }
 
+    /**
+     * 戦艦HPを取得
+     * 
+     * @param alphaSide
+     * @return
+     */
     public int GetHp(boolean alphaSide) {
         if (alphaSide) {
             return alphaHp;
@@ -36,6 +43,12 @@ class Cell {
         }
     }
 
+    /**
+     * 戦艦HPを設定
+     * 
+     * @param alphaSide
+     * @param hp
+     */
     public void SetHp(boolean alphaSide, int hp) {
         if (alphaSide) {
             alphaHp = hp;
@@ -44,6 +57,13 @@ class Cell {
         }
     }
 
+    /**
+     * 評価値を取得
+     * 
+     * @param alphaSide
+     * @param layer
+     * @return
+     */
     public int GetValue(boolean alphaSide, int layer) {
         if (alphaSide) {
             if (alphaValues.size() > layer) {
@@ -57,6 +77,12 @@ class Cell {
         return -1;
     }
 
+    /**
+     * 評価値配列を取得
+     * 
+     * @param alphaSide
+     * @return
+     */
     public ArrayList<Integer> GetValues(boolean alphaSide) {
         if (alphaSide) {
             return alphaValues;
@@ -65,6 +91,13 @@ class Cell {
         }
     }
 
+    /**
+     * 評価値を設定
+     * 
+     * @param alphaSide
+     * @param layer
+     * @param value
+     */
     public void SetValue(boolean alphaSide, int layer, int value) {
         if (alphaSide) {
             while (layer >= alphaValues.size()) {
@@ -83,6 +116,13 @@ class Cell {
         }
     }
 
+    /**
+     * 評価値を加算
+     * 
+     * @param alphaSide
+     * @param layer
+     * @param value
+     */
     public void AddValue(boolean alphaSide, int layer, int value) {
         if (alphaSide) {
             while (layer >= alphaValues.size()) {
@@ -101,6 +141,13 @@ class Cell {
         }
     }
 
+    /**
+     * 評価値を強制設定
+     * 
+     * @param alphaSide
+     * @param layer
+     * @param value
+     */
     public void SetValueForce(boolean alphaSide, int layer, int value) {
         if (alphaSide) {
             while (layer >= alphaValues.size()) {
@@ -119,6 +166,12 @@ class Cell {
         }
     }
 
+    /**
+     * 攻撃可否を設定
+     * 
+     * @param alphaSide
+     * @param enableAttack
+     */
     public void SetEnableAttack(boolean alphaSide, boolean enableAttack) {
         if (enableAttack) {
             if (alphaSide) {
@@ -139,6 +192,12 @@ class Cell {
         }
     }
 
+    /**
+     * 攻撃可否を取得
+     * 
+     * @param alphaSide
+     * @return
+     */
     public boolean GetEnableAttack(boolean alphaSide) {
         if (alphaSide) {
             return alphaEnableAttack;
@@ -147,6 +206,12 @@ class Cell {
         }
     }
 
+    /**
+     * 戦艦生死を取得
+     * 
+     * @param alphaSide
+     * @return
+     */
     public boolean IsAlive(boolean alphaSide) {
         if (alphaSide) {
             return alphaHp > 0;
@@ -155,6 +220,12 @@ class Cell {
         }
     }
 
+    /**
+     * 戦艦有無を取得
+     * 
+     * @param alphaSide
+     * @return
+     */
     public boolean IsEmpty(boolean alphaSide) {
         if (alphaSide) {
             return alphaHp == -1 && bravoHp != 0;
@@ -165,8 +236,9 @@ class Cell {
 }
 
 class Point {
-    public boolean empty = true;
 
+    public boolean empty = true;
+    // 座標X, Y値
     public int x;
     public int y;
 
@@ -233,26 +305,56 @@ class Point {
         }
     }
 
+    /**
+     * ポイントの加算を取得
+     * 
+     * @param point
+     * @return
+     */
     public Point Plus(Point point) {
         return new Point(this.x + point.x, this.y + point.y);
     }
 
+    /**
+     * ポイントの減算を取得
+     * 
+     * @param point
+     * @return
+     */
     public Point Minus(Point point) {
         return new Point(this.x - point.x, this.y - point.y);
     }
 
+    /**
+     * 数値の乗算を取得
+     * 
+     * @param number
+     * @return
+     */
     public Point Multiply(int number) {
         return new Point(x * number, y * number);
     }
 
+    /**
+     * 数値の除算を取得
+     * 
+     * @param number
+     * @return
+     */
     public Point Divide(int number) {
         return new Point(x / number, y / number);
     }
 
+    /**
+     * 距離を取得
+     */
     public int Distance() {
         return Math.abs(x) + Math.abs(y);
     }
 
+    /**
+     * ポイントの一致を取得
+     */
     @Override
     public boolean equals(Object object) {
         if (object == this) {
@@ -266,15 +368,28 @@ class Point {
         }
     }
 
+    /**
+     * ボード内の座標有無を取得
+     * 
+     * @return
+     */
     public boolean IsRange() {
         return (0 <= x && x < Board.BOARD_SIZE && 0 <= y && y < Board.BOARD_SIZE);
     }
 
+    /**
+     * (x, y)を取得
+     */
     @Override
     public String toString() {
         return "(" + x + ", " + y + ")";
     }
 
+    /**
+     * アルファベット数字を取得
+     * 
+     * @return
+     */
     public String toPointFormatString() {
         String[] yStrings = new String[] { "A", "B", "C", "D", "E" };
         if (0 <= y && y <= 4) {
@@ -283,6 +398,11 @@ class Point {
         return toString();
     }
 
+    /**
+     * 方角数字を取得
+     * 
+     * @return
+     */
     public String toVectorFormaString() {
         if (y == 0) {
             if (x > 0) {
@@ -305,36 +425,57 @@ class Point {
 }
 
 class Board {
+    // ボードの長さ
     public static final int BOARD_SIZE = 5;
 
+    // 攻撃結果
+    // なし
     public static final int ATTACK_NULL = -1;
+    // ハズレ！
     public static final int RESULT_NOHIT = 0;
+    // 波高し！
     public static final int RESULT_NEAR = 1;
+    // 命中！
     public static final int RESULT_HIT = 2;
+    // 撃沈！
     public static final int RESULT_SINK = 3;
 
+    // セル二次元配列
     private static Cell[][] cells;
+    // ターン数
     private static int turnCount = 0;
-
+    // 勝利フラッグ
     private static boolean alphaWin = false;
     private static boolean bravoWin = false;
 
+    // 前ターンの攻撃ポイント
     private static Point lastAlphaAttackPoint = null;
-    private static ArrayList<Integer> lastAlphaAttackResult = new ArrayList<Integer>(Arrays.asList(ATTACK_NULL));
-    private static Point lastAlphaMoveVector = null;
-
     private static Point lastBravoAttackPoint = null;
+    // 前ターンの攻撃結果
+    private static ArrayList<Integer> lastAlphaAttackResult = new ArrayList<Integer>(Arrays.asList(ATTACK_NULL));
     private static ArrayList<Integer> lastBravoAttackResult = new ArrayList<Integer>(Arrays.asList(ATTACK_NULL));
+    // 前ターンの移動ベクトル
+    private static Point lastAlphaMoveVector = null;
     private static Point lastBravoMoveVector = null;
 
+    // ログの表示可否
     private static boolean isVisibleLog = false;
+    // 攻撃結果の複数可否
     private static boolean isAttackResultArray = false;
+    // 攻撃結果の上書き可否
     private static boolean isEnemySecret = false;
 
     Board(boolean isVisibleLog, boolean isAttackResultArray, boolean isEnemySecret) {
         Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
     }
 
+    /**
+     * ボードの初期化
+     * 
+     * @param isVisibleLog
+     * @param isAttackResultArray
+     * @param isEnemySecret
+     */
     public static void Initialize(boolean isVisibleLog, boolean isAttackResultArray, boolean isEnemySecret) {
         cells = new Cell[BOARD_SIZE][BOARD_SIZE];
         for (int x = 0; x < BOARD_SIZE; x++) {
@@ -361,6 +502,11 @@ class Board {
         Board.isEnemySecret = isEnemySecret;
     }
 
+    /**
+     * 戦況のログ出力
+     * 
+     * @param alphaSide
+     */
     public static void WriteBoard(boolean alphaSide) {
         WriteLogSide(alphaSide);
         WriteLogLine("盤面】");
@@ -427,6 +573,11 @@ class Board {
         }
     }
 
+    /**
+     * ログ出力 (Side)
+     * 
+     * @param alphaSide
+     */
     public static void WriteLogSide(boolean alphaSide) {
         if (isVisibleLog) {
             if (alphaSide) {
@@ -437,18 +588,31 @@ class Board {
         }
     }
 
+    /**
+     * ログ出力 (WriteLine)
+     * 
+     * @param line
+     */
     public static void WriteLogLine(String line) {
         if (isVisibleLog) {
             System.out.println(line);
         }
     }
 
+    /**
+     * ログ出力 (Write)
+     * 
+     * @param line
+     */
     public static void WriteLog(String line) {
         if (isVisibleLog) {
             System.out.print(line);
         }
     }
 
+    /**
+     * コンソール出力 (無効ターン)
+     */
     public static void WriteDisableTurn() {
         System.out.print(ConsoleColors.RED_BOLD);
         System.out.println("【警告】無効ターン");
@@ -456,6 +620,12 @@ class Board {
         System.out.print(ConsoleColors.RESET);
     }
 
+    /**
+     * ゲーム継続の可否
+     * 
+     * @param interrupt
+     * @return
+     */
     public static boolean IsContinue(boolean interrupt) {
         if (!(!alphaWin && !bravoWin)) {
             return false;
@@ -521,6 +691,9 @@ class Board {
         return true;
     }
 
+    /**
+     * ゲームの中断
+     */
     public static void Interrupt() {
         int alphaCount = GetShipPoints(true).size();
         int bravoCount = GetShipPoints(false).size();
@@ -561,38 +734,88 @@ class Board {
         }
     }
 
+    /**
+     * α勝利フラッグを取得
+     * 
+     * @return
+     */
     public static boolean GetAlphaWin() {
         return alphaWin;
     }
 
+    /**
+     * β勝利フラッグを取得
+     * 
+     * @return
+     */
     public static boolean GetBravoWin() {
         return bravoWin;
     }
 
+    /**
+     * ターン数の加算
+     */
     public static void AddTurnCount() {
         turnCount++;
     }
 
+    /**
+     * ターン数を取得
+     * 
+     * @return
+     */
     public static int GetTurnCount() {
         return turnCount;
     }
 
+    /**
+     * セルを取得
+     * 
+     * @param point
+     * @return
+     */
     public static Cell GetCell(Point point) {
         return cells[point.x][point.y];
     }
 
+    /**
+     * セルを取得
+     * 
+     * @param x
+     * @param y
+     * @return
+     */
     public static Cell GetCell(int x, int y) {
         return cells[x][y];
     }
 
+    /**
+     * セルを設定
+     * 
+     * @param point
+     * @param cell
+     */
     public static void SetCell(Point point, Cell cell) {
         cells[point.x][point.y] = cell;
     }
 
+    /**
+     * セルを設定
+     * 
+     * @param x
+     * @param y
+     * @param cell
+     */
     public static void SetCell(int x, int y, Cell cell) {
         cells[x][y] = cell;
     }
 
+    /**
+     * 前ターンの攻撃有無を取得
+     * 
+     * @param alphaSide
+     * @return
+     */
     public static boolean IsLastAttack(boolean alphaSide) {
         if (alphaSide) {
             return (lastAlphaAttackPoint != null);
@@ -601,6 +824,12 @@ class Board {
         }
     }
 
+    /**
+     * 前ターンの移動有無を取得
+     * 
+     * @param alphaSide
+     * @return
+     */
     public static boolean IsLastMove(boolean alphaSide) {
         if (alphaSide) {
             return (lastAlphaMoveVector != null);
@@ -609,6 +838,12 @@ class Board {
         }
     }
 
+    /**
+     * 前ターンの攻撃ポイントを取得
+     * 
+     * @param alphaSide
+     * @return
+     */
     public static Point GetLastAttackPoint(boolean alphaSide) {
         if (alphaSide) {
             return lastAlphaAttackPoint;
@@ -617,6 +852,12 @@ class Board {
         }
     }
 
+    /**
+     * 前ターンの攻撃結果を取得
+     * 
+     * @param alphaSide
+     * @return
+     */
     public static ArrayList<Integer> GetLastAttackResult(boolean alphaSide) {
         if (alphaSide) {
             return lastAlphaAttackResult;
@@ -625,6 +866,12 @@ class Board {
         }
     }
 
+    /**
+     * 前ターンの移動ベクトルを取得
+     * 
+     * @param alphaSide
+     * @return
+     */
     public static Point GetLastMoveVector(boolean alphaSide) {
         if (alphaSide) {
             return lastAlphaMoveVector;
@@ -633,6 +880,12 @@ class Board {
         }
     }
 
+    /**
+     * 評価値の初期化
+     * 
+     * @param alphaSide
+     * @param layer
+     */
     public static void InitializeValues(boolean alphaSide, int layer) {
         for (int x = 0; x < Board.BOARD_SIZE; x++) {
             for (int y = 0; y < Board.BOARD_SIZE; y++) {
@@ -641,6 +894,12 @@ class Board {
         }
     }
 
+    /**
+     * 評価値の正規化
+     * 
+     * @param alphaSide
+     * @param layer
+     */
     public static void NormalizeValues(boolean alphaSide, int layer) {
         for (int x = 0; x < Board.BOARD_SIZE; x++) {
             for (int y = 0; y < Board.BOARD_SIZE; y++) {
@@ -656,6 +915,12 @@ class Board {
         }
     }
 
+    /**
+     * 戦艦リストを取得
+     * 
+     * @param alphaSide
+     * @return
+     */
     public static ArrayList<Point> GetShipPoints(boolean alphaSide) {
         ArrayList<Point> points = new ArrayList<Point>();
         for (int x = 0; x < Board.BOARD_SIZE; x++) {
@@ -668,17 +933,36 @@ class Board {
         return points;
     }
 
+    /**
+     * ランダムにポイントを取得
+     * 
+     * @param points
+     * @return
+     */
     public static Point GetRandomPoint(ArrayList<Point> points) {
         Random random = new Random();
         return points.get(random.nextInt(points.size()));
     }
 
+    /**
+     * ランダムな4箇所に戦艦を設定
+     * 
+     * @param alphaSide
+     * @param roundTrim
+     * @param cornerTrim
+     */
     public static void SetRandom4Points(boolean alphaSide, boolean roundTrim, boolean cornerTrim) {
         for (Point point : GetRandomPoints(4, roundTrim, cornerTrim)) {
             GetCell(point).SetHp(alphaSide, 3);
         }
     }
 
+    /**
+     * 指定した4箇所に戦艦を設定
+     * 
+     * @param alphaSide
+     * @param type
+     */
     public static void SetType4Points(boolean alphaSide, int type) {
         switch (type) {
             case 0:
@@ -702,6 +986,14 @@ class Board {
         }
     }
 
+    /**
+     * ランダムなポイントリストを取得
+     * 
+     * @param count
+     * @param roundTrim
+     * @param cornerTrim
+     * @return
+     */
     public static ArrayList<Point> GetRandomPoints(int count, boolean roundTrim,
             boolean cornerTrim) {
         ArrayList<Point> points = new ArrayList<Point>();
@@ -735,6 +1027,14 @@ class Board {
         return points;
     }
 
+    /**
+     * 評価値が最大であるポイントリストを取得
+     * 
+     * @param alphaSide
+     * @param isEnableAttack
+     * @param layer
+     * @return
+     */
     public static ArrayList<Point> GetMaxValuePoints(boolean alphaSide, boolean isEnableAttack, int layer) {
         HashMap<Point, Integer> pointsValue = new HashMap<Point, Integer>();
         for (int x = 0; x < Board.BOARD_SIZE; x++) {
@@ -756,6 +1056,14 @@ class Board {
         return points;
     }
 
+    /**
+     * 評価値が最小であるポイントリストを取得
+     * 
+     * @param alphaSide
+     * @param isEnableAttack
+     * @param layer
+     * @return
+     */
     public static ArrayList<Point> GetMinValuePoints(boolean alphaSide, boolean isEnableAttack, int layer) {
         HashMap<Point, Integer> pointsValue = new HashMap<Point, Integer>();
         for (int x = 0; x < Board.BOARD_SIZE; x++) {
@@ -780,6 +1088,13 @@ class Board {
         return points;
     }
 
+    /**
+     * 最も近い戦艦リストを取得
+     * 
+     * @param alphaSide
+     * @param point
+     * @return
+     */
     public static ArrayList<Point> GetShortPoints(boolean alphaSide, Point point) {
         HashMap<Point, Integer> pointsDistance = new HashMap<Point, Integer>();
         for (Point shipPoint : GetShipPoints(alphaSide)) {
@@ -795,6 +1110,12 @@ class Board {
         return points;
     }
 
+    /**
+     * 周囲のポイントリストを取得
+     * 
+     * @param point
+     * @return
+     */
     public static ArrayList<Point> GetRoundPoints(Point point) {
         ArrayList<Point> points = new ArrayList<Point>();
         if (point.x > 0) {
@@ -824,6 +1145,14 @@ class Board {
         return points;
     }
 
+    /**
+     * 十字方向のポイントリストを取得
+     * 
+     * @param point
+     * @param minLength
+     * @param maxLength
+     * @return
+     */
     public static ArrayList<Point> GetCrossPoints(Point point, int minLength, int maxLength) {
         ArrayList<Point> points = new ArrayList<Point>();
         for (int i = minLength; i <= maxLength; i++) {
@@ -843,10 +1172,26 @@ class Board {
         return points;
     }
 
+    /**
+     * ポイント間の距離を取得
+     * 
+     * @param aPoint
+     * @param bPoint
+     * @return
+     */
     public static int GetPointDistance(Point aPoint, Point bPoint) {
         return (Math.abs(aPoint.x - bPoint.x) + Math.abs(aPoint.y - bPoint.y));
     }
 
+    /**
+     * 評価値リストを取得
+     * 
+     * @param alphaSide
+     * @param points
+     * @param layer
+     * @param filter
+     * @return
+     */
     public static HashMap<Point, Integer> GetPointValues(boolean alphaSide, ArrayList<Point> points, int layer,
             int filter) {
         if (points == null) {
@@ -883,6 +1228,14 @@ class Board {
         }
     }
 
+    /**
+     * 移動可否を取得 (ポイント)
+     * 
+     * @param alphaSide
+     * @param oldPoint
+     * @param newPoint
+     * @return
+     */
     public static boolean IsMoveEnablePoint(boolean alphaSide, Point oldPoint, Point newPoint) {
         if (!oldPoint.IsRange() || !newPoint.IsRange()) {
             return false;
@@ -902,10 +1255,26 @@ class Board {
         }
     }
 
+    /**
+     * 移動可否を取得 (ベクトル)
+     * 
+     * @param alphaSide
+     * @param oldPoint
+     * @param vectorPoint
+     * @return
+     */
     public static boolean IsMoveEnableVector(boolean alphaSide, Point oldPoint, Point vectorPoint) {
         return IsMoveEnablePoint(alphaSide, oldPoint, oldPoint.Plus(vectorPoint));
     }
 
+    /**
+     * 移動可能ポイントリストを取得 (ポイント)
+     * 
+     * @param alphaSide
+     * @param oldPoint
+     * @param newPoints
+     * @return
+     */
     public static ArrayList<Point> GetFilterMoveEnablePoints(boolean alphaSide, Point oldPoint,
             ArrayList<Point> newPoints) {
         ArrayList<Point> tempPoints = new ArrayList<Point>();
@@ -917,6 +1286,14 @@ class Board {
         return tempPoints;
     }
 
+    /**
+     * 移動可否ポイントリストを取得 (ベクトル)
+     * 
+     * @param alphaSide
+     * @param oldPoint
+     * @param newVectors
+     * @return
+     */
     public static ArrayList<Point> GetFilterMoveEnableVectors(boolean alphaSide, Point oldPoint,
             ArrayList<Point> newVectors) {
         ArrayList<Point> tempVectors = new ArrayList<Point>();
@@ -928,6 +1305,14 @@ class Board {
         return tempVectors;
     }
 
+    /**
+     * 移動 (ポイント)
+     * 
+     * @param alphaSide
+     * @param oldPoint
+     * @param newPoint
+     * @return
+     */
     public static boolean MovePoint(boolean alphaSide, Point oldPoint, Point newPoint) {
         WriteLogSide(alphaSide);
         if (IsMoveEnablePoint(alphaSide, oldPoint, newPoint)) {
@@ -956,10 +1341,24 @@ class Board {
         }
     }
 
+    /**
+     * 移動 (ベクトル)
+     * 
+     * @param alphaSide
+     * @param oldPoint
+     * @param vectorPoint
+     * @return
+     */
     public static boolean MoveVector(boolean alphaSide, Point oldPoint, Point vectorPoint) {
         return MovePoint(alphaSide, oldPoint, oldPoint.Plus(vectorPoint));
     }
 
+    /**
+     * 強制移動 (ベクトル)
+     * 
+     * @param alphaSide
+     * @param vectorPoint
+     */
     public static void MoveVectorForce(boolean alphaSide, Point vectorPoint) {
         WriteLogSide(alphaSide);
         WriteLogLine("移動】 " + vectorPoint.toVectorFormaString());
@@ -975,6 +1374,11 @@ class Board {
         Logger.AddLogger(alphaSide);
     }
 
+    /**
+     * 攻撃可否ポイントを検索
+     * 
+     * @param alphaSide
+     */
     public static void SearchEnableAttackPoints(boolean alphaSide) {
         for (int x = 0; x < Board.BOARD_SIZE; x++) {
             for (int y = 0; y < Board.BOARD_SIZE; y++) {
@@ -993,6 +1397,12 @@ class Board {
         }
     }
 
+    /**
+     * 攻撃可能ポイントリストを取得
+     * 
+     * @param alphaSide
+     * @return
+     */
     public static ArrayList<Point> GetEnableAttackPoints(boolean alphaSide) {
         ArrayList<Point> points = new ArrayList<Point>();
         for (int x = 0; x < Board.BOARD_SIZE; x++) {
@@ -1005,6 +1415,13 @@ class Board {
         return points;
     }
 
+    /**
+     * 攻撃可否を取得
+     * 
+     * @param alphaSide
+     * @param point
+     * @return
+     */
     public static boolean IsEnableAttackPoint(boolean alphaSide, Point point) {
         if (!point.IsRange()) {
             return false;
@@ -1013,6 +1430,13 @@ class Board {
         return Board.GetCell(point).GetEnableAttack(alphaSide);
     }
 
+    /**
+     * 攻撃可能ポイントリストを取得
+     * 
+     * @param alphaSide
+     * @param points
+     * @return
+     */
     public static ArrayList<Point> GetFilterEnableAttackPoints(boolean alphaSide, ArrayList<Point> points) {
         ArrayList<Point> tempPoints = new ArrayList<Point>();
         for (Point point : points) {
@@ -1023,6 +1447,14 @@ class Board {
         return tempPoints;
     }
 
+    /**
+     * 攻撃
+     * 
+     * @param alphaSide
+     * @param point
+     * @param judgeResult
+     * @return
+     */
     public static boolean AttackPoint(boolean alphaSide, Point point, boolean judgeResult) {
         WriteLogSide(alphaSide);
         if (IsEnableAttackPoint(alphaSide, point)) {
@@ -1099,6 +1531,12 @@ class Board {
         }
     }
 
+    /**
+     * 攻撃結果を上書き
+     * 
+     * @param alphaSide
+     * @param attackResult
+     */
     public static void AttackResultTransfer(boolean alphaSide, ArrayList<Integer> attackResult) {
         Board.WriteLog(ConsoleColors.BLUE_BOLD);
         for (int i = 0; i < attackResult.size(); i++) {
@@ -1126,6 +1564,12 @@ class Board {
         }
     }
 
+    /**
+     * 強制攻撃
+     * 
+     * @param alphaSide
+     * @param point
+     */
     public static void AttackPointForce(boolean alphaSide, Point point) {
         WriteLogSide(alphaSide);
         ArrayList<Integer> attackResult = new ArrayList<Integer>();
@@ -1182,50 +1626,104 @@ class Board {
 }
 
 class Interface {
+    // BoardにおけるalphaSide
     public final boolean alphaSide;
+    // 攻撃結果の上書き可否
     public final boolean isEnemySecret;
 
+    // 戦艦数
     public int allyCount;
-    public int allySumHp;
     public int enemyCount;
+    // 合計HP
+    public int allySumHp;
     public int enemySumHp;
 
+    /**
+     * 前ターンの敵攻撃有無
+     * 
+     * @return
+     */
     public boolean IsEnemyLastAttack() {
         return Board.IsLastAttack(!alphaSide);
     }
 
+    /**
+     * 前ターンの味方攻撃有無
+     * 
+     * @return
+     */
     public boolean IsAllyLastAttack() {
         return Board.IsLastAttack(alphaSide);
     }
 
+    /**
+     * 前ターンの敵移動有無
+     * 
+     * @return
+     */
     public boolean IsEnemyLastMove() {
         return (Board.GetLastMoveVector(!alphaSide) != null);
     }
 
+    /**
+     * 前ターンの味方移動有無
+     * 
+     * @return
+     */
     public boolean IsAllyLastMove() {
         return (Board.GetLastMoveVector(alphaSide) != null);
     }
 
+    /**
+     * 前ターンの敵攻撃結果
+     * 
+     * @return
+     */
     public ArrayList<Integer> EnemyLastAttackResult() {
         return Board.GetLastAttackResult(!alphaSide);
     }
 
+    /**
+     * 前ターンの味方攻撃結果
+     * 
+     * @return
+     */
     public ArrayList<Integer> AllyLastAttackResult() {
         return Board.GetLastAttackResult(alphaSide);
     }
 
+    /**
+     * 前ターンの敵攻撃ポイント
+     * 
+     * @return
+     */
     public Point EnemyLastAttackPoint() {
         return Board.GetLastAttackPoint(!alphaSide);
     }
 
+    /**
+     * 前ターンの味方攻撃ポイント
+     * 
+     * @return
+     */
     public Point AllyLastAttackPoint() {
         return Board.GetLastAttackPoint(alphaSide);
     }
 
+    /**
+     * 前ターンの敵移動ベクトル
+     * 
+     * @return
+     */
     public Point EnemyLastMoveVector() {
         return Board.GetLastMoveVector(!alphaSide);
     }
 
+    /**
+     * 前ターンの味方移動ベクトル
+     * 
+     * @return
+     */
     public Point AllyLastMoveVector() {
         return Board.GetLastMoveVector(alphaSide);
     }
@@ -1239,6 +1737,11 @@ class Interface {
         enemySumHp = 12;
     }
 
+    /**
+     * パラメータを設定 (復元用)
+     * 
+     * @param parameters
+     */
     public void SetCountSumHp(int[] parameters) {
         allyCount = parameters[0];
         allySumHp = parameters[1];
@@ -1246,10 +1749,21 @@ class Interface {
         enemySumHp = parameters[3];
     }
 
-    public int[] SetCountSumHp() {
+    /**
+     * パラメータを取得
+     * 
+     * @return
+     */
+    public int[] GetCountSumHp() {
         return new int[] { allyCount, allySumHp, enemyCount, enemySumHp };
     }
 
+    /**
+     * 移動
+     * 
+     * @param oldPoint
+     * @param newPoint
+     */
     public void DoMove(Point oldPoint, Point newPoint) {
         Board.WriteBoard(alphaSide);
         Board.WriteLogLine("allyCount = " + allyCount + ", allySumHp = " + allySumHp + ", enemyCount = " + enemyCount
@@ -1260,6 +1774,11 @@ class Interface {
         Board.MovePoint(alphaSide, oldPoint, newPoint);
     }
 
+    /**
+     * 攻撃
+     * 
+     * @param point
+     */
     public void DoAttack(Point point) {
         Board.WriteBoard(alphaSide);
         Board.WriteLogLine("allyCount = " + allyCount + ", allySumHp = " + allySumHp + ", enemyCount = " + enemyCount
@@ -1270,42 +1789,73 @@ class Interface {
         Board.AttackPoint(alphaSide, point, !isEnemySecret);
     }
 
-    public void DoMoveForce(Point vectorPoint) {
-        Board.WriteBoard(alphaSide);
-        Board.WriteLogLine("allyCount = " + allyCount + ", allySumHp = " + allySumHp + ", enemyCount = " + enemyCount
-                + ", enemySumHp = " + enemySumHp);
-        Board.WriteLog(ConsoleColors.BLUE_BOLD);
-        Board.WriteLogLine("<" + vectorPoint.toVectorFormaString() + " に移動！>");
-        Board.WriteLog(ConsoleColors.RESET);
-        Board.MoveVectorForce(alphaSide, vectorPoint);
-    }
+    // /**
+    // * 強制移動
+    // *
+    // * @param vectorPoint
+    // */
+    // public void DoMoveForce(Point vectorPoint) {
+    // Board.WriteBoard(alphaSide);
+    // Board.WriteLogLine("allyCount = " + allyCount + ", allySumHp = " + allySumHp
+    // + ", enemyCount = " + enemyCount
+    // + ", enemySumHp = " + enemySumHp);
+    // Board.WriteLog(ConsoleColors.BLUE_BOLD);
+    // Board.WriteLogLine("<" + vectorPoint.toVectorFormaString() + " に移動！>");
+    // Board.WriteLog(ConsoleColors.RESET);
+    // Board.MoveVectorForce(alphaSide, vectorPoint);
+    // }
 
-    public void DoAttackForce(Point point) {
-        Board.WriteBoard(alphaSide);
-        Board.WriteLogLine("allyCount = " + allyCount + ", allySumHp = " + allySumHp + ", enemyCount = " + enemyCount
-                + ", enemySumHp = " + enemySumHp);
-        Board.WriteLog(ConsoleColors.BLUE_BOLD);
-        Board.WriteLogLine("<" + point.toPointFormatString() + " に魚雷発射！>");
-        Board.WriteLog(ConsoleColors.RESET);
-        Board.AttackPointForce(alphaSide, point);
-    }
+    // /**
+    // * 強制攻撃
+    // *
+    // * @param point
+    // */
+    // public void DoAttackForce(Point point) {
+    // Board.WriteBoard(alphaSide);
+    // Board.WriteLogLine("allyCount = " + allyCount + ", allySumHp = " + allySumHp
+    // + ", enemyCount = " + enemyCount
+    // + ", enemySumHp = " + enemySumHp);
+    // Board.WriteLog(ConsoleColors.BLUE_BOLD);
+    // Board.WriteLogLine("<" + point.toPointFormatString() + " に魚雷発射！>");
+    // Board.WriteLog(ConsoleColors.RESET);
+    // Board.AttackPointForce(alphaSide, point);
+    // }
 }
 
 class Logger {
+    // JSONObject
     private static JSONObject jsonObject;
+    // ファイル名 (拡張子なし)
     private static String fileName;
+    // 自動保存の有無
     private static boolean autoSave;
 
+    /**
+     * ロガーを作成
+     * 
+     * @param fileName
+     * @param autoSave
+     */
     public static void CreateLogger(String fileName, boolean autoSave) {
         jsonObject = new JSONObject();
         Logger.fileName = fileName;
         Logger.autoSave = autoSave;
     }
 
+    /**
+     * ファイル名を取得
+     * 
+     * @return
+     */
     public static String GetFileName() {
         return fileName;
     }
 
+    /**
+     * ロガーに戦況を追加
+     * 
+     * @param alphaSide
+     */
     public static void AddLogger(boolean alphaSide) {
         JSONObject childJsonObject = new JSONObject();
         childJsonObject.put("alphaSide", alphaSide);
@@ -1339,6 +1889,12 @@ class Logger {
         }
     }
 
+    /**
+     * 一次元配列の戦艦HPを取得
+     * 
+     * @param alphaSide
+     * @return
+     */
     public static ArrayList<Integer> GetHps(boolean alphaSide) {
         ArrayList<Integer> hps = new ArrayList<Integer>();
         for (int x = 0; x < Board.BOARD_SIZE; x++) {
@@ -1349,6 +1905,12 @@ class Logger {
         return hps;
     }
 
+    /**
+     * 一次元配列の評価値配列を取得
+     * 
+     * @param alphaSide
+     * @return
+     */
     public static ArrayList<ArrayList<Integer>> GetValues(boolean alphaSide) {
         ArrayList<ArrayList<Integer>> values = new ArrayList<ArrayList<Integer>>();
         for (int x = 0; x < Board.BOARD_SIZE; x++) {
@@ -1359,6 +1921,12 @@ class Logger {
         return values;
     }
 
+    /**
+     * 一次元配列の攻撃可否を取得
+     * 
+     * @param alphaSide
+     * @return
+     */
     public static ArrayList<Boolean> GetEnableAttacks(boolean alphaSide) {
         ArrayList<Boolean> enableAttacks = new ArrayList<Boolean>();
         for (int x = 0; x < Board.BOARD_SIZE; x++) {
@@ -1369,6 +1937,9 @@ class Logger {
         return enableAttacks;
     }
 
+    /**
+     * ロガーを保存
+     */
     public static void SaveLogger() {
         File folder = new File("log");
         if (!folder.exists() || !folder.isDirectory()) {
