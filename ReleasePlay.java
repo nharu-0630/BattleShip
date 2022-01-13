@@ -9,17 +9,22 @@ public class ReleasePlay {
     public static final boolean isEnemySecret = true;
 
     // アルゴリズム
-    public static int alphaAlgorithmNumber = 16;
+    public static int alphaAlgorithmNumber = 17;
 
     public static void main(String args[]) {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
         AlgorithmSwitcher alphaAlgorithm = new AlgorithmSwitcher(true, isEnemySecret);
-        Board.SetRandom4Points(true, true, true);
-        // Board.GetCell(new Point("A2")).SetHp(true, 3);
-        // Board.GetCell(new Point("B4")).SetHp(true, 3);
-        // Board.GetCell(new Point("D2")).SetHp(true, 3);
-        // Board.GetCell(new Point("D4")).SetHp(true, 3);
+        // Board.SetRandom4Points(true, true, true);
+        // #region 正方形
+        // Board.SetType4Points(true, 0);
+        // #endregion
+        // #region 大ひし形
+        Board.SetType4Points(true, 1);
+        // #endregion
+        // #region 小ひし形
+        // Board.SetType4Points(true, 2);
+        // #endregion
 
         alphaAlgorithm.SetAlgorithm(alphaAlgorithmNumber);
         alphaAlgorithm.SetParameter(null);

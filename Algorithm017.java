@@ -454,6 +454,18 @@ class Algorithm017 extends Interface {
                 // }
                 // }
             }
+            // if (EnemyLastAttackResult().contains(Board.RESULT_NOHIT) && !prepareTurned) {
+            // ArrayList<Point> nohitPoints = Board.GetRoundPoints(EnemyLastAttackPoint());
+            // for (Point point : Board.GetShipPoints(alphaSide)) {
+            // for (Point movePoint : Board.GetCrossPoints(point, 1, 2)) {
+            // if (nohitPoints.contains(movePoint) && Board.IsMoveEnablePoint(alphaSide,
+            // point, movePoint)) {
+            // DoMove(point, movePoint);
+            // return;
+            // }
+            // }
+            // }
+            // }
         }
 
         if (prepareTurned && Board.IsEnableAttackPoint(alphaSide, preparePoint)) {

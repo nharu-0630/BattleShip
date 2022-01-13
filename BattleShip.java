@@ -673,29 +673,32 @@ class Board {
         return points.get(random.nextInt(points.size()));
     }
 
-    // public static ArrayList<Point> GetRandomPoints(int count) {
-    // ArrayList<Point> points = new ArrayList<Point>();
-    // Random random = new Random();
-    // HashMap<Integer, Integer> randomPoints = new HashMap<Integer, Integer>();
-    // while (randomPoints.size() != count) {
-    // randomPoints.put(random.nextInt(Board.BOARD_SIZE),
-    // random.nextInt(Board.BOARD_SIZE));
-    // }
-    // for (Map.Entry<Integer, Integer> randomPoint : randomPoints.entrySet()) {
-    // points.add(new Point(randomPoint.getKey(), randomPoint.getValue()));
-    // }
-    // return points;
-    // }
-
-    // public static void SetRandom4Points(boolean alphaSide) {
-    // for (Point point : GetRandomPoints(4)) {
-    // GetCell(point).SetHp(alphaSide, 3);
-    // }
-    // }
-
     public static void SetRandom4Points(boolean alphaSide, boolean roundTrim, boolean cornerTrim) {
         for (Point point : GetRandomPoints(4, roundTrim, cornerTrim)) {
             GetCell(point).SetHp(alphaSide, 3);
+        }
+    }
+
+    public static void SetType4Points(boolean alphaSide, int type) {
+        switch (type) {
+            case 0:
+                Board.GetCell(new Point("B2")).SetHp(alphaSide, 3);
+                Board.GetCell(new Point("B4")).SetHp(alphaSide, 3);
+                Board.GetCell(new Point("D2")).SetHp(alphaSide, 3);
+                Board.GetCell(new Point("D4")).SetHp(alphaSide, 3);
+                break;
+            case 1:
+                Board.GetCell(new Point("A3")).SetHp(alphaSide, 3);
+                Board.GetCell(new Point("C1")).SetHp(alphaSide, 3);
+                Board.GetCell(new Point("C5")).SetHp(alphaSide, 3);
+                Board.GetCell(new Point("E3")).SetHp(alphaSide, 3);
+                break;
+            case 2:
+                Board.GetCell(new Point("B3")).SetHp(alphaSide, 3);
+                Board.GetCell(new Point("C2")).SetHp(alphaSide, 3);
+                Board.GetCell(new Point("C4")).SetHp(alphaSide, 3);
+                Board.GetCell(new Point("D3")).SetHp(alphaSide, 3);
+                break;
         }
     }
 
