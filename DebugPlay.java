@@ -31,17 +31,17 @@ public class DebugPlay {
     public static int bravoAlgorithmNumber = 17;
 
     public static void main(String args[]) {
-        DeepTry(null);
-
-        // for (int i = 1; i <= 16; i++) {
-        // for (int j = i; j <= 16; j++) {
-        // alphaAlgorithmNumber = i;
-        // bravoAlgorithmNumber = j;
-        // if (i != 3 && j != 3) {
         // DeepTry(null);
-        // }
-        // }
-        // }
+
+        for (int i = 1; i <= 17; i++) {
+            for (int j = i; j <= 17; j++) {
+                alphaAlgorithmNumber = i;
+                bravoAlgorithmNumber = j;
+                if (i != 3 && j != 3) {
+                    DeepTry(null);
+                }
+            }
+        }
     }
 
     public static void Try(boolean alphaSide, int[] parameters) {
