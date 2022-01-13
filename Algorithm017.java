@@ -220,10 +220,10 @@ class Algorithm017 extends Interface {
                         break;
                 }
             }
-            Board.WriteLogLine(
-                    "enemyFakeMoveCount = " + enemyFakeMoveCount + ", enemyRealMoveCount = " + enemyRealMoveCount
-                            + ", enemyNoMoveCount = " + enemyNoMoveCount);
         }
+        Board.WriteLogLine(
+                "enemyFakeMoveCount = " + enemyFakeMoveCount + ", enemyRealMoveCount = " + enemyRealMoveCount
+                        + ", enemyNoMoveCount = " + enemyNoMoveCount);
 
         // 敵軍が移動した = 移動先の可能性があるポイントの評価値に1を追加する
         if (IsEnemyLastMove()) {
