@@ -11,12 +11,12 @@ public class DebugPlay {
     public static final int maxTurnCount = 60;
 
     // ゲーム試合数
-    public static final int deepTryCount = 10000;
-    // public static final int deepTryCount = 10;
+    // public static final int deepTryCount = 10000;
+    public static final int deepTryCount = 10;
 
     // ログ保存
-    // public static final boolean isSaveLog = true;
-    public static final boolean isSaveLog = false;
+    public static final boolean isSaveLog = true;
+    // public static final boolean isSaveLog = false;
 
     // ログ表示
     // public static final boolean isVisibleLog = true;
@@ -28,7 +28,7 @@ public class DebugPlay {
 
     // アルゴリズム
     public static int alphaAlgorithmNumber = 17;
-    public static int bravoAlgorithmNumber = 17;
+    public static int bravoAlgorithmNumber = 18;
 
     public static void main(String args[]) {
         DeepTry(null);
@@ -48,12 +48,12 @@ public class DebugPlay {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
         AlgorithmSwitcher alphaAlgorithm = new AlgorithmSwitcher(true, isEnemySecret);
-        // Board.SetRandom4Points(true, true, true);
+        Board.SetRandom4Points(true, true, true);
         // #region 正方形
         // Board.SetType4Points(true, 0);
         // #endregion
         // #region 大ひし形
-        Board.SetType4Points(true, 1);
+        // Board.SetType4Points(true, 1);
         // #endregion
         // #region 小ひし形
         // Board.SetType4Points(true, 2);
