@@ -115,8 +115,10 @@ class Algorithm018 extends Interface {
             newValue += 1;
         } else if (oldValue < 10) {
             newValue += 3;
-        } else {
+        } else if (oldValue < 20) {
             newValue += 5;
+        } else {
+            newValue += 10;
         }
         return newValue;
     }
@@ -234,10 +236,10 @@ class Algorithm018 extends Interface {
                         break;
                 }
             }
-            Board.WriteLogLine(
-                    "enemyFakeMoveCount = " + enemyFakeMoveCount + ", enemyRealMoveCount = " + enemyRealMoveCount
-                            + ", enemyNoMoveCount = " + enemyNoMoveCount);
         }
+        Board.WriteLogLine(
+                "enemyFakeMoveCount = " + enemyFakeMoveCount + ", enemyRealMoveCount = " + enemyRealMoveCount
+                        + ", enemyNoMoveCount = " + enemyNoMoveCount);
 
         // 敵軍が移動した = 移動先の可能性があるポイントの評価値に1を追加する
         if (IsEnemyLastMove()) {
