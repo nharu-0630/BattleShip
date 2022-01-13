@@ -1662,7 +1662,7 @@ class Interface {
      * @return
      */
     public boolean IsEnemyLastMove() {
-        return (Board.GetLastMoveVector(!alphaSide) != null);
+        return Board.IsLastMove(!alphaSide);
     }
 
     /**
@@ -1671,7 +1671,7 @@ class Interface {
      * @return
      */
     public boolean IsAllyLastMove() {
-        return (Board.GetLastMoveVector(alphaSide) != null);
+        return Board.IsLastMove(alphaSide);
     }
 
     /**
