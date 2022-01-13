@@ -28,28 +28,29 @@ https://xyzyxjp.github.io/BattleShip/
 | alphaEnableAttack | boolean              | false  | αの攻撃の可否            |
 | bravoEnableAttack | boolean              | false  | βの攻撃の可否            |
 
-| メソッド名       | 引数型               | 戻り値型                              |           |                          |
-| ----------- | ----------------- | --------------------------------- | --------- | ------------------------ |
-| GetHp       | boolean           | int                               | 戦艦HPを取得   |                          |
-| SetHp       | boolean, int      |                                   | 戦艦HPを設定   |                          |
-| GetValue    | boolean, int      | ArrayList\<Integer\>              | 評価値を取得    | 第2引数`layer`              |
-| GetValues   | boolean           | ArrayList\<ArrayList\<Integer\>\> | 評価値リストを取得 |                          |
-| SetValue    | boolean, int, int |                                   | 評価値を設定    | 第2引数`layer`, 第3引数`value` |
-| AddValue    | boolean, int, int |                                   | 評価値を加算    | 第2引数`layer`, 第3引数`value` |
-| SetValueForce    | boolean, int, int |                                   | 評価値を強制設定    | 第2引数`layer`, 第3引数`value` |
-| SetEnableAttack | boolean, boolean  |                                   | 攻撃の可否を設定  |                          |
-| GetEnableAttack | boolean, boolean  | boolean                           | 攻撃の可否を取得  |                          |
-| IsAlive     | boolean           | boolean                           | 戦艦の生死を取得  |                          |
-| IsEmpty     | boolean           | boolean                           | 戦艦の有無を取得  |                          |
+| メソッド名           | 引数型               | 戻り値型                 |           |                          |
+| --------------- | ----------------- | -------------------- | --------- | ------------------------ |
+| GetHp           | boolean           | int                  | 戦艦HPを取得   |                          |
+| SetHp           | boolean, int      |                      | 戦艦HPを設定   |                          |
+| GetValue        | boolean, int      | ArrayList\<Integer\> | 評価値を取得    | 第2引数`layer`              |
+| GetValues       | boolean           | ArrayList\<Integer\> | 評価値リストを取得 |                          |
+| SetValue        | boolean, int, int |                      | 評価値を設定    | 第2引数`layer`, 第3引数`value` |
+| AddValue        | boolean, int, int |                      | 評価値を加算    | 第2引数`layer`, 第3引数`value` |
+| SetValueForce   | boolean, int, int |                      | 評価値を強制設定  | 第2引数`layer`, 第3引数`value` |
+| SetEnableAttack | boolean, boolean  |                      | 攻撃の可否を設定  |                          |
+| GetEnableAttack | boolean, boolean  | boolean              | 攻撃の可否を取得  |                          |
+| IsAlive         | boolean           | boolean              | 戦艦の生死を取得  |                          |
+| IsEmpty         | boolean           | boolean              | 戦艦の有無を取得  |                          |
 
 第1引数には`alphaSide`を割当  
 
 ### ポイント(Point)
 
-| 変数名 | 変数型 | デフォルト値 |       |
-| --- | --- | ------ | ----- |
-| x   | int | 0      | 座標のX値 |
-| y   | int | 0      | 座標のY値 |
+| 変数名   | 変数型     | デフォルト値 |       |
+| ----- | ------- | ------ | ----- |
+| x     | int     | 0      | 座標のX値 |
+| y     | int     | 0      | 座標のY値 |
+| empty | boolean | true   |       |
 
 | メソッド名               | 引数型     | 戻り値型   |             |
 | ------------------- | ------- | ------ | ----------- |
@@ -60,32 +61,33 @@ https://xyzyxjp.github.io/BattleShip/
 | Distance            |         | int    | 距離を取得       |
 | equals              | boolean | Point  | 引数のポイントと比較  |
 | IsRange             | boolean |        | ボード内の座標有無   |
-| toString            |         | String | (x, y)      |
+| toString            |         | String | `(x, y)`    |
 | toPointFormatString |         | String | `アルファベット数字` |
 | toVectorFormaString |         | String | `方角数字`      |
 
 ### ボード(Board)
 
-| int | attackResult |
-| ------- | ------------ |
-| 撃沈！     | 3            |
-| 命中！     | 2            |
-| 波高し！    | 1            |
-| ハズレ！    | 0            |
+|              |           |     |
+| ------------ | --------- | --- |
+| BOARD_SIZE   | ボードの1辺の長さ | 5   |
+| RESULT_SINK  | 撃沈！       | 3   |
+| RESULT_HIT   | 命中！       | 2   |
+| RESULT_NEAR  | 波高し！      | 1   |
+| RESULT_NOHIT | ハズレ！      | 0   |
+| ATTACK_NULL  | 攻撃結果なし    | -1  |
 
 | 変数名                   | 変数型                  | デフォルト値 |                         |
 | --------------------- | -------------------- | ------ | ----------------------- |
-| boardSize             | int                  | 5      | ボードの1辺の長さ               |
 | cells                 | Cell[][]             |        | セルの2次元配列                |
 | turnCount             | int                  | 0      | ターン数                    |
 | alphaWin              | boolean              | false  | αの勝利                    |
 | bravoWin              | boolean              | false  | βの勝利                    |
-| lastAlphaAttackPoint  | Point                |        | αの前回攻撃ポイント              |
+| lastAlphaAttackPoint  | Point                | null   | αの前回攻撃ポイント              |
 | lastAlphaAttackResult | ArrayList\<Integer\> | -1     | αの前回攻撃結果                |
-| lastAlphaMoveVector   | Point                |        | αの前回移動ベクトル              |
-| lastBravoAttackPoint  | Point                |        | βの前回攻撃ポイント              |
+| lastAlphaMoveVector   | Point                | null   | αの前回移動ベクトル              |
+| lastBravoAttackPoint  | Point                | null   | βの前回攻撃ポイント              |
 | lastBravoAttackResult | ArrayList\<Integer\> | -1     | βの前回攻撃結果                |
-| lastBravoMoveVector   | Point                |        | βの前回移動ベクトル              |
+| lastBravoMoveVector   | Point                | null   | βの前回移動ベクトル              |
 | isVisibleLog          | boolean              | false  | ログの表示                   |
 | isAttackResultArray   | boolean              | false  | 攻撃結果を複数返す場合は`true`      |
 | isEnemySecret         | boolean              | false  | 攻撃結果をあとから設定する場合のみ`true` |
