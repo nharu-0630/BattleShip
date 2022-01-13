@@ -210,10 +210,19 @@ class Algorithm016 extends Interface {
                         enemyNoMoveCount++;
                         break;
                 }
-                Board.WriteLogLine(
-                        "enemyFakeMoveCount = " + enemyFakeMoveCount + ", enemyRealMoveCount = " + enemyRealMoveCount
-                                + ", enemyNoMoveCount = " + enemyNoMoveCount);
+            } else {
+                switch (allyAttackType) {
+                    case TYPE_FAKEMOVE:
+                        enemyRealMoveCount++;
+                        break;
+                    case TYPE_REALMOVE:
+                        enemyFakeMoveCount++;
+                        break;
+                }
             }
+            Board.WriteLogLine(
+                    "enemyFakeMoveCount = " + enemyFakeMoveCount + ", enemyRealMoveCount = " + enemyRealMoveCount
+                            + ", enemyNoMoveCount = " + enemyNoMoveCount);
         }
 
         // 敵軍が移動した = 移動先の可能性があるポイントの評価値に1を追加する
@@ -355,6 +364,10 @@ class Algorithm016 extends Interface {
                             DoAttack(estimatedPoint);
                             return;
                         }
+                    } else {
+                        allyAttackType = TYPE_FAKEMOVE;
+                        DoAttack(AllyLastAttackPoint());
+                        return;
                     }
                 } else {
                     if (Board.IsEnableAttackPoint(alphaSide, AllyLastAttackPoint())) {

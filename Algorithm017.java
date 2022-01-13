@@ -210,7 +210,6 @@ class Algorithm017 extends Interface {
                         enemyNoMoveCount++;
                         break;
                 }
-
             } else {
                 switch (allyAttackType) {
                     case TYPE_FAKEMOVE:

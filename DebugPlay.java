@@ -27,7 +27,7 @@ public class DebugPlay {
     public static final boolean isStepWait = false;
 
     // アルゴリズム
-    public static int alphaAlgorithmNumber = 15;
+    public static int alphaAlgorithmNumber = 16;
     public static int bravoAlgorithmNumber = 17;
 
     public static void main(String args[]) {
