@@ -11,16 +11,16 @@ public class DebugPlay {
     public static final int maxTurnCount = 60;
 
     // ゲーム試合数
-    public static final int deepTryCount = 10000;
-    // public static final int deepTryCount = 10;
+    // public static final int deepTryCount = 10000;
+    public static final int deepTryCount = 1;
 
     // ログ保存
     // public static final boolean isSaveLog = true;
     public static final boolean isSaveLog = false;
 
     // ログ表示
-    // public static final boolean isVisibleLog = true;
-    public static final boolean isVisibleLog = false;
+    public static final boolean isVisibleLog = true;
+    // public static final boolean isVisibleLog = false;
 
     // ステップ待機
     // public static final boolean isStepWait = true;

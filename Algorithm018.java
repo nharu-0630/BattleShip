@@ -307,7 +307,6 @@ class Algorithm018 extends Interface {
                     if ((enemyFakeMoveCount >= 1 && enemyRealMoveCount == 0) || !estimatedPoint.IsRange()
                             || (enemyFakeMoveCount > enemyRealMoveCount)) {
                         allyAttackType = TYPE_FAKEMOVE;
-                        Board.WriteLogLine("A");
                         DoAttack(AllyLastAttackPoint());
                         return;
                     } else if ((enemyRealMoveCount >= 1 && enemyFakeMoveCount == 0)
@@ -318,7 +317,6 @@ class Algorithm018 extends Interface {
                             estimatedAttackedStatus = 1;
                             estimatedBeforePoint = AllyLastAttackPoint();
                             allyAttackType = TYPE_REALMOVE;
-                            Board.WriteLogLine("B");
                             DoAttack(estimatedPoint);
                             return;
                         }
@@ -326,7 +324,6 @@ class Algorithm018 extends Interface {
                 } else {
                     if (Board.IsEnableAttackPoint(alphaSide, AllyLastAttackPoint())) {
                         allyAttackType = TYPE_NOMOVE;
-                        Board.WriteLogLine("E");
                         DoAttack(AllyLastAttackPoint());
                         return;
                     }
@@ -336,7 +333,6 @@ class Algorithm018 extends Interface {
                     estimatedAttackedStatus = 0;
                     if (Board.IsEnableAttackPoint(alphaSide, estimatedBeforePoint)) {
                         allyAttackType = TYPE_FAKEMOVE;
-                        Board.WriteLogLine("F");
                         DoAttack(estimatedBeforePoint);
                         estimatedBeforePoint = null;
                         return;
@@ -390,7 +386,6 @@ class Algorithm018 extends Interface {
         if (prepareTurned && Board.IsEnableAttackPoint(alphaSide, preparePoint)) {
             prepareTurned = false;
             allyAttackType = TYPE_HIT;
-            Board.WriteLogLine("G");
             DoAttack(preparePoint);
             preparePoint = null;
             return;
@@ -402,7 +397,6 @@ class Algorithm018 extends Interface {
             for (Point point : maxValuePoints) {
                 if (Board.IsEnableAttackPoint(alphaSide, point)) {
                     allyAttackType = TYPE_SEARCH;
-                    Board.WriteLogLine("H");
                     DoAttack(point);
                     return;
                 }
@@ -457,7 +451,6 @@ class Algorithm018 extends Interface {
 
         if (Board.GetMaxValuePoints(alphaSide, true, 0).size() != 0) {
             allyAttackType = TYPE_SEARCH;
-            Board.WriteLogLine("I");
             DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true, 0)));
             return;
         } else {
