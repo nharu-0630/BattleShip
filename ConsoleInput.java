@@ -150,7 +150,7 @@ public class ConsoleInput {
             tempLine = scanner.nextLine();
             if (tempLine.chars().allMatch(Character::isDigit)) {
                 value = Integer.parseInt(tempLine);
-                if (0 <= value && value <= 4) {
+                if (min <= value && value <= max) {
                     System.out.println(confirmText + " = " + value);
                     System.out.print(ConsoleColors.YELLOW);
                     System.out.print("確定(y), 取消(n): ");

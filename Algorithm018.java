@@ -43,8 +43,8 @@ class Algorithm018 extends Interface {
                     }
                 }
                 if (vector.Distance() == 2) {
-                    if ((new Point(x, y).Plus(vector).Divide(2)).IsRange()) {
-                        if (Board.GetCell(new Point(x, y).Plus(vector).Divide(2))
+                    if ((new Point(x, y).Plus(vector.Divide(2))).IsRange()) {
+                        if (Board.GetCell(new Point(x, y).Plus(vector.Divide(2)))
                                 .GetValue(alphaSide, layer) == -2) {
                             excludePoints.add(point);
                         }
@@ -111,14 +111,26 @@ class Algorithm018 extends Interface {
         int newValue = Board.GetCell(point).GetValue(alphaSide, layer);
         newValue = newValue < 0 ? 0 : newValue;
         int oldValue = Board.GetCell(point.Minus(vector)).GetValue(alphaSide, layer);
-        if (0 <= oldValue && oldValue < 5) {
-            newValue += 0;
-        } else if (5 <= oldValue && oldValue < 10) {
-            newValue += 3;
-        } else if (10 <= oldValue && oldValue < 20) {
-            newValue += 5;
-        } else if (20 <= oldValue) {
-            newValue += 10;
+        if (enemyCount <= 2) {
+            if (0 <= oldValue && oldValue < 5) {
+                newValue += 0;
+            } else if (5 <= oldValue && oldValue < 10) {
+                newValue += 3;
+            } else if (10 <= oldValue && oldValue < 20) {
+                newValue += 5;
+            } else if (20 <= oldValue) {
+                newValue += 10;
+            }
+        } else {
+            if (0 <= oldValue && oldValue < 5) {
+                newValue += 0;
+            } else if (5 <= oldValue && oldValue < 10) {
+                newValue += 1;
+            } else if (10 <= oldValue && oldValue < 20) {
+                newValue += 2;
+            } else if (20 <= oldValue) {
+                newValue += 10;
+            }
         }
         return newValue;
     }
@@ -332,6 +344,7 @@ class Algorithm018 extends Interface {
                 if (estimatedAttackedStatus == 1) {
                     estimatedAttackedStatus = 0;
                     if (Board.IsEnableAttackPoint(alphaSide, estimatedBeforePoint)) {
+                        Board.GetCell(estimatedBeforePoint).SetValueForce(alphaSide, 0, 20);
                         allyAttackType = TYPE_FAKEMOVE;
                         DoAttack(estimatedBeforePoint);
                         estimatedBeforePoint = null;

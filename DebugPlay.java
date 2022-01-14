@@ -11,16 +11,16 @@ public class DebugPlay {
     public static final int maxTurnCount = 60;
 
     // ゲーム試合数
-    // public static final int deepTryCount = 10000;
-    public static final int deepTryCount = 1;
+    public static final int deepTryCount = 1000;
+    // public static final int deepTryCount = 10;
 
     // ログ保存
     // public static final boolean isSaveLog = true;
     public static final boolean isSaveLog = false;
 
     // ログ表示
-    public static final boolean isVisibleLog = true;
-    // public static final boolean isVisibleLog = false;
+    // public static final boolean isVisibleLog = true;
+    public static final boolean isVisibleLog = false;
 
     // ステップ待機
     // public static final boolean isStepWait = true;
@@ -33,8 +33,8 @@ public class DebugPlay {
     public static void main(String args[]) {
         DeepTry(null);
 
-        // for (int i = 1; i <= 17; i++) {
-        // for (int j = i; j <= 17; j++) {
+        // for (int i = 1; i <= 18; i++) {
+        // for (int j = i; j <= 18; j++) {
         // alphaAlgorithmNumber = i;
         // bravoAlgorithmNumber = j;
         // if (i != 3 && j != 3) {
