@@ -123,7 +123,7 @@ class Algorithm018 extends Interface {
         return newValue;
     }
 
-    public void Think() {
+    private void Estimate() {
         if (IsEnemyLastAttack()) {
             if (EnemyLastAttackResult().contains(Board.RESULT_SINK)) {
                 allySumHp--;
@@ -149,6 +149,10 @@ class Algorithm018 extends Interface {
             }
         }
         Board.SearchEnableAttackPoints(alphaSide);
+    }
+
+    public void Think() {
+        Estimate();
 
         // 自軍が移動した = 移動先の可能性があるポイントの逆評価値に1を追加する
         if (IsAllyLastMove()) {
