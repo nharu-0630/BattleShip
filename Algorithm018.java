@@ -6,7 +6,7 @@ class Algorithm018 extends Interface {
         Board.InitializeValues(alphaSide, 1);
     }
 
-    private boolean estimatedAttackedFlag = false;
+    private int estimatedAttackedStatus = 0;
     private Point estimatedBeforePoint = null;
     private boolean prepareTurned = false;
     private Point preparePoint = null;
@@ -287,6 +287,13 @@ class Algorithm018 extends Interface {
 
         fakeMoveFlag = false;
 
+        if (estimatedAttackedStatus == 2) {
+            estimatedAttackedStatus = 0;
+        }
+        if (estimatedAttackedStatus == 1) {
+            estimatedAttackedStatus++;
+        }
+
         // 自軍が攻撃した
         if (IsAllyLastAttack()) {
             // 敵軍が命中した
@@ -297,48 +304,39 @@ class Algorithm018 extends Interface {
                 if (IsEnemyLastMove()) {
                     Point estimatedPoint = AllyLastAttackPoint()
                             .Plus(EnemyLastMoveVector());
-                    if ((enemyFakeMoveCount >= 1 && enemyRealMoveCount == 0) || !estimatedPoint.IsRange()) {
+                    if ((enemyFakeMoveCount >= 1 && enemyRealMoveCount == 0) || !estimatedPoint.IsRange()
+                            || (enemyFakeMoveCount > enemyRealMoveCount)) {
                         allyAttackType = TYPE_FAKEMOVE;
+                        Board.WriteLogLine("A");
                         DoAttack(AllyLastAttackPoint());
                         return;
-                    } else if (enemyRealMoveCount >= 1 && enemyFakeMoveCount == 0) {
+                    } else if ((enemyRealMoveCount >= 1 && enemyFakeMoveCount == 0)
+                            || (enemyRealMoveCount > enemyFakeMoveCount)) {
                         Board.GetCell(AllyLastAttackPoint()).SetValueForce(alphaSide, 0, 0);
                         Board.GetCell(estimatedPoint).SetValueForce(alphaSide, 0, 20);
                         if (Board.IsEnableAttackPoint(alphaSide, estimatedPoint)) {
-                            estimatedAttackedFlag = true;
+                            estimatedAttackedStatus = 1;
                             estimatedBeforePoint = AllyLastAttackPoint();
                             allyAttackType = TYPE_REALMOVE;
+                            Board.WriteLogLine("B");
                             DoAttack(estimatedPoint);
                             return;
-                        }
-                    } else {
-                        if (enemyFakeMoveCount > enemyRealMoveCount) {
-                            allyAttackType = TYPE_FAKEMOVE;
-                            DoAttack(AllyLastAttackPoint());
-                        } else {
-                            Board.GetCell(AllyLastAttackPoint()).SetValueForce(alphaSide, 0, 0);
-                            Board.GetCell(estimatedPoint).SetValueForce(alphaSide, 0, 20);
-                            if (Board.IsEnableAttackPoint(alphaSide, estimatedPoint)) {
-                                estimatedAttackedFlag = true;
-                                estimatedBeforePoint = AllyLastAttackPoint();
-                                allyAttackType = TYPE_REALMOVE;
-                                DoAttack(estimatedPoint);
-                                return;
-                            }
                         }
                     }
                 } else {
                     if (Board.IsEnableAttackPoint(alphaSide, AllyLastAttackPoint())) {
                         allyAttackType = TYPE_NOMOVE;
+                        Board.WriteLogLine("E");
                         DoAttack(AllyLastAttackPoint());
                         return;
                     }
                 }
             } else {
-                if (estimatedAttackedFlag) {
-                    estimatedAttackedFlag = false;
+                if (estimatedAttackedStatus == 1) {
+                    estimatedAttackedStatus = 0;
                     if (Board.IsEnableAttackPoint(alphaSide, estimatedBeforePoint)) {
                         allyAttackType = TYPE_FAKEMOVE;
+                        Board.WriteLogLine("F");
                         DoAttack(estimatedBeforePoint);
                         estimatedBeforePoint = null;
                         return;
@@ -392,6 +390,7 @@ class Algorithm018 extends Interface {
         if (prepareTurned && Board.IsEnableAttackPoint(alphaSide, preparePoint)) {
             prepareTurned = false;
             allyAttackType = TYPE_HIT;
+            Board.WriteLogLine("G");
             DoAttack(preparePoint);
             preparePoint = null;
             return;
@@ -403,6 +402,7 @@ class Algorithm018 extends Interface {
             for (Point point : maxValuePoints) {
                 if (Board.IsEnableAttackPoint(alphaSide, point)) {
                     allyAttackType = TYPE_SEARCH;
+                    Board.WriteLogLine("H");
                     DoAttack(point);
                     return;
                 }
@@ -457,6 +457,7 @@ class Algorithm018 extends Interface {
 
         if (Board.GetMaxValuePoints(alphaSide, true, 0).size() != 0) {
             allyAttackType = TYPE_SEARCH;
+            Board.WriteLogLine("I");
             DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true, 0)));
             return;
         } else {
