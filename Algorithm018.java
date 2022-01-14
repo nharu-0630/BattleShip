@@ -111,28 +111,87 @@ class Algorithm018 extends Interface {
         int newValue = Board.GetCell(point).GetValue(alphaSide, layer);
         newValue = newValue < 0 ? 0 : newValue;
         int oldValue = Board.GetCell(point.Minus(vector)).GetValue(alphaSide, layer);
-        if (enemyCount <= 2) {
-            if (0 <= oldValue && oldValue < 5) {
-                newValue += 0;
-            } else if (5 <= oldValue && oldValue < 10) {
-                newValue += 3;
-            } else if (10 <= oldValue && oldValue < 20) {
-                newValue += 5;
-            } else if (20 <= oldValue) {
-                newValue += 10;
-            }
-        } else {
-            if (0 <= oldValue && oldValue < 5) {
-                newValue += 0;
-            } else if (5 <= oldValue && oldValue < 10) {
-                newValue += 1;
-            } else if (10 <= oldValue && oldValue < 20) {
-                newValue += 2;
-            } else if (20 <= oldValue) {
-                newValue += 10;
-            }
+        if (0 <= oldValue && oldValue < 5) {
+            newValue += 0;
+        } else if (5 <= oldValue && oldValue < 10) {
+            newValue += 3;
+        } else if (10 <= oldValue && oldValue < 20) {
+            newValue += 5;
+        } else if (20 <= oldValue) {
+            newValue += 10;
         }
         return newValue;
+    }
+
+    private void SwipeValue(int layer, Point vector) {
+        switch (vector.x) {
+            case 2:
+            case 1:
+                for (int x = Board.BOARD_SIZE - 1; x > vector.x; x--) {
+                    for (int y = 0; y < Board.BOARD_SIZE; y++) {
+                        int value = Board.GetCell(x - vector.x, y).GetValue(alphaSide, layer);
+                        if (value != -2) {
+                            Board.GetCell(x, y).SetValueForce(alphaSide, layer, value);
+                        }
+                    }
+                }
+                for (int x = 0; x < vector.x; x++) {
+                    for (int y = 0; y < Board.BOARD_SIZE; y++) {
+                        Board.GetCell(x, y).SetValueForce(alphaSide, layer, -1);
+                    }
+                }
+                break;
+            case -1:
+            case -2:
+                for (int x = 0; x < Board.BOARD_SIZE + vector.x; x++) {
+                    for (int y = 0; y < Board.BOARD_SIZE; y++) {
+                        int value = Board.GetCell(x - vector.x, y).GetValue(alphaSide, layer);
+                        if (value != -2) {
+                            Board.GetCell(x, y).SetValueForce(alphaSide, layer, value);
+                        }
+                    }
+                }
+                for (int x = Board.BOARD_SIZE + vector.x; x < Board.BOARD_SIZE; x++) {
+                    for (int y = 0; y < Board.BOARD_SIZE; y++) {
+                        Board.GetCell(x, y).SetValueForce(alphaSide, layer, -1);
+                    }
+                }
+                break;
+        }
+        switch (vector.y) {
+            case 2:
+            case 1:
+                for (int x = 0; x < Board.BOARD_SIZE; x++) {
+                    for (int y = Board.BOARD_SIZE - 1; y >= vector.y; y--) {
+                        int value = Board.GetCell(x, y - vector.y).GetValue(alphaSide, layer);
+                        if (value != -2) {
+                            Board.GetCell(x, y).SetValueForce(alphaSide, layer, value);
+                        }
+                    }
+                }
+                for (int x = 0; x < Board.BOARD_SIZE; x++) {
+                    for (int y = 0; y < vector.y; y++) {
+                        Board.GetCell(x, y).SetValueForce(alphaSide, layer, -1);
+                    }
+                }
+                break;
+            case -1:
+            case -2:
+                for (int x = 0; x < Board.BOARD_SIZE; x++) {
+                    for (int y = 0; y < Board.BOARD_SIZE + vector.y; y++) {
+                        int value = Board.GetCell(x, y - vector.y).GetValue(alphaSide, layer);
+                        if (value != -2) {
+                            Board.GetCell(x, y).SetValueForce(alphaSide, layer, value);
+                        }
+                    }
+                }
+                for (int x = 0; x < Board.BOARD_SIZE; x++) {
+                    for (int y = Board.BOARD_SIZE + vector.y; y < Board.BOARD_SIZE; y++) {
+                        Board.GetCell(x, y).SetValueForce(alphaSide, layer, -1);
+                    }
+                }
+                break;
+        }
     }
 
     private void Estimate() {
@@ -168,7 +227,12 @@ class Algorithm018 extends Interface {
 
         // 自軍が移動した = 移動先の可能性があるポイントの逆評価値に1を追加する
         if (IsAllyLastMove()) {
-            MoveValue(1, AllyLastMoveVector());
+            // MoveValue(1, AllyLastMoveVector());
+            if (allyCount > 1) {
+                MoveValue(1, AllyLastMoveVector());
+            } else {
+                SwipeValue(1, AllyLastMoveVector());
+            }
         }
 
         // 自軍が攻撃した = 攻撃したポイントの逆評価値を-1に固定する, 周囲のポイントの逆評価値に1を追加する
@@ -260,7 +324,12 @@ class Algorithm018 extends Interface {
         // 敵軍が移動した = 移動先の可能性があるポイントの評価値に1を追加する
         if (IsEnemyLastMove()) {
             enemyMoveCount++;
-            MoveValue(0, EnemyLastMoveVector());
+            // MoveValue(0, EnemyLastMoveVector());
+            if (enemyCount > 1) {
+                MoveValue(0, EnemyLastMoveVector());
+            } else {
+                SwipeValue(0, EnemyLastMoveVector());
+            }
         }
 
         // 敵軍が攻撃した = 攻撃したポイントの評価値を-1に固定する, 周囲のポイントの評価値に1を追加する
