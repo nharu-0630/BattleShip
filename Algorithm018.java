@@ -382,30 +382,7 @@ class Algorithm018 extends Interface {
                         }
                     }
                 }
-                // ArrayList<Point> minValuePoints = new
-                // ArrayList<Point>(Board.GetPointValues(alphaSide,
-                // Board.GetCrossPoints(EnemyLastAttackPoint(), 1, 2), 1,
-                // -1).keySet());
-                // for (Point point : minValuePoints) {
-                // if (Board.IsMoveEnablePoint(alphaSide, EnemyLastAttackPoint(),
-                // point)) {
-                // DoMove(EnemyLastAttackPoint(), point);
-                // return;
-                // }
-                // }
             }
-            // if (EnemyLastAttackResult().contains(Board.RESULT_NOHIT) && !prepareTurned) {
-            // ArrayList<Point> nohitPoints = Board.GetRoundPoints(EnemyLastAttackPoint());
-            // for (Point point : Board.GetShipPoints(alphaSide)) {
-            // for (Point movePoint : Board.GetCrossPoints(point, 1, 2)) {
-            // if (nohitPoints.contains(movePoint) && Board.IsMoveEnablePoint(alphaSide,
-            // point, movePoint)) {
-            // DoMove(point, movePoint);
-            // return;
-            // }
-            // }
-            // }
-            // }
         }
 
         if (prepareTurned && Board.IsEnableAttackPoint(alphaSide, preparePoint)) {
