@@ -111,13 +111,13 @@ class Algorithm018 extends Interface {
         int newValue = Board.GetCell(point).GetValue(alphaSide, layer);
         newValue = newValue < 0 ? 0 : newValue;
         int oldValue = Board.GetCell(point.Minus(vector)).GetValue(alphaSide, layer);
-        if (oldValue < 5) {
-            newValue += 1;
-        } else if (oldValue < 10) {
+        if (0 <= oldValue && oldValue < 5) {
+            newValue += 0;
+        } else if (5 <= oldValue && oldValue < 10) {
             newValue += 3;
-        } else if (oldValue < 20) {
+        } else if (10 <= oldValue && oldValue < 20) {
             newValue += 5;
-        } else {
+        } else if (20 <= oldValue) {
             newValue += 10;
         }
         return newValue;
