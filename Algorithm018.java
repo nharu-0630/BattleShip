@@ -127,12 +127,14 @@ class Algorithm018 extends Interface {
         switch (vector.x) {
             case 2:
             case 1:
-                for (int x = Board.BOARD_SIZE - 1; x > vector.x; x--) {
+                for (int x = Board.BOARD_SIZE - 1; x >= vector.x; x--) {
                     for (int y = 0; y < Board.BOARD_SIZE; y++) {
                         int value = Board.GetCell(x - vector.x, y).GetValue(alphaSide, layer);
-                        if (value != -2) {
-                            Board.GetCell(x, y).SetValueForce(alphaSide, layer, value);
+                        value = value == -2 ? -1 : value;
+                        if (vector.x == 2 && Board.GetCell(x - 1, y).GetValue(alphaSide, layer) == -2) {
+                            value = -1;
                         }
+                        Board.GetCell(x, y).SetValueForce(alphaSide, layer, value);
                     }
                 }
                 for (int x = 0; x < vector.x; x++) {
@@ -146,9 +148,11 @@ class Algorithm018 extends Interface {
                 for (int x = 0; x < Board.BOARD_SIZE + vector.x; x++) {
                     for (int y = 0; y < Board.BOARD_SIZE; y++) {
                         int value = Board.GetCell(x - vector.x, y).GetValue(alphaSide, layer);
-                        if (value != -2) {
-                            Board.GetCell(x, y).SetValueForce(alphaSide, layer, value);
+                        value = value == -2 ? -1 : value;
+                        if (vector.x == -2 && Board.GetCell(x + 1, y).GetValue(alphaSide, layer) == -2) {
+                            value = -1;
                         }
+                        Board.GetCell(x, y).SetValueForce(alphaSide, layer, value);
                     }
                 }
                 for (int x = Board.BOARD_SIZE + vector.x; x < Board.BOARD_SIZE; x++) {
@@ -164,9 +168,11 @@ class Algorithm018 extends Interface {
                 for (int x = 0; x < Board.BOARD_SIZE; x++) {
                     for (int y = Board.BOARD_SIZE - 1; y >= vector.y; y--) {
                         int value = Board.GetCell(x, y - vector.y).GetValue(alphaSide, layer);
-                        if (value != -2) {
-                            Board.GetCell(x, y).SetValueForce(alphaSide, layer, value);
+                        value = value == -2 ? -1 : value;
+                        if (vector.y == 2 && Board.GetCell(x, y - 1).GetValue(alphaSide, layer) == -2) {
+                            value = -1;
                         }
+                        Board.GetCell(x, y).SetValueForce(alphaSide, layer, value);
                     }
                 }
                 for (int x = 0; x < Board.BOARD_SIZE; x++) {
@@ -180,9 +186,11 @@ class Algorithm018 extends Interface {
                 for (int x = 0; x < Board.BOARD_SIZE; x++) {
                     for (int y = 0; y < Board.BOARD_SIZE + vector.y; y++) {
                         int value = Board.GetCell(x, y - vector.y).GetValue(alphaSide, layer);
-                        if (value != -2) {
-                            Board.GetCell(x, y).SetValueForce(alphaSide, layer, value);
+                        value = value == -2 ? -1 : value;
+                        if (vector.y == -2 && Board.GetCell(x, y + 1).GetValue(alphaSide, layer) == -2) {
+                            value = -1;
                         }
+                        Board.GetCell(x, y).SetValueForce(alphaSide, layer, value);
                     }
                 }
                 for (int x = 0; x < Board.BOARD_SIZE; x++) {
@@ -192,6 +200,7 @@ class Algorithm018 extends Interface {
                 }
                 break;
         }
+
     }
 
     private void Estimate() {
