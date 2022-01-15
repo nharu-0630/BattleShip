@@ -522,18 +522,16 @@ class Algorithm018 extends Interface {
                         } else if (minusVector.y < -1) {
                             moveVector = new Point(0, -2);
                         }
+                        if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)
+                                || point.equals(movePoint.Plus(moveVector))) {
+                            moveVector = moveVector.Divide(2);
+                            if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
+                                moveVector = null;
+                            }
+                        }
                         if (moveVector != null) {
-                            if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)
-                                    || point.equals(movePoint.Plus(moveVector))) {
-                                moveVector = moveVector.Divide(2);
-                                if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
-                                    moveVector = null;
-                                }
-                            }
-                            if (moveVector != null) {
-                                DoMove(movePoint, movePoint.Plus(moveVector));
-                                return;
-                            }
+                            DoMove(movePoint, movePoint.Plus(moveVector));
+                            return;
                         }
                     }
                 }
