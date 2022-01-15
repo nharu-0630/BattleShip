@@ -988,6 +988,11 @@ class Board {
                 Board.GetCell(new Point("C4")).SetHp(alphaSide, 3);
                 Board.GetCell(new Point("D3")).SetHp(alphaSide, 3);
                 break;
+            case 3:
+                Board.GetCell(new Point("A2")).SetHp(alphaSide, 3);
+                Board.GetCell(new Point("D1")).SetHp(alphaSide, 3);
+                Board.GetCell(new Point("E4")).SetHp(alphaSide, 3);
+                Board.GetCell(new Point("B5")).SetHp(alphaSide, 3);
         }
     }
 

@@ -27,7 +27,7 @@ public class DebugPlay {
     public static final boolean isStepWait = false;
 
     // アルゴリズム
-    public static int alphaAlgorithmNumber = 17;
+    public static int alphaAlgorithmNumber = 18;
     public static int bravoAlgorithmNumber = 18;
 
     public static void main(String args[]) {
@@ -48,28 +48,28 @@ public class DebugPlay {
         Board.Initialize(isVisibleLog, isAttackResultArray, isEnemySecret);
 
         AlgorithmSwitcher alphaAlgorithm = new AlgorithmSwitcher(true, isEnemySecret);
-        Board.SetRandom4Points(true, true, true);
-        // #region 正方形
+        // ランダム
+        // Board.SetRandom4Points(true, true, true);
+        // 正方形
         // Board.SetType4Points(true, 0);
-        // #endregion
-        // #region 大ひし形
+        // 大ひし形
         // Board.SetType4Points(true, 1);
-        // #endregion
-        // #region 小ひし形
+        // 小ひし形
         // Board.SetType4Points(true, 2);
-        // #endregion
+        // 大ひし形回転
+        Board.SetType4Points(true, 3);
 
         AlgorithmSwitcher bravoAlgorithm = new AlgorithmSwitcher(false, isEnemySecret);
+        // ランダム
         Board.SetRandom4Points(false, true, true);
-        // #region 正方形
+        // 正方形
         // Board.SetType4Points(false, 0);
-        // #endregion
-        // #region 大ひし形
+        // 大ひし形
         // Board.SetType4Points(false, 1);
-        // #endregion
-        // #region 小ひし形
+        // 小ひし形
         // Board.SetType4Points(false, 2);
-        // #endregion
+        // 大ひし形回転
+        // Board.SetType4Points(false, 3);
 
         alphaAlgorithm.SetAlgorithm(alphaAlgorithmNumber);
         bravoAlgorithm.SetAlgorithm(bravoAlgorithmNumber);
