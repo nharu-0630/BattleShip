@@ -11,7 +11,6 @@ class Algorithm018 extends Interface {
     private boolean prepareTurned = false;
     private Point preparePoint = null;
     private boolean fakeMoveEnable = true;
-    private boolean fakeMoveFlag = false;
 
     private int enemyMoveCount = 0;
 
