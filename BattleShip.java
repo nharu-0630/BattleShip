@@ -989,10 +989,17 @@ class Board {
                 Board.GetCell(new Point("D3")).SetHp(alphaSide, 3);
                 break;
             case 3:
-                Board.GetCell(new Point("A2")).SetHp(alphaSide, 3);
-                Board.GetCell(new Point("D1")).SetHp(alphaSide, 3);
-                Board.GetCell(new Point("E4")).SetHp(alphaSide, 3);
-                Board.GetCell(new Point("B5")).SetHp(alphaSide, 3);
+                if (Math.random() < 0.5) {
+                    Board.GetCell(new Point("A2")).SetHp(alphaSide, 3);
+                    Board.GetCell(new Point("D1")).SetHp(alphaSide, 3);
+                    Board.GetCell(new Point("E4")).SetHp(alphaSide, 3);
+                    Board.GetCell(new Point("B5")).SetHp(alphaSide, 3);
+                } else {
+                    Board.GetCell(new Point("A4")).SetHp(alphaSide, 3);
+                    Board.GetCell(new Point("B1")).SetHp(alphaSide, 3);
+                    Board.GetCell(new Point("E2")).SetHp(alphaSide, 3);
+                    Board.GetCell(new Point("D5")).SetHp(alphaSide, 3);
+                }
         }
     }
 
