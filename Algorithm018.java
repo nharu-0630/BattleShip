@@ -360,7 +360,7 @@ class Algorithm018 extends Interface {
             }
             // 自軍が命中した = 命中したポイントの逆評価値を10に設定する
             if (EnemyLastAttackResult().contains(Board.RESULT_HIT)) {
-                if (fakeMoveFlag) {
+                if (allyMoveType == TYPE_ESCAPE) {
                     fakeMoveEnable = false;
                 }
                 Board.GetCell(EnemyLastAttackPoint()).SetValue(alphaSide, 1, 20);
@@ -381,14 +381,15 @@ class Algorithm018 extends Interface {
             }
         }
 
-        fakeMoveFlag = false;
-
         if (estimatedAttackedStatus == 2) {
             estimatedAttackedStatus = 0;
         }
         if (estimatedAttackedStatus == 1) {
             estimatedAttackedStatus++;
         }
+
+        allyAttackType = 0;
+        allyMoveType = 0;
 
         // 自軍が攻撃した
         if (IsAllyLastAttack()) {
@@ -471,7 +472,6 @@ class Algorithm018 extends Interface {
                                             continue;
                                         }
                                         if (Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
-                                            fakeMoveFlag = true;
                                             allyMoveType = TYPE_ESCAPE;
                                             Board.WriteLogLine("TYPE_ESCAPE");
                                             DoMove(movePoint, movePoint.Plus(moveVector));
