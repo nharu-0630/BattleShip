@@ -27,6 +27,12 @@ class Algorithm018 extends Interface {
     private final int TYPE_REALMOVE = 4;
     private final int TYPE_NOMOVE = 5;
 
+    private int allyMoveType = 0;
+
+    private final int TYPE_ESCAPE = 1;
+    private final int TYPE_ATTACK = 2;
+    private final int TYPE_FREE = 3;
+
     public void SetParameter(int[] parameters) {
 
     }
@@ -327,8 +333,8 @@ class Algorithm018 extends Interface {
             }
         }
         Board.WriteLogLine(
-                "enemyFakeMoveCount = " + enemyFakeMoveCount + ", enemyRealMoveCount = " + enemyRealMoveCount
-                        + ", enemyNoMoveCount = " + enemyNoMoveCount);
+                "TYPE_FAKEMOVE = " + enemyFakeMoveCount + ", TYPE_REALMOVE = " + enemyRealMoveCount
+                        + ", TYPE_NOMOVE = " + enemyNoMoveCount);
 
         // 敵軍が移動した = 移動先の可能性があるポイントの評価値に1を追加する
         if (IsEnemyLastMove()) {
@@ -394,9 +400,10 @@ class Algorithm018 extends Interface {
                 if (IsEnemyLastMove()) {
                     Point estimatedPoint = AllyLastAttackPoint()
                             .Plus(EnemyLastMoveVector());
-                    if ((enemyFakeMoveCount >= 1 && enemyRealMoveCount == 0) || !estimatedPoint.IsRange()
+                    if ((enemyFakeMoveCount >= 0 && enemyRealMoveCount == 0) || !estimatedPoint.IsRange()
                             || (enemyFakeMoveCount > enemyRealMoveCount)) {
                         allyAttackType = TYPE_FAKEMOVE;
+                        Board.WriteLogLine("TYPE_FAKEMOVE");
                         DoAttack(AllyLastAttackPoint());
                         return;
                     } else if ((enemyRealMoveCount >= 1 && enemyFakeMoveCount == 0)
@@ -407,6 +414,7 @@ class Algorithm018 extends Interface {
                             estimatedAttackedStatus = 1;
                             estimatedBeforePoint = AllyLastAttackPoint();
                             allyAttackType = TYPE_REALMOVE;
+                            Board.WriteLogLine("TYPE_REALMOVE");
                             DoAttack(estimatedPoint);
                             return;
                         }
@@ -414,6 +422,7 @@ class Algorithm018 extends Interface {
                 } else {
                     if (Board.IsEnableAttackPoint(alphaSide, AllyLastAttackPoint())) {
                         allyAttackType = TYPE_NOMOVE;
+                        Board.WriteLogLine("TYPE_NOMOVE");
                         DoAttack(AllyLastAttackPoint());
                         return;
                     }
@@ -424,6 +433,7 @@ class Algorithm018 extends Interface {
                     if (Board.IsEnableAttackPoint(alphaSide, estimatedBeforePoint)) {
                         Board.GetCell(estimatedBeforePoint).SetValueForce(alphaSide, 0, 20);
                         allyAttackType = TYPE_FAKEMOVE;
+                        Board.WriteLogLine("TYPE_FAKEMOVE");
                         DoAttack(estimatedBeforePoint);
                         estimatedBeforePoint = null;
                         return;
@@ -462,6 +472,8 @@ class Algorithm018 extends Interface {
                                         }
                                         if (Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
                                             fakeMoveFlag = true;
+                                            allyMoveType = TYPE_ESCAPE;
+                                            Board.WriteLogLine("TYPE_ESCAPE");
                                             DoMove(movePoint, movePoint.Plus(moveVector));
                                             return;
                                         }
@@ -477,6 +489,7 @@ class Algorithm018 extends Interface {
         if (prepareTurned && Board.IsEnableAttackPoint(alphaSide, preparePoint)) {
             prepareTurned = false;
             allyAttackType = TYPE_HIT;
+            Board.WriteLogLine("TYPE_HIT");
             DoAttack(preparePoint);
             preparePoint = null;
             return;
@@ -487,7 +500,29 @@ class Algorithm018 extends Interface {
         if (Board.GetCell(maxValuePoints.get(0)).GetValue(alphaSide, 0) >= 5) {
             for (Point point : maxValuePoints) {
                 if (Board.IsEnableAttackPoint(alphaSide, point)) {
+                    // if (IsAllyLastAttack() && AllyLastAttackResult().contains(Board.RESULT_HIT))
+                    // {
+                    // if (IsEnemyLastMove()) {
+                    // if (point.equals(AllyLastAttackPoint())) {
+                    // allyAttackType = TYPE_FAKEMOVE;
+                    // Board.WriteLogLine("TYPE_FAKEMOVE");
+                    // } else if (point.Plus(EnemyLastMoveVector()).equals(AllyLastAttackPoint())) {
+                    // allyAttackType = TYPE_REALMOVE;
+                    // Board.WriteLogLine("TYPE_REALMOVE");
+                    // } else {
+                    // allyAttackType = TYPE_SEARCH;
+                    // Board.WriteLogLine("TYPE_SEARCH");
+                    // }
+                    // } else {
+                    // allyAttackType = TYPE_NOMOVE;
+                    // Board.WriteLogLine("TYPE_NOMOVE");
+                    // }
+                    // } else {
+                    // allyAttackType = TYPE_SEARCH;
+                    // Board.WriteLogLine("TYPE_SEARCH");
+                    // }
                     allyAttackType = TYPE_SEARCH;
+                    Board.WriteLogLine("TYPE_SEARCH");
                     DoAttack(point);
                     return;
                 }
@@ -504,6 +539,8 @@ class Algorithm018 extends Interface {
                         int value = Collections.max(crossPointValues.values());
                         for (Map.Entry<Point, Integer> crossPointValue : crossPointValues.entrySet()) {
                             if (crossPointValue.getValue() == value) {
+                                allyMoveType = TYPE_ATTACK;
+                                Board.WriteLogLine("TYPE_ATTACK");
                                 DoMove(point, crossPointValue.getKey());
                                 return;
                             }
@@ -522,16 +559,20 @@ class Algorithm018 extends Interface {
                         } else if (minusVector.y < -1) {
                             moveVector = new Point(0, -2);
                         }
-                        if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)
-                                || point.equals(movePoint.Plus(moveVector))) {
-                            moveVector = moveVector.Divide(2);
-                            if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
-                                moveVector = null;
-                            }
-                        }
                         if (moveVector != null) {
-                            DoMove(movePoint, movePoint.Plus(moveVector));
-                            return;
+                            if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)
+                                    || point.equals(movePoint.Plus(moveVector))) {
+                                moveVector = moveVector.Divide(2);
+                                if (!Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
+                                    moveVector = null;
+                                }
+                            }
+                            if (moveVector != null) {
+                                allyMoveType = TYPE_ATTACK;
+                                Board.WriteLogLine("TYPE_ATTACK");
+                                DoMove(movePoint, movePoint.Plus(moveVector));
+                                return;
+                            }
                         }
                     }
                 }
@@ -540,10 +581,21 @@ class Algorithm018 extends Interface {
 
         if (Board.GetMaxValuePoints(alphaSide, true, 0).size() != 0) {
             allyAttackType = TYPE_SEARCH;
+            Board.WriteLogLine("TYPE_SEARCH");
             DoAttack(Board.GetRandomPoint(Board.GetMaxValuePoints(alphaSide, true, 0)));
             return;
         } else {
-            Board.WriteDisableTurn();
+            for (Point movePoint : Board.GetShipPoints(alphaSide)) {
+                for (Point moveVector : Board.GetCrossPoints(movePoint, 1, 2)) {
+                    if (Board.IsMoveEnableVector(alphaSide, movePoint, moveVector)) {
+                        allyMoveType = TYPE_FREE;
+                        Board.WriteLogLine("TYPE_FREE");
+                        DoMove(movePoint, movePoint.Plus(moveVector));
+                        return;
+                    }
+                }
+            }
+            // Board.WriteDisableTurn();
         }
     }
 }
