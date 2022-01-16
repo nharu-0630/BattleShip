@@ -26,6 +26,12 @@ class Algorithm018 extends Interface {
     private final int TYPE_REALMOVE = 4;
     private final int TYPE_NOMOVE = 5;
 
+    private int allyMoveCount = 0;
+
+    private int allyEscapeMoveCount = 0;
+    private int allyAttackMoveCount = 0;
+    private int allyFreeMoveCount = 0;
+
     private int allyMoveType = 0;
 
     private final int TYPE_ESCAPE = 1;
@@ -247,6 +253,18 @@ class Algorithm018 extends Interface {
             } else {
                 SwipeValue(1, AllyLastMoveVector());
             }
+            allyMoveCount++;
+            switch (allyMoveType) {
+                case TYPE_ESCAPE:
+                    allyEscapeMoveCount++;
+                    break;
+                case TYPE_ATTACK:
+                    allyAttackMoveCount++;
+                    break;
+                case TYPE_FREE:
+                    allyFreeMoveCount++;
+                    break;
+            }
         }
 
         // 自軍が攻撃した = 攻撃したポイントの逆評価値を-1に固定する, 周囲のポイントの逆評価値に1を追加する
@@ -331,9 +349,6 @@ class Algorithm018 extends Interface {
                 }
             }
         }
-        Board.WriteLogLine(
-                "TYPE_FAKEMOVE = " + enemyFakeMoveCount + ", TYPE_REALMOVE = " + enemyRealMoveCount
-                        + ", TYPE_NOMOVE = " + enemyNoMoveCount);
 
         // 敵軍が移動した = 移動先の可能性があるポイントの評価値に1を追加する
         if (IsEnemyLastMove()) {
@@ -389,6 +404,14 @@ class Algorithm018 extends Interface {
 
         allyAttackType = 0;
         allyMoveType = 0;
+
+        Board.WriteLogLine("AllyMoveCount = " + allyMoveCount);
+        Board.WriteLogLine("TYPE_ESCAPE = " + allyEscapeMoveCount + ", TYPE_ATTACK = " + allyAttackMoveCount
+                + ", TYPE_FREE = " + allyFreeMoveCount);
+        Board.WriteLogLine("EnemyMoveCount = " + enemyMoveCount);
+        Board.WriteLogLine(
+                "TYPE_FAKEMOVE = " + enemyFakeMoveCount + ", TYPE_REALMOVE = " + enemyRealMoveCount
+                        + ", TYPE_NOMOVE = " + enemyNoMoveCount);
 
         // 自軍が攻撃した
         if (IsAllyLastAttack()) {
