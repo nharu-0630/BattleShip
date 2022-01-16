@@ -49,7 +49,7 @@ public class DebugPlay {
 
         AlgorithmSwitcher alphaAlgorithm = new AlgorithmSwitcher(true, isEnemySecret);
         // ランダム
-        // Board.SetRandom4Points(true, true, true);
+        Board.SetRandom4Points(true, true, true);
         // 正方形
         // Board.SetType4Points(true, 0);
         // 大ひし形
@@ -57,7 +57,7 @@ public class DebugPlay {
         // 小ひし形
         // Board.SetType4Points(true, 2);
         // 大ひし形回転
-        Board.SetType4Points(true, 3);
+        // Board.SetType4Points(true, 3);
 
         AlgorithmSwitcher bravoAlgorithm = new AlgorithmSwitcher(false, isEnemySecret);
         // ランダム

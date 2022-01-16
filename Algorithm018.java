@@ -440,7 +440,7 @@ class Algorithm018 extends Interface {
             // 自軍が命中した
             if (EnemyLastAttackResult().contains(Board.RESULT_HIT)) {
                 if (fakeMoveEnable) {
-                    if (Board.GetCell(EnemyLastAttackPoint()).GetHp(alphaSide) == 2) {
+                    if (Board.GetCell(EnemyLastAttackPoint()).GetHp(alphaSide) == 2 || true) {
                         HashMap<Point, Integer> pointsValue = new HashMap<Point, Integer>();
                         for (Point point : Board.GetCrossPoints(EnemyLastAttackPoint(), 1, 1)) {
                             if (Board.IsMoveEnablePoint(alphaSide, EnemyLastAttackPoint(), point)) {

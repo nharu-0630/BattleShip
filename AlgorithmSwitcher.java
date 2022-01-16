@@ -4,7 +4,7 @@ class AlgorithmSwitcher {
         this.isEnemySecret = isEnemySecret;
     }
 
-    private int algorithmNumber = 17;
+    private int algorithmNumber = 18;
     private boolean alphaSide = true;
     private boolean isEnemySecret = true;
     private Algorithm001 algorithm001;
@@ -25,6 +25,7 @@ class AlgorithmSwitcher {
     private Algorithm016 algorithm016;
     private Algorithm017 algorithm017;
     private Algorithm018 algorithm018;
+    // private Algorithm019 algorithm019;
 
     public void SetAlgorithm(int algorithmNumber) {
         this.algorithmNumber = algorithmNumber;
@@ -104,6 +105,10 @@ class AlgorithmSwitcher {
                 algorithm018 = new Algorithm018(alphaSide, isEnemySecret);
                 algorithm018.SetParameter(parameters);
                 break;
+            // case 19:
+            // algorithm019 = new Algorithm019(alphaSide, isEnemySecret);
+            // algorithm019.SetParameter(parameters);
+            // break;
         }
     }
 
@@ -163,6 +168,9 @@ class AlgorithmSwitcher {
             case 18:
                 algorithm018.SetCountSumHp(parameters);
                 break;
+            // case 19:
+            // algorithm019.SetCountSumHp(parameters);
+            // break;
         }
     }
 
@@ -222,6 +230,9 @@ class AlgorithmSwitcher {
             case 18:
                 algorithm018.Think();
                 break;
+            // case 19:
+            // algorithm019.Think();
+            // break;
         }
     }
 }
